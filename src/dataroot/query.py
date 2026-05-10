@@ -444,11 +444,44 @@ def _company_a_pmr_gene_answer(store, question: str) -> str | None:
 
 def _upcoming_availability_answer(store, question: str) -> str | None:
     lower = question.lower()
-    if not any(term in lower for term in ["next", "upcoming", "coming", "available", "availability", "batch", "batches"]):
+    if not any(
+        term in lower
+        for term in [
+            "next",
+            "upcoming",
+            "coming",
+            "available",
+            "availability",
+            "capacity",
+            "batch",
+            "batches",
+            "run",
+            "runs",
+            "fermentation",
+            "fermnation",
+            "product",
+        ]
+    ):
         return None
 
     company_b_rows = _rows_from_table(store, "bioreactor_schedule.csv")
-    if company_b_rows and any(term in lower for term in ["compound", "batch", "run", "fermentation", "month", "available", "coming"]):
+    if company_b_rows and any(
+        term in lower
+        for term in [
+            "compound",
+            "batch",
+            "run",
+            "runs",
+            "fermentation",
+            "fermnation",
+            "month",
+            "available",
+            "capacity",
+            "bioreactor",
+            "product",
+            "coming",
+        ]
+    ):
         return _company_b_upcoming_answer(store, question)
 
     company_a_rows = _rows_from_table(store, "essential_oil_inventory.csv")
@@ -530,6 +563,7 @@ def _company_a_compound_availability_answer(store, question: str) -> str | None:
 
 
 def _company_b_upcoming_answer(store, question: str) -> str | None:
+    lower = question.lower()
     schedule_rows = sorted(
         [
             row for row in _rows_from_table(store, "bioreactor_schedule.csv")
@@ -537,6 +571,13 @@ def _company_b_upcoming_answer(store, question: str) -> str | None:
         ],
         key=lambda row: str(row.row_data.get("availability_start", "")),
     )
+    if "capacity" in lower:
+        schedule_rows.sort(
+            key=lambda row: (
+                -_float_or_zero(row.row_data.get("capacity_l")),
+                str(row.row_data.get("availability_start", "")),
+            )
+        )
     run_rows = [
         row for row in _rows_from_table(store, "fermentation_runs_2026_q1.csv")
         if str(row.row_data.get("run_status", "")).lower() in {"ongoing", "pending"}
@@ -579,7 +620,7 @@ def _company_b_upcoming_answer(store, question: str) -> str | None:
             }
         )
         lines.append(
-            f"- Bioreactor {row.row_data.get('bioreactor_id')} is {row.row_data.get('status')} from {row.row_data.get('availability_start')} to {row.row_data.get('availability_end')} for media {row.row_data.get('compatible_media_ids')} [citation: {row.row_slug}]"
+            f"- Bioreactor {row.row_data.get('bioreactor_id')} has {row.row_data.get('capacity_l')} L capacity and is {row.row_data.get('status')} from {row.row_data.get('availability_start')} to {row.row_data.get('availability_end')} for media {row.row_data.get('compatible_media_ids')} [citation: {row.row_slug}]"
         )
 
     provenance = {

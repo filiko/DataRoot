@@ -1,0 +1,29 @@
+Timestamp,Entry_Type,Cultivar_ID,Obs_Type,Observer,Location,Data_Field_1,Data_Field_2,Data_Field_3,Data_Field_4,Notes,Verified,System
+2026-03-18 09:15:00,OBSERVATION,A-CUL-TOM-014,PMR_SCREEN,DrMChen,GH Bay 3,LesionScore,1.1,Replicate, R1,Low lesion development,OK,LIMS
+2026-03-18 09:45:00,OBSERVATION,A-CUL-TOM-014,PMR_SCREEN,DrMChen,GH Bay 3,LesionScore,1.3,Replicate, R2,Low lesion development,OK,LIMS
+2026-03-18 10:15:00,OBSERVATION,A-CUL-TOM-022,PMR_SCREEN,DrMChen,GH Bay 3,LesionScore,1.4,Replicate, R1,Borderline acceptable,OK,LIMS
+2026-03-18 10:30:00,OBSERVATION,A-CUL-TOM-022,PMR_SCREEN,DrMChen,GH Bay 3,LesionScore,1.5,Replicate, R2,At threshold boundary,OK,LIMS
+2026-03-18 11:00:00,OBSERVATION,A-CUL-TOM-031,PMR_SCREEN,DrMChen,GH Bay 3,LesionScore,3.2,Replicate, R1,Expected - no PMR marker,OK,LIMS
+2026-03-18 11:15:00,OBSERVATION,A-CUL-TOM-031,PMR_SCREEN,DrMChen,GH Bay 3,LesionScore,3.4,Replicate, R2,High susceptibility confirmed,OK,LIMS
+2026-03-18 11:30:00,COMMENT,A-CUL-TOM-022,PMR_REVIEW,DrMChen,GH Bay 3,Note,Block1 unexpected susceptibility in fall trial,Rep1 showed elevated lesions,,Possible marker x background - needs investigation,OK,LIMS
+2026-03-18 14:00:00,ACTION, A-CUL-TOM-022,FLAG,DrMChen,Office,Hold,pending_retest,Field trial A-TRL-FD-008 retest scheduled Q2,,Hold status until retest complete,OK,LIMS
+2026-03-18 14:30:00,RESULT,ALL,PMR_REVIEW_SUMMARY,DrMChen,Office,Summary,A-CUL-TOM-014 PASS,A-CUL-TOM-022 BORDERLINE,A-CUL-TOM-031 FAIL,No PMR marker - expected,OK,LIMS
+2026-03-22 08:00:00,OBSERVATION,A-CUL-TOM-014,FIELD_VISIT,CMendez,A-FLD-BLOCK-3,Condition,Good,Color,Normal,Leaf roll index 1.2,,OK,LIMS
+2026-03-22 09:30:00,OBSERVATION,A-FLD-BLOCK-3,SOIL_CHECK,CMendez,A-FLD-BLOCK-3,Soil Moisture,0.18,cm/cm,Available water capacity,Per soil report SOIL-RPT-2026-033,,OK,LIMS
+2026-03-22 10:00:00,OBSERVATION,A-CUL-TOM-014,FIELD_VISIT,CMendez,A-FLD-BLOCK-3,Irrigation,Deficit 60%,ET0,Status,Ready for spring planting,,OK,LIMS
+2026-03-22 10:45:00,RESULT,A-INV-SEED-02,INVENTORY_CHECK,CMendez,Storage,Seed Units,2400,Germination,94,Timestamp,2026-04-04,Verified release status,OK,LIMS
+2026-03-22 11:00:00,RESULT,A-FLD-BLOCK-3,PLANTING_WINDOW,CMendez,Office,Window Start,2026-04-20,Window End,2026-05-18,Area m2,1200,Recommended for A-CUL-TOM-014 deployment,OK,LIMS
+2026-04-04 13:00:00,QC_TEST,A-CUL-TOM-014,LOT-TOM-014-2026A,PNair,QC Lab,Germination,94.25,percent,Threshold,85,Result,PASS,Passed germination QC,OK,LIMS
+2026-04-04 13:30:00,QC_TEST,A-CUL-TOM-022,LOT-TOM-022-2026A,PNair,QC Lab,Germination,91.88,percent,Threshold,85,Result,PASS-HOLD,Passed germ but on breeding hold,OK,LIMS
+2026-04-04 13:45:00,QC_TEST,A-CUL-TOM-031,LOT-TOM-031-2026A,PNair,QC Lab,Germination,96.25,percent,Threshold,85,Result,PASS,Released for drought-only requests,OK,LIMS
+2026-04-04 14:00:00,QC_TEST,A-CUL-TOM-027,LOT-TOM-027-2026A,PNair,QC Lab,Germination,84.25,percent,Threshold,85,Result,FAIL,Below threshold - early stage re-bulking needed,OK,LIMS
+2026-04-04 14:30:00,STATUS_UPDATE,A-INV-SEED-17,RECLASSIFY,PNair,QC Lab,Status,hold_early_stage,Reason,Germination below 85%,Notes,Notify breeding team for re-derive,OK,LIMS
+2026-04-08 10:00:00,RESULT,A-CUL-TOM-014,LOT-TOM-014-2026A,PNair,QC Lab,Viability,96,percent,Timestamp,2026-04-08,Result,PASS,Release verified,OK,LIMS
+2026-02-10 09:00:00,GENOTYPING_RESULT,A-CUL-TOM-014,DRT2,DrJOkonkwo,Mol Lab,Marker, A-GEN-DRT2,Result,PRESENT,Confidence,0.91,Protocol, A-PROT-003,Confirmed,OK,LIMS
+2026-02-10 09:30:00,GENOTYPING_RESULT,A-CUL-TOM-014,PMR3,DrJOkonkwo,Mol Lab,Marker, A-GEN-PMR3,Result,PRESENT,Confidence,0.88,Protocol, A-PROT-003,Confirmed,OK,LIMS
+2026-02-10 10:00:00,GENOTYPING_RESULT,A-CUL-TOM-022,DRT2,DrJOkonkwo,Mol Lab,Marker, A-GEN-DRT2,Result,PRESENT,Confidence,0.91,Protocol, A-PROT-003,Confirmed,OK,LIMS
+2026-02-10 10:30:00,GENOTYPING_RESULT,A-CUL-TOM-022,PMR3,DrJOkonkwo,Mol Lab,Marker, A-GEN-PMR3,Result,PRESENT,Confidence,0.88,Protocol, A-PROT-003,Confirmed,OK,LIMS
+2026-02-10 11:00:00,GENOTYPING_RESULT,A-CUL-TOM-031,DRT2,DrJOkonkwo,Mol Lab,Marker, A-GEN-DRT2,Result,PRESENT,Confidence,0.91,Protocol, A-PROT-003,Confirmed,OK,LIMS
+2026-02-10 11:30:00,GENOTYPING_RESULT,A-CUL-TOM-031,PMR3,DrJOkonkwo,Mol Lab,Marker, A-GEN-PMR3,Result,ABSENT,Confidence,0.88,Protocol, A-PROT-003,Confirmed - expected absent,OK,LIMS
+2026-02-10 14:00:00,COMMENT,A-CUL-TOM-022,INVESTIGATION,DrJOkonkwo,Mol Lab,Note,A-CUL-TOM-022 shows PMR3 marker but field trial A-TRL-FD-008 showed elevated susceptibility,,Possible marker x background interaction,Further study recommended,OK,LIMS
+2026-04-10 09:00:00,REVIEW,Q1-2026,SEASON_SUMMARY,DrMChen,Office,Summary,Trial data compiled,A-CUL-TOM-014 field ready,A-CUL-TOM-022 pending retest, A-CUL-TOM-031 drought only,Inquiries A-INQ-001 candidate,OK,LIMS

@@ -1,0 +1,46 @@
+[
+  {
+    "inquiry_id": "A-INQ-001",
+    "received_date": "2026-04-14",
+    "requester_type": "seed_distributor",
+    "crop": "tomato",
+    "requested_traits": ["drought_tolerance", "powdery_mildew_resistance"],
+    "region": "Texas Zone 8",
+    "desired_timeline": "spring planting",
+    "minimum_seed_units": 1500,
+    "notes": "Customer wants a greenhouse-validated cultivar with field readiness notes."
+  },
+  {
+    "inquiry_id": "A-INQ-002",
+    "received_date": "2026-04-18",
+    "requester_type": "regional_farm_cooperative",
+    "crop": "pepper",
+    "requested_traits": ["salt_tolerance"],
+    "region": "California Central Valley",
+    "desired_timeline": "fall planting",
+    "minimum_seed_units": 800,
+    "notes": "High salinity irrigation water is a concern. Looking for field-validated lines only."
+  },
+  {
+    "inquiry_id": "A-INQ-003",
+    "received_date": "2026-04-22",
+    "requester_type": "greenhouse_producer",
+    "crop": "tomato",
+    "requested_traits": ["early_flowering", "heat_tolerance"],
+    "region": "Arizona Zone 9b",
+    "desired_timeline": "early summer harvest",
+    "minimum_seed_units": 2000,
+    "notes": "Need cultivars that can handle triple-digit temperatures during fruit set."
+  },
+  {
+    "inquiry_id": "A-INQ-004",
+    "received_date": "2026-04-28",
+    "requester_type": "organic_farm_network",
+    "crop": "tomato",
+    "requested_traits": ["blight_resistance", "fruit_worm_resistance", "high_lycopene"],
+    "region": "Florida Zone 9a",
+    "desired_timeline": "spring planting",
+    "minimum_seed_units": 1200,
+    "notes": "No currently registered cultivar meets all three criteria. Interested in partial candidates."
+  }
+]

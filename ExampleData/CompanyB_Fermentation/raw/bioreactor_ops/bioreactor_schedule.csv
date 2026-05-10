@@ -1,0 +1,13 @@
+bioreactor_id,capacity_l,availability_start,availability_end,status,compatible_media_ids,notes
+B-BR-R1,20,2026-04-20,2026-05-05,available,B-MEDIA-EST-04;B-MEDIA-BAN-01,"Small pilot vessel for ester profiling"
+B-BR-R2,50,2026-04-28,2026-05-10,available,B-MEDIA-EST-04,"Open pilot window for ester strain scale-up"
+B-BR-R3,100,2026-05-15,2026-06-01,available,B-MEDIA-EST-04;B-MEDIA-FLOR-01,"Medium scale; reserved for lactic profiles"
+B-BR-R4,200,2026-04-25,2026-05-15,available,B-MEDIA-LACT-02;B-MEDIA-ORGANIC-01,"Lactobacillus compatible; pH controlled"
+B-BR-R5,200,2026-05-20,2026-06-05,reserved,B-MEDIA-EST-04,"Reserved for unrelated acid production campaign"
+B-BR-R6,50,2026-06-10,2026-06-30,available,B-MEDIA-FLOR-01;B-MEDIA-CIT-01,"Floral and citrus media compatible"
+B-BR-R7,20,2026-04-15,2026-04-27,maintenance,B-MEDIA-EST-04,"Vessel under maintenance; reopening late April"
+B-BR-R8,500,2026-05-25,2026-07-15,available,B-MEDIA-EST-04;B-MEDIA-LACT-02;B-MEDIA-ORGANIC-01,"Production scale; advance reservation required"
+B-BR-R9,10,2026-04-18,2026-05-30,available,B-MEDIA-EST-04;B-MEDIA-BAN-01;B-MEDIA-FLOR-01,"Small bench-scale; good for screening"
+B-BR-R10,100,2026-06-01,2026-06-20,available,B-MEDIA-EST-04;B-MEDIA-CIT-01,"Citrus profile media compatible"
+B-BR-R11,20,2026-04-22,2026-05-10,available,B-MEDIA-BAN-01;B-MEDIA-FLOR-01,"Bench to small pilot transition"
+B-BR-R12,50,2026-05-10,2026-05-28,available,B-MEDIA-ORGANIC-01;B-MEDIA-LACT-02,"Organic acid production compatible"

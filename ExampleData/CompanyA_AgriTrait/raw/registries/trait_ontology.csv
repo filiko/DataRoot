@@ -1,0 +1,13 @@
+trait_id,trait_name,aliases,crop_scope,measurement_method,linked_marker_ids,success_threshold,notes
+A-TRT-DRT,drought_tolerance,"water stress tolerance;low irrigation performance;drydown response",tomato,greenhouse drydown assay,A-GEN-DRT2,"wilting_score <= 2.0 and yield_retention_pct >= 80",Used for arid region readiness
+A-TRT-PMR,powdery_mildew_resistance,"PM resistance;mildew resistance;Oidium lycopersicum",tomato,pathogen challenge assay,A-GEN-PMR3,"lesion_score <= 1.5",High-priority disease package trait
+A-TRT-SAL,salt_tolerance,"salinity tolerance;high NaCl response",pepper,electrolyte leakage assay,A-GEN-SAL1,"growth_retention_pct >= 75",Irrigation water salinity concern
+A-TRT-EAR-FL,early_flowering,"precocious flowering;flowering time",tomato,days_to_flower count,A-GEN-EAR-FL1,"days_to_flower <= 45",Target for early summer harvest
+A-TRT-HEAT,heat_tolerance,"high temperature tolerance;fruit set under heat",tomato,pollen viability assay,A-GEN-HEAT1,"pollen_germination_pct >= 60 at 38C",Triple-digit temperature concern
+A-TRT-BLIGHT,blight_resistance,"Phytophthora resistance;late blight",tomato,field challenge,A-GEN-BLIGHT1,"disease_score <= 2.0",Florida humid climate priority
+A-TRT-FW,fruit_worm_resistance,"helicoverpa resistance;fruit borer",tomato,insect challenge assay,A-GEN-FW1,"infestation_pct <= 10",Organic farm request
+A-TRT-LYC,high_lycopene,"lycopene content;antioxidant enhancement",tomato,chromatography assay,A-GEN-LYC1,"lycopene_content_ppm >= 80",Nutritional trait
+A-TRT-NEM,nematode_resistance,"root-knot nematode resistance;Meloidogyne",tomato,soil challenge,A-GEN-NEM1,"gall_index <= 2.0",Soil pest resistance
+A-TRT-FUS,fusarium_wilt_resistance,"Fusarium oxysporum resistance;vascular wilt",tomato,root dip assay,A-GEN-FUS1,"wilt_score <= 1.5",Common soil pathogen
+A-TRT-VERT,verticillium_wilt_resistance,"Verticillium dahliae resistance;ve discoloration",tomato,field observation,A-GEN-VERT1,"ve_score <= 2.0",Cool climate wilt
+A-TRT-SALT,salt_tolerance_global,"general salinity response;Na/K ratio",tomato,leaf tissue test,A-GEN-SALT2,"Na_K_ratio <= 0.5",Broader salinity screening

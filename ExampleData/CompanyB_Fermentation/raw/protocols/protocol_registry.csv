@@ -1,0 +1,5 @@
+Protocol Code,Protocol Name,Version,Date,Department,Supersedes,Status,Confidential,Language
+B-PROT-001,Low Temp Fermentation,2.0,2026-01-15,Fermentation,1.5,ACTIVE,No,EN
+B-PROT-002,GC-MS Ester Assay,1.5,2026-02-01,Analytical,1.3,ACTIVE,No,EN
+B-PROT-003,Strain Identity QC,1.8,2026-03-01,Quality Control,1.6,ACTIVE,No,EN
+B-PROT-004,Pilot Scale-Up Review,1.5,2026-03-10,Fermentation,1.2,ACTIVE,No,EN

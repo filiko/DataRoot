@@ -1,0 +1,7 @@
+profile_id,profile_name,aliases,target_metabolite_ids,preferred_conditions,acceptance_threshold,notes
+B-PROF-EST-01,fruit_forward_citrus_ester,"bright fruit;citrus-like ester;fresh ester;orange peel",B-MET-EHEX;B-MET-EBUT;B-MET-EOCT,low_temperature,"combined_target_metabolites >= 85 mg/L and off_note_score <= 2",Demo profile for product team request
+B-PROF-LACTIC-02,creamy_lactic_profile,"cream;lactic;buttery;dairy ester",B-MET-LACT;B-MET-DIAC,ambient_temperature,"lactic_acid >= 200 mg/L and diacetyl <= 5 mg/L",Brewing partner request for balanced ester profile
+B-PROF-ORGANIC-03,high_organic_acid,"citric acid;malic acid;tartaric",B-MET-CIT;B-MET-MAL;B-MET-TART,controlled_ph,"total_organic_acid >= 500 mg/L",Food ingredients focus
+B-PROF-BANANA-04,banana_tropical_ester,"isoamyl acetate;fruity;banana;pear",B-MET-IAA;B-MET-PEARY,low_temperature,"isoamyl_acetate >= 40 mg/L and off_note_score <= 2",Research collaborator; no full candidate exists
+B-PROF-FLORAL-05,floral_rose_ester,"rose;geraniol;floral",B-MET-GERA;B-MET-CITRON,low_temperature,"geraniol >= 15 mg/L and citronellol >= 10 mg/L",Cosmetic and flavor applications
+B-PROF-CITRUS-06,citrus_limonene_profile,"limonene;citrus peel;bright",B-MET-LIMO;B-MET-GAMMA,low_temperature,"limonene >= 50 mg/L",Essential oil replacement focus

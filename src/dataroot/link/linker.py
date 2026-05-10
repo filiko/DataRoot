@@ -3,14 +3,17 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 from collections import defaultdict
 from dataclasses import dataclass
 
 from dataroot.kb.base import DocumentRecord
 from dataroot.kb.markdown import append_links, record_to_markdown
+from dataroot.link.address_match import address_key
 
 ID_RE = re.compile(r"\b[A-Z][A-Z0-9]{0,4}(?:-[A-Z0-9]{1,10}){1,6}\b|\bstation[_-]?\d{2,4}\b", re.IGNORECASE)
+ADDRESS_COLUMN_RE = re.compile(r"(?:^|_)(?:address|street_address|site_address|property_address|location_address)$", re.IGNORECASE)
 
 
 @dataclass
@@ -30,6 +33,11 @@ def link_workspace(store) -> LinkSummary:
     relationship_docs = _write_relationship_docs(store, id_map)
     _add_relationship_links(id_map, links_by_slug)
     _add_column_overlap_links(records, links_by_slug)
+
+    if _address_join_enabled():
+        address_map = _collect_address_mentions(records)
+        relationship_docs += _write_address_relationship_docs(store, address_map)
+        _add_address_relationship_links(address_map, links_by_slug)
 
     updates = 0
     added = 0
@@ -174,3 +182,79 @@ def _add_column_overlap_links(records: list[DocumentRecord], links_by_slug: dict
 
 def _slug_id(value: str) -> str:
     return re.sub(r"[^A-Za-z0-9._/-]+", "_", value.strip().lower()).strip("_")
+
+
+def _address_join_enabled() -> bool:
+    return os.environ.get("DATAROOT_LINK_ADDRESS_JOIN", "0") == "1"
+
+
+def _collect_address_mentions(records: list[DocumentRecord]) -> dict[str, list[tuple[str, str]]]:
+    """Map ``address_key`` -> list of (row_group_slug, source_table)."""
+    address_map: dict[str, list[tuple[str, str]]] = defaultdict(list)
+    for record in records:
+        if record.doc_type != "row_group":
+            continue
+        if record.frontmatter.get("row_grouping") != "single_row":
+            continue
+        row = record.frontmatter.get("row_data") or {}
+        if not isinstance(row, dict):
+            continue
+        table = str(record.frontmatter.get("table", ""))
+        for column_name, value in row.items():
+            if not isinstance(column_name, str):
+                continue
+            if not ADDRESS_COLUMN_RE.search(column_name):
+                continue
+            key = address_key(value)
+            if not key:
+                continue
+            entry = (record.slug, table)
+            if entry not in address_map[key]:
+                address_map[key].append(entry)
+            break
+    return {key: entries for key, entries in address_map.items() if len({table for _, table in entries}) > 1}
+
+
+def _write_address_relationship_docs(store, address_map: dict[str, list[tuple[str, str]]]) -> int:
+    count = 0
+    existing = {record.slug for record in store.list(doc_type="relationship")}
+    for key, entries in sorted(address_map.items()):
+        slug = f"relationships/address__{_slug_id(key)}"
+        slugs = sorted({entry[0] for entry in entries})
+        tables = sorted({entry[1] for entry in entries if entry[1]})
+        body = "\n".join(
+            [
+                f"# {key}",
+                "",
+                "Documents whose normalized address matches this key:",
+                *[f"- [[{doc_slug}]]" for doc_slug in slugs],
+            ]
+        )
+        record = DocumentRecord(
+            doc_type="relationship",
+            slug=slug,
+            title=key,
+            frontmatter={
+                "relationship_type": "shared_address",
+                "address_key": key,
+                "document_count": len(slugs),
+                "documents": slugs,
+                "source_tables": tables,
+                "confidence": 0.6,
+            },
+            body=body,
+        )
+        if slug not in existing:
+            store.write(record)
+            count += 1
+    return count
+
+
+def _add_address_relationship_links(
+    address_map: dict[str, list[tuple[str, str]]],
+    links_by_slug: dict[str, list[tuple[str, str]]],
+) -> None:
+    for key, entries in address_map.items():
+        relationship_slug = f"relationships/address__{_slug_id(key)}"
+        for doc_slug, _table in entries:
+            links_by_slug[doc_slug].append((relationship_slug, f"shares address {key}"))

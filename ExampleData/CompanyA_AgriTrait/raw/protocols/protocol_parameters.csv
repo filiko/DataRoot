@@ -1,0 +1,41 @@
+Protocol_ID,Parameter,Value,Unit,Range,Tolerance,Instrument,Method_Ref,Notes
+A-PROT-001,Temperature,25,degC,22-28,+-1,Greenhouse controller,A-PROT-001,Setpoint 25C
+A-PROT-001,Humidity,65,percent,60-75,+-5,Greenhouse controller,A-PROT-001,Ambient greenhouse
+A-PROT-001,Light period,16,hours,na,+-0.5,Growth chamber,A-PROT-001,16L:8D
+A-PROT-001,Pot size,1000,mL,na,na,na,A-PROT-001,1 liter pots
+A-PROT-001,Media,Metro-Mix 360,na,na,na,na,A-PROT-001,Soilless mix
+A-PROT-001,Watering protocol,FC to Drydown,na,na,na,na,A-PROT-001,Full capacity then withhold
+A-PROT-001,Wilting score max,2.0,0-5 scale,0-5,na,Visual,A-PROT-001,Pass threshold
+A-PROT-001,Recovery score max,1.5,0-5 scale,0-5,na,Visual,A-PROT-001,48hr re-water threshold
+A-PROT-001,Re-water timing,96,hours after drystart,na,+-2,na,A-PROT-001,Day 4 re-water
+A-PROT-001,Biomass dry temp,65,degC,na,na,Forced air oven,A-PROT-001,72hr dry
+A-PROT-001,Biomass dry time,72,hours,na,na,Forced air oven,A-PROT-001,Constant weight
+A-PROT-002,Inoculum density,1.00E+06,conidia/mL,na,+-10pct,Hemocytometer,A-PROT-002,Counted
+A-PROT-002,Inoculum vol,50,mL,na,na,Sprayer,A-PROT-002,Per plant
+A-PROT-002,Tween80 conc,0.01,percent,na,na,na,A-PROT-002,Wetting agent
+A-PROT-002, RH incubation,85,percent,80-90,+-3,Inoculation tent,A-PROT-002,First 48hr
+A-PROT-002,Temp incubation,22,degC,20-24,+-1,Inoculation tent,A-PROT-002,22-24C range
+A-PROT-002,Lesion score max,1.5,0-5 scale,0-5,na,Visual,A-PROT-002,Day 14 threshold
+A-PROT-002,Scoring times,48,hrs interval,na,na,Visual,A-PROT-002,Days 5,7,9,11,13
+A-PROT-002,Donor plant, A-CUL-TOM-BASE-08,na,na,na,na,A-PROT-002,Susceptible check
+A-PROT-002,Viability min,85,percent,na,na,na,A-PROT-002,Pre-inoculum check
+A-PROT-003,DNA elution vol,100,uL,na,na,DNA kit,A-PROT-003,AE buffer
+A-PROT-003,DNA min conc,50,ng/uL,na,na,NanoDrop,A-PROT-003,Working stock
+A-PROT-003,A260/A280 min,1.7,ratio,na,na,NanoDrop,A-PROT-003,Protein contamination
+A-PROT-003,PCR rxn vol,25,uL,na,na,na,A-PROT-003,Standard reaction
+A-PROT-003,Primer conc,2,uL each,10uM,na,na,A-PROT-003,Final 0.8uM
+A-PROT-003,Mastermix vol,12.5,uL,na,na,na,A-PROT-003,2x conc
+A-PROT-003,DNA vol,2,uL,na,na,na,A-PROT-003,Template
+A-PROT-003,Annealing temp,58,degC,na,+-1,PCR,A-PROT-003,Standard
+A-PROT-003,Cycles,35,cycles,na,na,PCR,A-PROT-003,Standard
+A-PROT-003,Gel conc,1.5,percent,na,na,na,A-PROT-003,Agarose
+A-PROT-003,Gel voltage,100,V,na,na,na,A-PROT-003,35min run
+A-PROT-003,DRT2 expected bp,180,bp,na,na,na,A-PROT-003,Marker amplicon
+A-PROT-003,PMR3 expected bp,240,bp,na,na,na,A-PROT-003,Marker amplicon
+A-PROT-004,Min GH trials,2,replicates,na,na,na,A-PROT-004,Per trait
+A-PROT-004,Min field trials,1,trial,na,na,na,A-PROT-004,Per trait
+A-PROT-004,Germ min,85,percent,na,na,na,A-PROT-004,Release threshold
+A-PROT-004,Viability min,90,percent,na,na,na,A-PROT-004,Pre-inoculum
+A-PROT-004,Seed min units,500,seeds,na,na,na,A-PROT-004,Commercial threshold
+A-PROT-004,Marker conf min,0.75,score,na,na,na,A-PROT-004,Confidence threshold
+A-PROT-004,Block ready status,ready,status,na,na,LIMS,A-PROT-004,Required

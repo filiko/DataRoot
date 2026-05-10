@@ -7,7 +7,7 @@ Harness-agnostic: tools are JSON schemas, not SDK objects.
 """
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Callable
 
 from .codex_client import CodexClient, AgentResult
 
@@ -30,7 +30,7 @@ class Runner:
         system_prompt: str,
         tools: list[dict[str, Any]],
         messages: list[dict[str, Any]],
-        tool_executor: callable | None = None,
+        tool_executor: Callable[[str, dict[str, Any]], Any] | None = None,
         temperature: float = 0.7,
     ) -> AgentResult:
         """

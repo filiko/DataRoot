@@ -1,0 +1,23 @@
+gene_id,gene_symbol,pathway,metabolite_ids,organism_scope,evidence_level,notes
+B-GEN-AAT1,AAT1,ester_biosynthesis,B-MET-EHEX;B-MET-EBUT,yeast,high,Synthetic pathway mapping for demo
+B-GEN-EHT1,EHT1,medium_chain_ester_biosynthesis,B-MET-EOCT;B-MET-ECAP,yeast,high,Synthetic pathway mapping for demo
+B-GEN-LDH2,LDH2,lactic_acid_biosynthesis,B-MET-LACT,yeast,high,Synthetic pathway for demo
+B-GEN-ALDC,ALDC,diacetyl_reduction,B-MET-DIAC,yeast,medium,Synthetic pathway for demo
+B-GEN-CIT1,CIT1,organic_acid_biosynthesis,B-MET-CIT;B-MET-MAL,lactobacillus,high,Synthetic pathway for demo
+B-GEN-TAH,TAH,tartaric_acid_biosynthesis,B-MET-TART,lactobacillus,medium,Synthetic pathway for demo
+B-GEN-ATF1,ATF1,acetate_ester_biosynthesis,B-MET-IAA;B-MET-PEARY,yeast,high,Synthetic pathway for demo
+B-GEN-GER1,GER1,monoterpene_biosynthesis,B-MEN-GERA;B-MET-CITRON;B-MET-NEROL,yeast,high,Synthetic pathway for demo
+B-GEN-LIM1,LIM1,citrus_terpene_biosynthesis,B-MET-LIMO;B-MET-GAMMA,yeast,medium,Synthetic pathway for demo
+B-GEN-ALDH,ALDH,acetate_biosynthesis,B-MET-ACET,yeast,high,Synthetic pathway for demo
+B-GEN-FAR1,FAR1,sesquiterpene_biosynthesis,B-MET-FARN,yeast,medium,Synthetic pathway for demo
+B-GEN-AAT2,AAT2,short_chain_ester_biosynthesis,B-MET-EVAL,yeast,medium,Synthetic pathway for demo
+B-GEN-BUTY,BUTY,butyric_acid_biosynthesis,B-MET-BUTY,bacterial,low,Synthetic pathway for demo
+B-GEN-EVH1,EVH1,vanillin_ester_biosynthesis,B-MET-EVAN,yeast,low,Synthetic pathway for demo
+B-GEN-ATF2,ATF2,higher_ketone_biosynthesis,B-MET-HEP,yeast,medium,Synthetic pathway for demo
+B-GEN-EHT2,EHT2,medium_chain_ester_biosynthesis,B-MET-EHEP,yeast,medium,Synthetic pathway for demo
+B-GEN-FAS1,FAS1,medium_chain_fatty_acid,B-MET-OCTAN,yeast,high,Synthetic pathway for demo
+B-GEN-EPH1,EPH1,phenyl_ester_biosynthesis,B-MET-EPAD,yeast,medium,Synthetic pathway for demo
+B-GEN-BNZ1,BNZ1,aromatic_alcohol_biosynthesis,B-MET-BENZ,yeast,high,Synthetic pathway for demo
+B-GEN-PNH1,PNH1,higher_alcohol_biosynthesis,B-MET-PHEN,yeast,high,Synthetic pathway for demo
+B-GEN-EPH2,EPH2,aromatic_ester_biosynthesis,B-MET-EPHEN,yeast,medium,Synthetic pathway for demo
+B-GEN-ALDH2,ALDH2,fusel_alcohol_metabolism,B-MET-ISOAM,yeast,high,Synthetic pathway for demo

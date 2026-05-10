@@ -115,6 +115,20 @@ DEFAULT_ASK_BOARD_DEMOS = (
         raw_path=Path("ExampleData") / "CompanyB_Fermentation" / "raw",
         question="What are the next batches or runs coming out soon?",
     ),
+    AskBoardDemo(
+        company_key="austin_permits",
+        label="Austin Permits Explorer",
+        section_kind="Standard Demo",
+        raw_path=Path("ExampleData") / "AustinPermits" / "raw",
+        question="Which recent Austin permits have matching plan review evidence?",
+    ),
+    AskBoardDemo(
+        company_key="austin_permits",
+        label="Austin Permits Explorer",
+        section_kind="Live Ask",
+        raw_path=Path("ExampleData") / "AustinPermits" / "raw",
+        question="Which open code tasks are tied to recent complaint locations?",
+    ),
 )
 
 

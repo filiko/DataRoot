@@ -1,0 +1,18 @@
+inventory_id,cultivar_id,lot_id,available_kg,storage_location,last_qc_date,germination_pct,release_status,notes
+A-INV-OIL-001,A-CUL-CIT-003,LOT-CIT-003-2025A,45,Austin Cold Room 4,2025-11-15,na,released,Valencia Royale 2025 fall harvest. High limonene confirmed.
+A-INV-OIL-002,A-CUL-CIT-001,LOT-CIT-001-2025A,38,Austin Cold Room 4,2025-10-20,na,released,Tahitian Gold 2025 fall harvest. Citrus blend compatible.
+A-INV-OIL-003,A-CUL-CIT-002,LOT-CIT-002-2025A,25,Austin Cold Room 4,2025-10-22,na,released,Meyer Lemon 2025 harvest. Elevated citral.
+A-INV-OIL-004,A-CUL-LAV-001,LOT-LAV-001-2025A,8,Austin Cold Room 5,2025-07-25,na,released,Provence True lavender absolute. Premium floral.
+A-INV-OIL-005,A-CUL-LAV-002,LOT-LAV-002-2025A,22,Austin Cold Room 5,2025-08-10,na,released,Grosso Select lavandin. Higher camphor for aromatherapy.
+A-INV-OIL-006,A-CUL-LEM-001,LOT-LEM-001-2025A,18,Austin Cold Room 4,2025-09-25,na,released,Lemongrass Pro 2025 harvest. High citral.
+A-INV-OIL-007,A-CUL-HOP-001,LOT-HOP-001-2025A,5,Austin Cold Room 6,2025-09-15,na,released,Cascade Gold CO2 extract. Craft brewing.
+A-INV-OIL-008,A-CUL-ROS-001,LOT-ROS-001-2025A,4,Austin Cold Room 5,2025-06-05,na,released,Rose Absolute Plus. High geraniol attar quality.
+A-INV-OIL-009,A-CUL-CLO-001,LOT-CLO-001-2025A,12,Austin Cold Room 4,2025-10-05,na,released,Clove Bud Elite. High eugenol.
+A-INV-OIL-010,A-CUL-MINT-001,LOT-MINT-001-2025A,28,Austin Cold Room 5,2025-08-22,na,released,Peppermint High Grade. Menthol 48%.
+A-INV-OIL-011,A-CUL-TEA-001,LOT-TEA-001-2026A,35,Austin Cold Room 4,2026-03-20,na,released,Tea Tree Select 2026 winter harvest. Meets Australian standard.
+A-INV-OIL-012,A-CUL-CIT-004,LOT-CIT-004-2025A,20,Austin Cold Room 4,2025-11-22,na,released,Grapefruit White 2025. Elevated nootkatone.
+A-INV-OIL-013,A-CUL-BAS-001,LOT-BAS-001-2025A,5,Austin Cold Room 4,2025-06-22,na,released,Thai Basil Supreme. Eugenol 34%.
+A-INV-OIL-014,A-CUL-CIT-005,LOT-CIT-005-2025A,30,Austin Cold Room 4,2025-10-28,na,released,Eureka Lemon Select. Classic lemon profile.
+A-INV-SEED-EO-01,A-CUL-CIT-003,LOT-CIT-003-2026B,850,Seed Vault Austin,2026-02-01,92,released,Valencia Royale seed stock for expansion planting.
+A-INV-SEED-EO-02,A-CUL-CIT-001,LOT-CIT-001-2026B,620,Seed Vault Austin,2026-02-05,91,released,Tahitian Gold seed stock.
+A-INV-SEED-EO-03,A-CUL-LAV-001,LOT-LAV-001-2026A,180,Seed Vault Austin,2026-01-20,88,released,Provence True lavender seed. Limited supply.

@@ -1,0 +1,5 @@
+station_id,station_name,county,latitude,longitude,waterbody_type,status
+STATION_001,North Fork Well,Travis,30.301,-97.742,groundwater,active
+STATION_002,South Creek Intake,Hays,30.012,-97.887,surface_water,active
+STATION_003,East Reservoir Tap,Williamson,30.511,-97.676,surface_water,active
+STATION_004,West Spring Box,Bastrop,30.151,-97.311,groundwater,inactive

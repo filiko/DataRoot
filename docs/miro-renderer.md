@@ -9,7 +9,14 @@ read-when: Building the Miro renderer or the Cytoscape fallback.
 Miro REST API renderer, swimlane layout math, OAuth, rendering
 pseudocode, and Cytoscape fallback.
 
-← Back to [CONTEXT.md](../CONTEXT.md)
+← Back to [README.md](../README.md)
+
+> **Disambiguation.** This document discusses *Miro's* MCP server (a
+> separate project Miro publishes for board access). It does **not**
+> cover DataRoot's own MCP server. For DataRoot's MCP server — the
+> stdio JSON-RPC server at `src/dataroot/mcp/server.py` that exposes
+> `ask_and_render` and seven other tools — see
+> [`docs/mcp-server.md`](mcp-server.md).
 
 ## 6.1 Why Miro
 
@@ -23,9 +30,13 @@ diagram generation, but we use REST for deterministic rendering.
 
 ## 6.2 Implementation path
 
-Use Miro REST API v2 directly (not MCP) as the implementation path.
+Use Miro REST API v2 directly (not Miro MCP) as the implementation
+path. The DataRoot MCP server's `ask_and_render` tool calls into this
+same REST renderer — `src/dataroot/render/miro.py` is the single Miro
+integration point regardless of how the question arrived (FastAPI
+panel, CLI, or DataRoot MCP).
 
-Reasons:
+Reasons we don't use Miro's MCP server:
 - Fewer moving parts than launching another MCP subprocess.
 - Bulk endpoints handle 20 items per call.
 - Precise positioning (swimlane layout) is straightforward via REST.
@@ -139,4 +150,4 @@ the same; only the rendering target changes.
 The fallback must work cleanly in the demo so a Miro outage doesn't
 kill the presentation.
 
-← Back to [CONTEXT.md](../CONTEXT.md)
+← Back to [README.md](../README.md)

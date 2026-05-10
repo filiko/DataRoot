@@ -1,0 +1,42 @@
+[
+  {
+    "inquiry_id": "B-INQ-001",
+    "received_date": "2026-04-16",
+    "requester_type": "product_team",
+    "target_profile": "fruit-forward citrus-like ester profile",
+    "fermentation_condition": "low temperature",
+    "desired_scale": "pilot",
+    "target_ready_by": "2026-05-15",
+    "notes": "Preference for strains with completed GC-MS assay and no active QC holds."
+  },
+  {
+    "inquiry_id": "B-INQ-002",
+    "received_date": "2026-04-19",
+    "requester_type": "brewing_partner",
+    "target_profile": "creamy lactic profile with low off-notes",
+    "fermentation_condition": "ambient temperature",
+    "desired_scale": "bench",
+    "target_ready_by": "2026-06-01",
+    "notes": "Customer wants balanced ester profile with minimal acetic acid carryover."
+  },
+  {
+    "inquiry_id": "B-INQ-003",
+    "received_date": "2026-04-23",
+    "requester_type": "food_ingredients",
+    "target_profile": "high organic acid production",
+    "fermentation_condition": "controlled pH",
+    "desired_scale": "pilot",
+    "target_ready_by": "2026-05-30",
+    "notes": "Focus on citric and malic acid for flavor enhancement applications."
+  },
+  {
+    "inquiry_id": "B-INQ-004",
+    "received_date": "2026-04-27",
+    "requester_type": "research_collaborator",
+    "target_profile": "banana ester profile with tropical fruit overtones",
+    "fermentation_condition": "low temperature",
+    "desired_scale": "bench",
+    "target_ready_by": "2026-06-15",
+    "notes": "No current strain fully satisfies this profile; partial candidates only."
+  }
+]

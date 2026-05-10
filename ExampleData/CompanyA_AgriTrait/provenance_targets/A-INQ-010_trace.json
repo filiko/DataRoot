@@ -1,0 +1,51 @@
+{
+  "question": "Looking for a bright citrus essential oil with high limonene and floral undertones. Customer wants a citrus blend with bright top notes for premium perfumery. Minimum 50kg yield needed for fall 2026 delivery.",
+  "inquiry_id": "A-INQ-010",
+  "stages": ["query", "compounds", "genes", "cultivars", "harvests", "inventory", "field_readiness", "answer"],
+  "nodes": [
+    {"id": "n1", "slug": "inquiries/A-INQ-010", "label": "A-INQ-010", "stage": "query", "description": "Customer inquiry: citrus essential oil blend with high limonene, floral undertones, >=50kg yield for fall 2026"},
+    {"id": "n2", "slug": "compounds/compounds.csv", "label": "A-CMP-001 (limonene)", "stage": "compounds", "description": "Monoterpene; CAS 138-86-3, PubChem CID 22311, ChEMBL CHEMBL17249; boiling point 176C; bright citrus odor"},
+    {"id": "n3", "slug": "compounds/compounds.csv", "label": "A-CMP-002 (linalool)", "stage": "compounds", "description": "Monoterpenoid alcohol; CAS 78-70-6, PubChem CID 20963; floral lavender; boiling point 198C"},
+    {"id": "n4", "slug": "compounds/compounds.csv", "label": "A-CMP-003 (citral)", "stage": "compounds", "description": "Monoterpene aldehyde mix; CAS 141-29-6 (geranial), 106-26-1 (neral); strong lemon; boiling point 229C"},
+    {"id": "n5", "slug": "compounds/gene_catalog.csv", "label": "A-GEN-TPS-LIM1", "stage": "genes", "description": "Limonene synthase; uniprot Q83955; produces A-CMP-001 via mevalonate pathway; PMID:10472364"},
+    {"id": "n6", "slug": "compounds/gene_catalog.csv", "label": "A-GEN-TPS-LIN1", "stage": "genes", "description": "Linalool synthase; uniprot Q8WPC1; produces A-CMP-002 via mevalonate pathway; PMID:12165183"},
+    {"id": "n7", "slug": "compounds/gene_catalog.csv", "label": "A-GEN-TPS-GER1", "stage": "genes", "description": "Geranial synthase; uniprot Q8WPC2; produces A-CMP-003 (citral) via mevalonate pathway; PMID:15660358"},
+    {"id": "n8", "slug": "registries/essential_oil_cultivars.csv", "label": "A-CUL-CIT-003 (Valencia Royale)", "stage": "cultivars", "description": "Citrus sinensis. Produces limonene 75%, valencene 3%, nootkatone 1%. Status: active, field_ready."},
+    {"id": "n9", "slug": "registries/essential_oil_cultivars.csv", "label": "A-CUL-CIT-001 (Tahitian Gold)", "stage": "cultivars", "description": "Citrus sinensis x paradisi hybrid. Produces limonene 72%, linalool 6%, citral 4%. Status: active, field_ready."},
+    {"id": "n10", "slug": "registries/essential_oil_cultivars.csv", "label": "A-CUL-CIT-002 (Meyer Lemon Select)", "stage": "cultivars", "description": "Citrus meyeri. Produces limonene 68%, citral 8%, linalool 5%. Status: active, field_ready. Does NOT meet >=70% limonene target."},
+    {"id": "n11", "slug": "harvest_logs/essential_oil_harvests.csv", "label": "A-HV-CIT-003-2025F", "stage": "harvests", "description": "Harvest from A-CUL-CIT-003, 2025-11-10. Limonene 74.8%, valencene 3.2%, nootkatone 0.9%. Oil yield 420ml."},
+    {"id": "n12", "slug": "harvest_logs/essential_oil_harvests.csv", "label": "A-HV-CIT-001-2025F", "stage": "harvests", "description": "Harvest from A-CUL-CIT-001, 2025-10-15. Limonene 72.3%, linalool 5.8%, citral 3.9%."},
+    {"id": "n13", "slug": "inventory/seed_inventory.csv", "label": "A-INV-OIL-001", "stage": "inventory", "description": "LOT-CIT-003-2025A: 45kg available (insufficient alone for 50kg request)"},
+    {"id": "n14", "slug": "field_ops/field_blocks.csv", "label": "A-FLD-BLOCK-15", "stage": "field_readiness", "description": "Texas Zone 8, sandy loam, 1200m2, ready, planting window 2026-04-20 to 2026-05-18"},
+    {"id": "n15", "slug": "registries/essential_oil_cultivars.csv", "label": "A-CUL-CIT-003 planting 2026", "stage": "field_readiness", "description": "A-CUL-CIT-003 planted 2026-03-01 in A-FLD-BLOCK-15. Expected harvest 2026-11-10."},
+    {"id": "n16", "slug": "expected_answers/A-INQ-010_expected_answer.md", "label": "Answer: Valencia Royale recommended", "stage": "answer", "description": "A-CUL-CIT-003 meets >=70% limonene target. 2026 harvest projected 55+ kg. Fall 2026 delivery feasible."}
+  ],
+  "edges": [
+    {"from": "n1", "to": "n2", "label": "requests compound", "evidence": "A-INQ-010.requested_compounds includes A-CMP-001 (limonene)"},
+    {"from": "n1", "to": "n3", "label": "requests compound", "evidence": "A-INQ-010.requested_compounds includes A-CMP-002 (linalool)"},
+    {"from": "n1", "to": "n4", "label": "requests compound", "evidence": "A-INQ-010.requested_compounds includes A-CMP-003 (citral)"},
+    {"from": "n2", "to": "n5", "label": "produced by gene", "evidence": "compounds.csv: producing_gene_ids = A-GEN-TPS-LIM1"},
+    {"from": "n3", "to": "n6", "label": "produced by gene", "evidence": "compounds.csv: producing_gene_ids = A-GEN-TPS-LIN1"},
+    {"from": "n4", "to": "n7", "label": "produced by gene", "evidence": "compounds.csv: producing_gene_ids = A-GEN-TPS-GER1"},
+    {"from": "n5", "to": "n8", "label": "gene in cultivar", "evidence": "cultivar A-CUL-CIT-003 has mevalonate pathway genes for limonene production; gene catalog references uniprot Q83955 (tomato homolog); same pathway in citrus"},
+    {"from": "n5", "to": "n9", "label": "gene in cultivar", "evidence": "cultivar A-CUL-CIT-001 produces limonene 72%"},
+    {"from": "n6", "to": "n9", "label": "gene in cultivar", "evidence": "cultivar A-CUL-CIT-001 produces linalool 6%"},
+    {"from": "n4", "to": "n10", "label": "gene in cultivar", "evidence": "cultivar A-CUL-CIT-002 produces citral 8%"},
+    {"from": "n8", "to": "n11", "label": "cultivar harvested", "evidence": "A-HV-CIT-003-2025F from A-CUL-CIT-003; limonene 74.8% confirmed"},
+    {"from": "n9", "to": "n12", "label": "cultivar harvested", "evidence": "A-HV-CIT-001-2025F from A-CUL-CIT-001; limonene 72.3% confirmed"},
+    {"from": "n11", "to": "n13", "label": "harvest to inventory", "evidence": "LOT-CIT-003-2025A: 45kg available oil from A-HV-CIT-003-2025F"},
+    {"from": "n8", "to": "n15", "label": "cultivar planted", "evidence": "A-CUL-CIT-003 planted A-FLD-BLOCK-15 on 2026-03-01"},
+    {"from": "n15", "to": "n14", "label": "planting location", "evidence": "A-FLD-BLOCK-15: 1200m2, sandy loam, ready, Texas Zone 8"},
+    {"from": "n15", "to": "n16", "label": "projected yield", "evidence": "Expected 55+ kg from 2026 harvest based on 2025 data (420ml from 115kg fresh). Planting March, harvest November 2026."}
+  ],
+  "provenance_summary": {
+    "primary_candidate": "A-CUL-CIT-003 (Valencia Royale)",
+    "confidence": "high",
+    "reasoning": "A-CUL-CIT-003 consistently produces 74-76% limonene (exceeding >=70% target), has field_ready status, and planted 2026 harvest in A-FLD-BLOCK-15 will yield 55+ kg, meeting the 50 kg minimum. The cultivar has harvest data confirming 74.8% limonene from 2025 season.",
+    "secondary_candidates": ["A-CUL-CIT-001 (Tahitian Gold) - 72.3% limonene, insufficient inventory alone but could blend"],
+    "insufficient_candidates": ["A-CUL-CIT-002 (Meyer Lemon Select) - only 67.5% limonene, does not meet primary requirement"],
+    "timeline": "Planting March 2026, harvest November 2026, delivery late November 2026 — meets fall 2026 request",
+    "genetic_testing": "Marker-assisted selection confirmed for limonene synthase genes in A-CUL-CIT-003. No further genotyping required.",
+    "literature_references": ["PMID:10472364 (limonene synthase)", "PMID:12165183 (linalool synthase)", "PMID:15660358 (citral biosynthesis)"]
+  }
+}

@@ -1,0 +1,55 @@
+[
+  {
+    "inquiry_id": "A-INQ-010",
+    "received_date": "2026-05-01",
+    "requester_type": "essential_oil_distributor",
+    "crop": "citrus",
+    "requested_compounds": ["A-CMP-001", "A-CMP-002", "A-CMP-003"],
+    "requested_blend_profile": "bright citrus with floral undertones, high in limonene, moderate linalool",
+    "region": "California Central Valley",
+    "desired_timeline": "fall harvest 2026",
+    "minimum_yield_kg": 50,
+    "target_concentration_pct": {
+      "limonene": ">= 70",
+      "linalool": ">= 5",
+      "citral": ">= 3"
+    },
+    "notes": "Customer wants a premium citrus essential oil blend with bright top notes and floral base. Requesting organic-certified material if available. Willing to pay premium for specified limonene content.",
+    "citation_pmid": "PMID:10472364",
+    "citation_doi": "10.1021/np9905146"
+  },
+  {
+    "inquiry_id": "A-INQ-011",
+    "received_date": "2026-05-03",
+    "requester_type": "flavor_compound_manufacturer",
+    "crop": "herb",
+    "requested_compounds": ["A-CMP-008", "A-CMP-014", "A-CMP-017"],
+    "requested_blend_profile": "cooling minty-eucalyptus with woody undertones",
+    "region": "Pacific Northwest",
+    "desired_timeline": "late summer 2026",
+    "minimum_yield_kg": 30,
+    "target_concentration_pct": {
+      "1,8-cineole": ">= 40",
+      "borneol": ">= 8",
+      "menthol": ">= 15"
+    },
+    "notes": "Looking for herbal extract for cooling ointment production. Need consistent 1,8-cineole content. Acceptable variants with different borneol/menthol ratios."
+  },
+  {
+    "inquiry_id": "A-INQ-012",
+    "received_date": "2026-05-05",
+    "requester_type": "fragrance_house",
+    "crop": "rose",
+    "requested_compounds": ["A-CMP-006", "A-CMP-027", "A-CMP-023"],
+    "requested_blend_profile": "deep floral rose with green undertones",
+    "region": "Gulf Coast Texas",
+    "desired_timeline": "spring 2027",
+    "minimum_yield_kg": 25,
+    "target_concentration_pct": {
+      "geraniol": ">= 30",
+      "farnesol": ">= 10",
+      "beta-damascenone": ">= 2"
+    },
+    "notes": "Premium rose absolute for perfumery. Looking for TFPA-compliant cultivars suitable for Texas climate. Long-term supply relationship wanted."
+  }
+]

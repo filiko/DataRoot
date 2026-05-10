@@ -1,6 +1,6 @@
 ---
 purpose: How the three agent roles work, the runner, and the prompts.
-prerequisites: CONTEXT.md, docs/architecture.md
+prerequisites: README.md, docs/architecture.md
 read-when: Building the agent layer, writing prompts, understanding tool scoping.
 ---
 
@@ -9,7 +9,46 @@ read-when: Building the agent layer, writing prompts, understanding tool scoping
 How DataRoot's three agent roles work, the single runner, the
 prompt structure, and failure-mode handling.
 
-← Back to [CONTEXT.md](../CONTEXT.md)
+← Back to [README.md](../README.md)
+
+## Agents Track at a glance
+
+This file is the canonical reference for DataRoot's submission to the
+**Agents Track**. The autonomous behavior is concentrated in three places:
+
+| File                                     | What it does                                                   |
+|------------------------------------------|----------------------------------------------------------------|
+| `src/dataroot/agent/runner.py`           | The single tool-calling loop — prompt → model → tool → repeat. |
+| `src/dataroot/agent/tools.py`            | The `ToolExecutor` that dispatches every tool the agent calls. |
+| `src/dataroot/agent/tool_sets.py`        | Per-role tool allowlists (Role A / B / C have different scopes).|
+| `src/dataroot/agent/prompts/*.md`        | Hand-authored system prompts; one file per role.               |
+| `src/dataroot/query.py`                  | `answer_question` — the high-level entry point Role C runs.    |
+| `src/dataroot/render/miro.py`            | The agent's external-system effect: writing a Miro board.      |
+
+### What makes it more than a chatbot
+
+- **Plans across multi-hop graphs.** The Query Agent calls `kb_search` →
+  `kb_graph` → `query_table` → `find_candidate_paths` in whatever order the
+  question demands; tool order is decided by the model, not hardcoded.
+- **Recovers from missing data.** When a path can't be found, the prompt
+  forces an explicit "lineage gap" admission rather than fabrication; the
+  deterministic fallback in `src/dataroot/query.py` takes over so the user
+  always gets a cited answer.
+- **Two effects on external systems.** Each turn ends by writing
+  `inquiries/<timestamp>` and a provenance trace into GitKB, then calling
+  the Miro REST API to render the trace as a board the user can interact
+  with. The agent's output is observable, not just chat.
+- **Scoped autonomy.** Roles A and B are write-capable but only inside
+  `.dataroot/` and the KB; Role C is read-only against the KB and append-
+  only against `inquiries/`. The tool allowlists in `tool_sets.py` enforce
+  this — the model can't escape its scope by asking nicely.
+- **Deterministic fallback for every LLM step.** `interpretation.py` and
+  `miro_plan.py` both ship deterministic implementations the agent falls
+  back to if `OPENAI_API_KEY` is missing or the model errors. The system
+  degrades gracefully instead of failing.
+
+For the same loop exposed as MCP tools (the Texas Open Data Track artifact),
+see `docs/mcp-server.md`.
 
 ## 4.0 Agent runtime architecture
 
@@ -227,4 +266,4 @@ Failure modes:
 </provenance>
 ```
 
-← Back to [CONTEXT.md](../CONTEXT.md)
+← Back to [README.md](../README.md)

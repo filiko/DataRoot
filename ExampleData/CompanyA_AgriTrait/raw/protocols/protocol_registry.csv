@@ -1,0 +1,5 @@
+Protocol Code,Protocol Name,Version,Date,Department,Supersedes,Status,Confidential,Language
+A-PROT-001,Gh Drydown Assay,2.1,2026-01-10,Phenotyping,1.8,ACTIVE,No,EN
+A-PROT-002,PMR Pathogen Challenge,1.4,2026-01-15,Pathology,1.2,ACTIVE,No,EN
+A-PROT-003,Marker Genotyping PCR,3.0,2026-02-01,Molecular,2.1,ACTIVE,No,EN
+A-PROT-004,Field Readiness Review,1.8,2026-03-01,Operations,1.5,ACTIVE,No,EN

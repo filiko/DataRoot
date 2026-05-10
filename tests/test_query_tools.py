@@ -85,6 +85,20 @@ class QueryToolTests(unittest.TestCase):
             self.assertIn("B-STR-YE-021", answer)
             self.assertIn("<provenance>", answer)
 
+    def test_company_b_capacity_question_handles_typo(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            repo_root = Path(__file__).resolve().parents[1]
+            data_root = repo_root / "ExampleData" / "CompanyB_Fermentation" / "raw"
+            store = LocalMarkdownStore(Path(temp_dir) / "kb")
+            profile_workspace(data_root, store)
+
+            answer = answer_question(store, "do we have the capacity to run another fermnation product")
+
+            self.assertIn("fermentation-side availability", answer)
+            self.assertIn("200 L capacity", answer)
+            self.assertIn("[citation: row_groups/bioreactor_ops/bioreactor_schedule.csv/b-br-r4]", answer)
+            self.assertIn("<provenance>", answer)
+
 
 def _profile_water_quality(temp_dir: Path) -> LocalMarkdownStore:
     repo_root = Path(__file__).resolve().parents[1]

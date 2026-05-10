@@ -1,0 +1,6 @@
+Report_ID,Field_Block,Report_Date,Analyst,Department,Soil_Type,Organic_Matter_pct,pH,Bulk_Density_g_cm3,AWC_cm_cm,Nitrogen_ppm,Phosphorus_ppm,Potassium_ppm,Calcium_ppm,Magnesium_ppm,Fusarium_detected,Verticillium_detected,Nematode_eggs_100cm3,Status,Notes,Next_Review_Date,Reviewed_By
+SOIL-RPT-2026-033,A-FLD-BLOCK-3,2026-03-25,DrEVargas,Soil Sciences,sandy_loam,2.8,7.2,1.34,0.18,48,32,180,950,145,No,Very Low (acceptable),<100,Ready for spring planting,No corrective fertilization needed,2026-04-18,DrEVargas
+SOIL-RPT-2026-034,A-FLD-BLOCK-1,2026-03-20,DrEVargas,Soil Sciences,sandy_loam,2.5,7.1,1.38,0.17,45,28,165,890,138,No,Not detected,<100,Ready for spring planting,Primary drought trial block,2026-04-15,DrEVargas
+SOIL-RPT-2026-035,A-FLD-BLOCK-2,2026-03-22,DrEVargas,Soil Sciences,clay_loam,3.1,6.8,1.28,0.20,52,35,195,1100,165,No,Not detected,<100,Limited irrigation,Heat stress zone - supplemental water only,2026-04-10,DrEVargas
+SOIL-RPT-2026-036,A-FLD-BLOCK-4,2026-02-18,DrEVargas,Soil Sciences,organic_muck,4.2,6.5,1.15,0.25,68,42,220,1350,210,No,Low,120,Ready for spring planting,High humidity - disease pressure block,2026-04-05,DrEVargas
+SOIL-RPT-2026-037,A-FLD-BLOCK-6,2026-03-10,DrEVargas,Soil Sciences,clay,2.9,6.9,1.32,0.19,55,38,188,1020,158,No,Moderate,<200,Ready for planting,Nematode pressure known - use resistant cultivars,2026-04-01,DrEVargas

@@ -1,0 +1,9 @@
+media_id,name,carbon_source,nitrogen_source,temperature_range_c,compatible_profile_ids,notes
+B-MEDIA-EST-04,LowTemp Ester Media,glucose,yeast_extract,12-16,B-PROF-EST-01,"Used for low-temp ester production screens"
+B-MEDIA-BAN-01,Banana Ester Media,glucose,yeast_extract,16-20,B-PROF-BANANA-04,"Optimized for isoamyl acetate production"
+B-MEDIA-FLOR-01,Floral Ester Media,glucose,yeast_extract,16-20,B-PROF-FLORAL-05,"Supports geraniol/citronellol production"
+B-MEDIA-CIT-01,Citrus Terpene Media,glucose,yeast_extract,14-18,B-PROF-CITRUS-06,"Citrus terpene enhancing conditions"
+B-MEDIA-LACT-02,Lactic Acid Media,glucose,yeast_extract,28-32,B-PROF-LACTIC-02,"Lactobacillus compatible lactic production"
+B-MEDIA-ORGANIC-01,Organic Acid Media,glucose,yeast_extract,28-34,B-PROF-ORGANIC-03,"High organic acid titers"
+B-MEDIA-LACT-03,Balanced Ester-Lactic,glucose,yeast_extract,20-24,B-PROF-LACTIC-02,"Mixed profile optimization"
+B-MEDIA-VAN-01,Vanillin Ester Media,glucose,yeast_extract,18-22,other,"Early stage vanilla compound production"

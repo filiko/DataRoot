@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import os
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from dataroot.kb.local_store import LocalMarkdownStore
 from dataroot.link import link_workspace
@@ -104,6 +106,70 @@ class ProfileLinkTests(unittest.TestCase):
             self.assertEqual(len(single_rows), MAX_ROW_DOCS_PER_TABLE)
             self.assertEqual(len(chunk_rows), 1)
             self.assertEqual(chunk_rows[0].frontmatter["row_count"], 3)
+
+
+class AddressJoinTests(unittest.TestCase):
+    def test_address_join_disabled_by_default(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir) / "data"
+            root.mkdir()
+            (root / "permits.csv").write_text(
+                "permit_id,address\n"
+                "BP-1,1623 S LAMAR BOULEVARD\n",
+                encoding="utf-8",
+            )
+            (root / "complaints.csv").write_text(
+                "case_task_id,address\n"
+                "CMP-1,1623 S Lamar Blvd\n",
+                encoding="utf-8",
+            )
+            store = LocalMarkdownStore(Path(temp_dir) / "kb")
+
+            profile_workspace(root, store)
+            with mock.patch.dict(os.environ, {"DATAROOT_LINK_ADDRESS_JOIN": "0"}, clear=False):
+                link_workspace(store)
+
+            relationships = store.list(doc_type="relationship")
+            self.assertFalse(
+                any(r.frontmatter.get("relationship_type") == "shared_address" for r in relationships),
+                "address relationships must not appear when the env flag is off",
+            )
+
+    def test_address_join_links_variant_formats(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir) / "data"
+            root.mkdir()
+            (root / "permits.csv").write_text(
+                "permit_id,address\n"
+                "BP-1,1623 S LAMAR BOULEVARD\n"
+                "BP-2,7010 EASY WIND DR UNIT 130\n",
+                encoding="utf-8",
+            )
+            (root / "complaints.csv").write_text(
+                "case_task_id,address\n"
+                "CMP-1,1623 S Lamar Blvd.\n"
+                "CMP-2,7010 Easy Wind Drive\n",
+                encoding="utf-8",
+            )
+            store = LocalMarkdownStore(Path(temp_dir) / "kb")
+
+            profile_workspace(root, store)
+            with mock.patch.dict(os.environ, {"DATAROOT_LINK_ADDRESS_JOIN": "1"}, clear=False):
+                link_workspace(store)
+
+            relationships = store.list(doc_type="relationship")
+            address_rels = [r for r in relationships if r.frontmatter.get("relationship_type") == "shared_address"]
+            keys = {r.frontmatter.get("address_key") for r in address_rels}
+            self.assertIn("1623 S LAMAR BLVD", keys)
+            self.assertIn("7010 EASY WIND DR", keys)
+
+            for rel in address_rels:
+                docs = rel.frontmatter.get("documents") or []
+                tables = {doc.split("/")[1] for doc in docs if "/" in doc}
+                self.assertGreaterEqual(
+                    len(tables), 2,
+                    f"address relationship {rel.slug} must span at least two source tables",
+                )
 
 
 if __name__ == "__main__":

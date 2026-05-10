@@ -34,40 +34,95 @@ STORY_FRAME_W = 3200
 STORY_FRAME_GAP = 80
 STORY_HEADER_H = 300
 STORY_FLOW_H = 360
-STORY_LANE_W = 760
+STORY_LANE_W = 860
 STORY_LANE_H = 980
 STORY_AUDIT_H = 280
-STORY_CARD_W = 520
-STORY_CARD_H = 118
-STORY_CARD_GAP = 42
+STORY_CARD_W = 640
+STORY_CARD_H = 176
+STORY_CARD_GAP = 52
 DEMO_SECTION_W = 3200
 DEMO_SECTION_MIN_H = 2060
 DEMO_SECTION_GAP = 140
-DEMO_TOP_FRAME_H = 680
-DEMO_FLOW_Y = 190
-DEMO_QUESTION_X = 360
-DEMO_RETRIEVAL_X = 1120
-DEMO_EVIDENCE_X = 1880
-DEMO_ANSWER_Y = 500
-DEMO_FLOW_SHAPE_W = 560
-DEMO_FLOW_SHAPE_H = 136
-DEMO_ANSWER_SHAPE_H = 176
-DEMO_EVIDENCE_CARD_W = 520
-DEMO_EVIDENCE_CARD_H = 126
+DEMO_TOP_FRAME_H = 760
+DEMO_FLOW_Y = 270
+DEMO_QUESTION_X = 390
+DEMO_RETRIEVAL_X = 1180
+DEMO_EVIDENCE_X = 1970
+DEMO_ANSWER_Y = 590
+DEMO_FLOW_SHAPE_W = 640
+DEMO_FLOW_SHAPE_H = 170
+DEMO_ANSWER_SHAPE_H = 300
+DEMO_EVIDENCE_CARD_W = 640
+DEMO_EVIDENCE_CARD_H = 220
 DEMO_EVIDENCE_CARD_GAP_X = 70
-DEMO_EVIDENCE_CARD_GAP_Y = 42
+DEMO_EVIDENCE_CARD_GAP_Y = 52
 DEMO_EVIDENCE_TOP = 500
 DEMO_EVIDENCE_LEFT = 1020
 DEMO_EVIDENCE_COLUMNS = 3
 DEMO_AUDIT_H = 150
 DEMO_PROOF_MIN_H = 260
-DEMO_PROOF_ROW_H = 72
+DEMO_PROOF_ROW_H = 84
+DEMO_FLOW_FONT_SIZE = 24
+DEMO_CARD_FONT_SIZE = 20
+DEMO_TEXT_FONT_SIZE = 20
+DEMO_TITLE_FONT_SIZE = 30
+DEMO_TITLE_X = 960
+DEMO_TITLE_Y = 70
+DEMO_TITLE_W = 1760
+DEMO_SYMBOL_Y = 155
+DEMO_SYMBOL_W = 116
+DEMO_SYMBOL_H = 82
+DEMO_VISUAL_X = 2770
+DEMO_VISUAL_Y = 245
+DEMO_VISUAL_W = 520
+DEMO_VISUAL_H = 245
+DEMO_LEGEND_X = 2770
+DEMO_LEGEND_Y = 530
+DEMO_LEGEND_W = 520
+DEMO_LEGEND_H = 145
+DEMO_ASK_INPUT_X = DEMO_RETRIEVAL_X
+DEMO_ASK_INPUT_Y = DEMO_ANSWER_Y
+DEMO_ASK_INPUT_W = DEMO_FLOW_SHAPE_W
+DEMO_ASK_INPUT_LABEL = "Type your question here:"
+DEMO_ASK_INPUT_DEFAULT_QUESTION = ""
+DEMO_ASK_INPUT_HTML = (
+    f"<p><strong>{html.escape(DEMO_ASK_INPUT_LABEL)}</strong></p>"
+    f"<p>{html.escape(DEMO_ASK_INPUT_DEFAULT_QUESTION)}</p>"
+)
+DEMO_LIVE_ASK_RUN_X = 2770
+DEMO_LIVE_ASK_RUN_Y = 625
+DEMO_LIVE_ASK_RUN_W = 520
+DEMO_LIVE_ASK_RUN_H = 112
+DEMO_LIVE_ASK_RUN_HTML = (
+    "<p><strong>DataRoot Run Live Ask</strong></p>"
+    "<p><small>Root submit action</small></p>"
+)
+DEMO_PROOF_FRAME_TITLE = "Sources / Precise Proof"
 FIXED_FLOW_TITLES = {
     "question": "Question",
     "retrieval": "GitKB retrieval",
     "evidence": "Evidence Path",
     "answer": "Final Answer",
 }
+DEMO_FLOW_CONNECTORS = (
+    ("question", "answer", "answers", "bottom", "top"),
+    ("question", "retrieval", "asks", "right", "left"),
+    ("retrieval", "evidence", "retrieves", "right", "left"),
+    ("evidence", "answer", "grounds", "bottom", "right"),
+)
+DEMO_ASK_INPUT_PLACEHOLDERS = {
+    "",
+    "type your question here",
+    "type your question here:",
+    "ask your question",
+    "enter your question",
+    "what specific genes make solara-14 powdery mildew resistant?",
+}
+STORY_FLOW_CONNECTORS = (
+    ("question", "retrieval", "asks", "right", "left"),
+    ("retrieval", "evidence", "retrieves", "right", "left"),
+    ("evidence", "answer", "answers", "right", "left"),
+)
 
 STAGE_COLORS = {
     "query": "#d0e8ff",
@@ -85,6 +140,25 @@ STAGE_COLORS = {
     "bioreactor": "#ffd6e7",
     "row_group": "#eaeaea",
     "evidence": "#eaeaea",
+}
+
+ICONIFY_BASE = "https://api.iconify.design"
+FLOW_ICON_URLS = {
+    "files": f"{ICONIFY_BASE}/material-symbols/folder-data-rounded.svg?color=%23175cd3",
+    "kb":    f"{ICONIFY_BASE}/material-symbols/hub-rounded.svg?color=%236941c6",
+    "agent": f"{ICONIFY_BASE}/material-symbols/smart-toy-rounded.svg?color=%23b54708",
+    "proof": f"{ICONIFY_BASE}/material-symbols/fact-check-rounded.svg?color=%23027a48",
+}
+PICTOGRAM_ICON_URLS = {
+    "sprout": f"{ICONIFY_BASE}/mdi/sprout.svg?color=%23079455",
+    "scope":  f"{ICONIFY_BASE}/mdi/microscope.svg?color=%231570ef",
+    "dna":    f"{ICONIFY_BASE}/mdi/dna.svg?color=%237f56d9",
+    "flask":  f"{ICONIFY_BASE}/mdi/flask-round-bottom.svg?color=%23026aa2",
+    "tube":   f"{ICONIFY_BASE}/mdi/test-tube.svg?color=%23b54708",
+    "check":  f"{ICONIFY_BASE}/mdi/check-circle-outline.svg?color=%23027a48",
+    "files":  f"{ICONIFY_BASE}/mdi/file-multiple.svg?color=%23175cd3",
+    "graph":  f"{ICONIFY_BASE}/mdi/graph.svg?color=%236941c6",
+    "cert":   f"{ICONIFY_BASE}/mdi/file-certificate.svg?color=%23027a48",
 }
 
 MIRO_ACCESS_TOKEN_PLACEHOLDERS = {
@@ -154,22 +228,47 @@ class MiroClient:
         border_color: str = "#1a1a1a",
         border_width: int = 2,
         font_size: int = 14,
+        shape: str = "rectangle",
+        text_align: str = "center",
+        text_align_vertical: str = "middle",
+        text_color: str = "#1a1a1a",
     ) -> str:
         payload = {
-            "data": {"shape": "rectangle", "content": content},
+            "data": {"shape": shape, "content": content},
             "style": {
                 "fillColor": fill_color,
                 "borderColor": border_color,
                 "borderWidth": border_width,
                 "fontSize": font_size,
-                "textAlign": "center",
-                "textAlignVertical": "middle",
+                "textAlign": text_align,
+                "textAlignVertical": text_align_vertical,
+                "color": text_color,
             },
             "geometry": {"width": w, "height": h},
             "position": {"x": x, "y": y, "origin": "center"},
             "parent": {"id": parent_id},
         }
         return self._created_id(self._request("POST", f"/boards/{board_id}/shapes", json=payload))
+
+    def create_image(
+        self,
+        board_id: str,
+        *,
+        image_url: str,
+        title: str,
+        x: float,
+        y: float,
+        w: float,
+        h: float,
+        parent_id: str,
+    ) -> str:
+        payload = {
+            "data": {"url": image_url, "title": title},
+            "geometry": {"width": w},
+            "position": {"x": x, "y": y, "origin": "center"},
+            "parent": {"id": parent_id},
+        }
+        return self._created_id(self._request("POST", f"/boards/{board_id}/images", json=payload))
 
     def create_sticky(
         self,
@@ -201,21 +300,34 @@ class MiroClient:
         y: float,
         w: float,
         parent_id: str,
+        font_size: int = 14,
+        color: str = "#1a1a1a",
+        text_align: str = "left",
     ) -> str:
         payload = {
             "data": {"content": content},
-            "style": {"color": "#1a1a1a", "fontSize": 14},
+            "style": {"color": color, "fontSize": font_size, "textAlign": text_align},
             "geometry": {"width": w},
             "position": {"x": x, "y": y, "origin": "center"},
             "parent": {"id": parent_id},
         }
         return self._created_id(self._request("POST", f"/boards/{board_id}/texts", json=payload))
 
-    def create_connector(self, board_id: str, *, start_id: str, end_id: str, caption: str) -> str:
+    def create_connector(
+        self,
+        board_id: str,
+        *,
+        start_id: str,
+        end_id: str,
+        caption: str,
+        shape: str = "elbowed",
+        start_snap_to: str = "auto",
+        end_snap_to: str = "auto",
+    ) -> str:
         payload = {
-            "startItem": {"id": start_id, "snapTo": "auto"},
-            "endItem": {"id": end_id, "snapTo": "auto"},
-            "shape": "straight",
+            "startItem": {"id": start_id, "snapTo": start_snap_to},
+            "endItem": {"id": end_id, "snapTo": end_snap_to},
+            "shape": shape,
             "captions": [{"content": caption}] if caption else [],
             "style": {"strokeColor": "#1a1a1a", "strokeWidth": 2, "endStrokeCap": "arrow"},
         }
@@ -235,10 +347,27 @@ class MiroClient:
         if payload:
             self._request("PATCH", f"/boards/{board_id}/texts/{text_id}", json=payload)
 
-    def update_connector(self, board_id: str, connector_id: str, *, caption: str | None = None) -> None:
+    def update_connector(
+        self,
+        board_id: str,
+        connector_id: str,
+        *,
+        caption: str | None = None,
+        shape: str | None = None,
+        start_id: str | None = None,
+        end_id: str | None = None,
+        start_snap_to: str | None = None,
+        end_snap_to: str | None = None,
+    ) -> None:
         payload: dict[str, Any] = {}
         if caption is not None:
             payload["captions"] = [{"content": caption}] if caption else []
+        if shape is not None:
+            payload["shape"] = shape
+        if start_id is not None:
+            payload["startItem"] = _connector_endpoint_payload(start_id, start_snap_to)
+        if end_id is not None:
+            payload["endItem"] = _connector_endpoint_payload(end_id, end_snap_to)
         if payload:
             self._request("PATCH", f"/boards/{board_id}/connectors/{connector_id}", json=payload)
 
@@ -363,12 +492,44 @@ def _item_content(item: dict) -> str:
     return str(data.get("content") or item.get("content") or "")
 
 
+def plain_miro_item_text(item: dict) -> str:
+    """Return readable text from a Miro item content payload."""
+
+    return " ".join(re.sub(r"<[^>]+>", " ", html.unescape(_item_content(item))).split())
+
+
+def is_live_ask_question_input(item: dict) -> bool:
+    return DEMO_ASK_INPUT_LABEL.lower() in plain_miro_item_text(item).lower()
+
+
+def extract_live_ask_question_text(item: dict) -> str:
+    text = plain_miro_item_text(item).strip()
+    if not text:
+        return ""
+
+    label_match = re.search(re.escape(DEMO_ASK_INPUT_LABEL), text, flags=re.IGNORECASE)
+    if label_match:
+        text = text[label_match.end() :]
+
+    question = text.strip(" \t\r\n:-")
+    if question.lower() in DEMO_ASK_INPUT_PLACEHOLDERS:
+        return ""
+    return question
+
+
 def _connector_endpoint_ids(item: dict) -> tuple[str, str]:
     endpoints = []
     for key in ("startItem", "endItem"):
         endpoint = item.get(key) or {}
         endpoints.append(str(endpoint.get("id") or ""))
     return (endpoints[0], endpoints[1])
+
+
+def _connector_endpoint_payload(item_id: str, snap_to: str | None) -> dict[str, str]:
+    payload = {"id": item_id}
+    if snap_to is not None:
+        payload["snapTo"] = snap_to
+    return payload
 
 
 def render_provenance_to_miro(
@@ -408,7 +569,7 @@ def render_provenance_to_miro(
         render_metadata["proof_included"] = "true" if include_proof else "false"
     title = section_title or plan.context_label
     if update_existing_section:
-        _update_demo_section(
+        section_status = _update_demo_section(
             client,
             board_id,
             plan,
@@ -429,6 +590,51 @@ def render_provenance_to_miro(
             provenance_slug=provenance_slug,
             include_proof=include_proof,
         )
+        section_status = "created"
+    if render_metadata is not None:
+        render_metadata["section_status"] = section_status
+    return f"https://miro.com/app/board/{board_id}/"
+
+
+def clear_live_ask_section_to_miro(
+    *,
+    board_id: str | None = None,
+    section_title: str,
+    client: MiroClient | None = None,
+) -> str:
+    """Clear the visible Live Ask answer state while preserving the board input."""
+
+    token = miro_access_token_from_env()
+    if client is None and not token:
+        raise RuntimeError("MIRO_ACCESS_TOKEN is required to clear Live Ask state.")
+
+    board_id = board_id or os.environ.get("MIRO_BOARD_ID")
+    if not board_id:
+        raise RuntimeError("MIRO_BOARD_ID is required unless --board-id is provided.")
+
+    client = client or MiroClient(token=token or "")
+    section = _find_section_frame(client, board_id, section_title)
+    section_id = _item_id(section)
+    items = list(client.list_items(board_id))
+    frames = list(client.list_frames(board_id))
+    connectors = _list_connectors_or_empty(client, board_id)
+    children = [item for item in items if _parent_id(item) == section_id]
+    flow_ids = _fixed_flow_shape_ids(children)
+    missing = [FIXED_FLOW_TITLES[key] for key in ("question", "retrieval", "evidence", "answer") if key not in flow_ids]
+    if missing:
+        raise RuntimeError(f"Live Ask section is missing fixed board state cards: {', '.join(missing)}")
+
+    for key in ("question", "retrieval", "evidence", "answer"):
+        client.update_shape(board_id, flow_ids[key], content=_flow_html(FIXED_FLOW_TITLES[key], ""))
+
+    _delete_dynamic_section_area(
+        client,
+        board_id,
+        section=section,
+        frames=frames,
+        items=items,
+        connectors=connectors,
+    )
     return f"https://miro.com/app/board/{board_id}/"
 
 
@@ -452,13 +658,40 @@ def _render_demo_section(
         w=total_width,
         h=DEMO_TOP_FRAME_H,
     )
-    flow_ids = _render_demo_skeleton(client, board_id, plan, section_id)
-    _render_demo_segments(
+    selected_support_cards = _selected_answer_support_cards(plan)
+    _record_answer_support_audit(plan, selected_support_cards)
+    top_x_offset = _demo_top_x_offset(total_width)
+    flow_ids = _render_demo_skeleton(client, board_id, plan, section_id, x_offset=top_x_offset)
+    _ensure_demo_story_items(
+        client,
+        board_id,
+        plan,
+        section_title=section_title,
+        section_id=section_id,
+        children=[],
+        x_offset=top_x_offset,
+    )
+    _ensure_live_ask_question_input(
+        client,
+        board_id,
+        section_title=section_title,
+        section_id=section_id,
+        children=[],
+        x_offset=top_x_offset,
+    )
+    evidence_shape_ids = _render_demo_segments(
         client,
         board_id,
         plan,
         group_top=group_top,
         total_width=total_width,
+    )
+    _render_answer_support_connectors(
+        client,
+        board_id,
+        evidence_shape_ids=evidence_shape_ids,
+        selected_support_cards=selected_support_cards,
+        answer_shape_id=flow_ids["answer"],
     )
     if include_proof:
         _render_precise_proof_frame(
@@ -481,8 +714,22 @@ def _update_demo_section(
     section_title: str,
     provenance_slug: str | None,
     include_proof: bool,
-) -> None:
-    section = _find_section_frame(client, board_id, section_title)
+) -> str:
+    section = _find_section_frame_or_none(client, board_id, section_title)
+    if section is None:
+        group_top = _next_group_top(client, board_id)
+        _render_demo_section(
+            client,
+            board_id,
+            plan,
+            trace=trace,
+            section_title=section_title,
+            group_top=group_top,
+            provenance_slug=provenance_slug,
+            include_proof=include_proof,
+        )
+        return "created"
+
     section_id = _item_id(section)
     items = list(client.list_items(board_id))
     frames = list(client.list_frames(board_id))
@@ -491,15 +738,53 @@ def _update_demo_section(
     flow_ids = _fixed_flow_shape_ids(children)
     missing = [FIXED_FLOW_TITLES[key] for key in ("question", "retrieval", "evidence", "answer") if key not in flow_ids]
     if missing:
-        raise RuntimeError(
-            f'Miro section "{section_title}" is missing fixed flow shape(s): {", ".join(missing)}. '
-            "Run dataroot miro-refresh-board before live asks."
+        section_top = _item_top_global(section)
+        _delete_demo_section_area(
+            client,
+            board_id,
+            section=section,
+            frames=frames,
+            items=items,
+            connectors=connectors,
         )
+        _render_demo_section(
+            client,
+            board_id,
+            plan,
+            trace=trace,
+            section_title=section_title,
+            group_top=section_top,
+            provenance_slug=provenance_slug,
+            include_proof=include_proof,
+        )
+        return "repaired"
 
+    selected_support_cards = _selected_answer_support_cards(plan)
+    _record_answer_support_audit(plan, selected_support_cards)
+    total_width = _demo_section_width(plan)
+    top_x_offset = _demo_top_x_offset(total_width)
     client.update_shape(board_id, flow_ids["question"], content=_demo_question_html(plan))
     client.update_shape(board_id, flow_ids["retrieval"], content=_demo_retrieval_html(plan))
     client.update_shape(board_id, flow_ids["evidence"], content=_demo_evidence_html(plan))
     client.update_shape(board_id, flow_ids["answer"], content=_demo_answer_html(plan))
+    _ensure_demo_story_items(
+        client,
+        board_id,
+        plan,
+        section_title=section_title,
+        section_id=section_id,
+        children=children,
+        x_offset=top_x_offset,
+    )
+    _ensure_live_ask_question_input(
+        client,
+        board_id,
+        section_title=section_title,
+        section_id=section_id,
+        children=children,
+        x_offset=top_x_offset,
+    )
+    _normalize_demo_flow_connectors(client, board_id, flow_ids, connectors)
 
     _delete_dynamic_section_area(
         client,
@@ -510,13 +795,19 @@ def _update_demo_section(
         connectors=connectors,
     )
     section_top = _item_top_global(section)
-    total_width = _demo_section_width(plan)
-    _render_demo_segments(
+    evidence_shape_ids = _render_demo_segments(
         client,
         board_id,
         plan,
         group_top=section_top,
         total_width=total_width,
+    )
+    _render_answer_support_connectors(
+        client,
+        board_id,
+        evidence_shape_ids=evidence_shape_ids,
+        selected_support_cards=selected_support_cards,
+        answer_shape_id=flow_ids["answer"],
     )
     if include_proof:
         _render_precise_proof_frame(
@@ -528,66 +819,578 @@ def _update_demo_section(
             group_top=section_top,
             total_width=total_width,
         )
+    return "updated"
 
 
-def _render_demo_skeleton(client: MiroClient, board_id: str, plan: BoardPlan, section_id: str) -> dict[str, str]:
+def _render_demo_skeleton(
+    client: MiroClient,
+    board_id: str,
+    plan: BoardPlan,
+    section_id: str,
+    *,
+    x_offset: float = 0,
+) -> dict[str, str]:
     ids = {
         "question": client.create_shape(
             board_id,
             content=_demo_question_html(plan),
-            x=DEMO_QUESTION_X,
+            x=x_offset + DEMO_QUESTION_X,
             y=DEMO_FLOW_Y,
             w=DEMO_FLOW_SHAPE_W,
             h=DEMO_FLOW_SHAPE_H,
             fill_color="#d0e8ff",
             parent_id=section_id,
             border_color="#33415f",
-            font_size=16,
+            border_width=3,
+            font_size=DEMO_FLOW_FONT_SIZE,
+            shape="round_rectangle",
+            text_align="left",
         ),
         "retrieval": client.create_shape(
             board_id,
             content=_demo_retrieval_html(plan),
-            x=DEMO_RETRIEVAL_X,
+            x=x_offset + DEMO_RETRIEVAL_X,
             y=DEMO_FLOW_Y,
             w=DEMO_FLOW_SHAPE_W,
             h=DEMO_FLOW_SHAPE_H,
             fill_color="#e8d4f5",
             parent_id=section_id,
             border_color="#33415f",
-            font_size=16,
+            border_width=3,
+            font_size=DEMO_FLOW_FONT_SIZE,
+            shape="round_rectangle",
+            text_align="left",
         ),
         "evidence": client.create_shape(
             board_id,
             content=_demo_evidence_html(plan),
-            x=DEMO_EVIDENCE_X,
+            x=x_offset + DEMO_EVIDENCE_X,
             y=DEMO_FLOW_Y,
             w=DEMO_FLOW_SHAPE_W,
             h=DEMO_FLOW_SHAPE_H,
             fill_color="#fffac8",
             parent_id=section_id,
             border_color="#33415f",
-            font_size=16,
+            border_width=3,
+            font_size=DEMO_FLOW_FONT_SIZE,
+            shape="round_rectangle",
+            text_align="left",
         ),
         "answer": client.create_shape(
             board_id,
             content=_demo_answer_html(plan),
-            x=DEMO_QUESTION_X,
+            x=x_offset + DEMO_QUESTION_X,
             y=DEMO_ANSWER_Y,
             w=DEMO_FLOW_SHAPE_W,
             h=DEMO_ANSWER_SHAPE_H,
             fill_color="#d4f5d4",
             parent_id=section_id,
             border_color="#33415f",
-            font_size=16,
+            border_width=3,
+            font_size=DEMO_FLOW_FONT_SIZE,
+            shape="round_rectangle",
+            text_align="left",
         ),
     }
-    for source, target, label in [
-        ("question", "retrieval", "asks"),
-        ("retrieval", "evidence", "retrieves"),
-        ("evidence", "answer", "answers"),
-    ]:
-        client.create_connector(board_id, start_id=ids[source], end_id=ids[target], caption=label)
+    _render_demo_flow_connectors(client, board_id, ids)
     return ids
+
+
+def _ensure_demo_story_items(
+    client: MiroClient,
+    board_id: str,
+    plan: BoardPlan,
+    *,
+    section_title: str,
+    section_id: str | None,
+    children: list[dict],
+    x_offset: float = 0,
+) -> None:
+    if not section_id:
+        return
+    if not any(_is_demo_title_item(item) for item in children):
+        client.create_text(
+            board_id,
+            content=_demo_title_html(plan, section_title=section_title),
+            x=x_offset + DEMO_TITLE_X,
+            y=DEMO_TITLE_Y,
+            w=DEMO_TITLE_W,
+            parent_id=section_id,
+            font_size=DEMO_TITLE_FONT_SIZE,
+        )
+    if not any(_is_demo_flow_symbol(item) for item in children):
+        _render_demo_flow_symbols(client, board_id, section_id, x_offset=x_offset)
+    if not any(_is_demo_visual_item(item) for item in children):
+        _render_demo_visual(client, board_id, plan, section_id, x_offset=x_offset)
+    if not any(_is_demo_legend_item(item) for item in children):
+        client.create_shape(
+            board_id,
+            content=_demo_legend_html(),
+            x=x_offset + DEMO_LEGEND_X,
+            y=DEMO_LEGEND_Y,
+            w=DEMO_LEGEND_W,
+            h=DEMO_LEGEND_H,
+            fill_color="#f6f7fb",
+            parent_id=section_id,
+            border_color="#667085",
+            border_width=2,
+            font_size=18,
+            shape="round_rectangle",
+            text_align="left",
+        )
+
+
+def _demo_title_html(plan: BoardPlan, *, section_title: str) -> str:
+    section = section_title.replace(" - ", " / ")
+    return (
+        f"<p><strong>DataRoot</strong> | {html.escape(_truncate(section, 90))}</p>"
+        "<p>Turns messy research folders into a cited decision board.</p>"
+    )
+
+
+def _demo_legend_html() -> str:
+    return (
+        "<p><strong>Source key</strong></p>"
+        "<p>S1/S2 badges keep citations out of the main cards.</p>"
+        f"<p>Exact rows live in {html.escape(DEMO_PROOF_FRAME_TITLE)}.</p>"
+    )
+
+
+def _render_image_symbol(
+    client: MiroClient,
+    board_id: str,
+    section_id: str,
+    *,
+    icon_url: str,
+    label: str,
+    detail: str,
+    x: float,
+    y: float,
+    icon_w: float = 64,
+    icon_h: float = 64,
+    fallback_shape: str = "rectangle",
+    fallback_fill: str = "#f0f0f0",
+    fallback_border: str = "#1a1a1a",
+    font_size: int = 13,
+) -> None:
+    try:
+        client.create_image(
+            board_id,
+            image_url=icon_url,
+            title=label,
+            x=x,
+            y=y,
+            w=icon_w,
+            h=icon_h,
+            parent_id=section_id,
+        )
+    except MiroAPIError:
+        client.create_shape(
+            board_id,
+            content=(
+                f"<p><strong>{html.escape(label)}</strong></p>"
+                f"<p><small>{html.escape(detail)}</small></p>"
+            ),
+            x=x,
+            y=y,
+            w=icon_w,
+            h=icon_h,
+            fill_color=fallback_fill,
+            parent_id=section_id,
+            border_color=fallback_border,
+            border_width=2,
+            font_size=font_size,
+            shape=fallback_shape,
+            text_align="center",
+        )
+        return
+    client.create_text(
+        board_id,
+        content=(
+            f"<p><strong>{html.escape(label)}</strong></p>"
+            f"<p><small>{html.escape(detail)}</small></p>"
+        ),
+        x=x,
+        y=y + icon_h / 2 + 18,
+        w=icon_w + 20,
+        parent_id=section_id,
+        font_size=font_size,
+        text_align="center",
+    )
+
+
+def _render_demo_flow_symbols(client: MiroClient, board_id: str, section_id: str, *, x_offset: float = 0) -> None:
+    symbols = [
+        (DEMO_QUESTION_X, DEMO_SYMBOL_Y,       "files", "Files", "source files",   "#eff8ff", "#175cd3"),
+        (DEMO_RETRIEVAL_X, DEMO_SYMBOL_Y,      "kb",    "KB",    "GitKB index",     "#f4ebff", "#6941c6"),
+        (DEMO_EVIDENCE_X, DEMO_SYMBOL_Y,       "agent", "Agent", "reasoning cloud", "#fffaeb", "#b54708"),
+        (DEMO_QUESTION_X, DEMO_ANSWER_Y - 145, "proof", "Proof", "cited proof",     "#ecfdf3", "#027a48"),
+    ]
+    for x, y, key, label, detail, fallback_fill, fallback_border in symbols:
+        _render_image_symbol(
+            client, board_id, section_id,
+            icon_url=FLOW_ICON_URLS[key],
+            label=label,
+            detail=detail,
+            x=x_offset + x,
+            y=y,
+            icon_w=72,
+            icon_h=72,
+            fallback_shape="rectangle",
+            fallback_fill=fallback_fill,
+            fallback_border=fallback_border,
+            font_size=14,
+        )
+
+
+def _render_demo_visual(
+    client: MiroClient,
+    board_id: str,
+    plan: BoardPlan,
+    section_id: str,
+    *,
+    x_offset: float = 0,
+) -> None:
+    image_url = _demo_visual_url(plan.context_label)
+    title = f"DataRoot visual - {plan.context_label}"
+    if image_url:
+        try:
+            client.create_image(
+                board_id,
+                image_url=image_url,
+                title=title,
+                x=x_offset + DEMO_VISUAL_X,
+                y=DEMO_VISUAL_Y,
+                w=DEMO_VISUAL_W,
+                h=DEMO_VISUAL_H,
+                parent_id=section_id,
+            )
+            return
+        except MiroAPIError as exc:
+            plan.audit_notes.append(f"Miro image fallback for {plan.context_label}: {exc.status_code}.")
+
+    _render_demo_visual_pictogram(client, board_id, plan, section_id, x_offset=x_offset)
+
+
+def _render_demo_visual_pictogram(
+    client: MiroClient,
+    board_id: str,
+    plan: BoardPlan,
+    section_id: str,
+    *,
+    x_offset: float = 0,
+) -> None:
+    label, detail = _demo_visual_fallback(plan.context_label)
+    x = x_offset + DEMO_VISUAL_X
+    client.create_shape(
+        board_id,
+        content=(
+            f"<p><strong>{html.escape(label)}</strong></p>"
+            f"<p>{html.escape(detail)}</p>"
+        ),
+        x=x,
+        y=DEMO_VISUAL_Y,
+        w=DEMO_VISUAL_W,
+        h=DEMO_VISUAL_H,
+        fill_color="#ecfdf3",
+        parent_id=section_id,
+        border_color="#027a48",
+        border_width=3,
+        font_size=22,
+        shape="round_rectangle",
+        text_align="center",
+    )
+    normalized = plan.context_label.lower()
+    if "bio" in normalized or "ferment" in normalized:
+        _render_bioreactor_pictogram(client, board_id, section_id, x=x, y=DEMO_VISUAL_Y)
+    elif "crop" in normalized or "agri" in normalized:
+        _render_crop_lab_pictogram(client, board_id, section_id, x=x, y=DEMO_VISUAL_Y)
+    else:
+        _render_generic_lab_pictogram(client, board_id, section_id, x=x, y=DEMO_VISUAL_Y)
+
+
+def _render_crop_lab_pictogram(client: MiroClient, board_id: str, section_id: str, *, x: float, y: float) -> None:
+    pieces = [
+        (x - 150, y + 55, "sprout", "FIELD", "greenhouse rows", "#dcfae6", "#079455"),
+        (x + 12,  y + 55, "scope",  "LAB",   "assay bench",     "#d1e9ff", "#1570ef"),
+        (x + 165, y + 55, "dna",    "GENE",  "marker",          "#f4ebff", "#7f56d9"),
+    ]
+    for px, py, key, label, detail, fallback_fill, fallback_border in pieces:
+        _render_image_symbol(
+            client, board_id, section_id,
+            icon_url=PICTOGRAM_ICON_URLS[key],
+            label=label, detail=detail,
+            x=px, y=py, icon_w=64, icon_h=64,
+            fallback_shape="rectangle",
+            fallback_fill=fallback_fill, fallback_border=fallback_border,
+        )
+
+
+def _render_bioreactor_pictogram(client: MiroClient, board_id: str, section_id: str, *, x: float, y: float) -> None:
+    pieces = [
+        (x - 150, y + 55, "flask", "TANK",  "bioreactor", "#e0f2fe", "#026aa2"),
+        (x + 5,   y + 55, "tube",  "ASSAY", "lab test",   "#fffaeb", "#b54708"),
+        (x + 165, y + 55, "check", "QC",    "release",    "#ecfdf3", "#027a48"),
+    ]
+    for px, py, key, label, detail, fallback_fill, fallback_border in pieces:
+        _render_image_symbol(
+            client, board_id, section_id,
+            icon_url=PICTOGRAM_ICON_URLS[key],
+            label=label, detail=detail,
+            x=px, y=py, icon_w=64, icon_h=64,
+            fallback_shape="rectangle",
+            fallback_fill=fallback_fill, fallback_border=fallback_border,
+        )
+
+
+def _render_generic_lab_pictogram(client: MiroClient, board_id: str, section_id: str, *, x: float, y: float) -> None:
+    pieces = [
+        (x - 150, y + 55, "files", "FILES",  "raw data",    "#eff8ff", "#175cd3"),
+        (x + 5,   y + 55, "graph", "KB",     "linked graph", "#f4ebff", "#6941c6"),
+        (x + 165, y + 55, "cert",  "ANSWER", "proof",        "#ecfdf3", "#027a48"),
+    ]
+    for px, py, key, label, detail, fallback_fill, fallback_border in pieces:
+        _render_image_symbol(
+            client, board_id, section_id,
+            icon_url=PICTOGRAM_ICON_URLS[key],
+            label=label, detail=detail,
+            x=px, y=py, icon_w=64, icon_h=64,
+            fallback_shape="rectangle",
+            fallback_fill=fallback_fill, fallback_border=fallback_border,
+        )
+
+
+def _demo_visual_url(context_label: str) -> str | None:
+    normalized = context_label.lower()
+    env_names = []
+    if "bio" in normalized or "ferment" in normalized:
+        env_names.append("DATAROOT_MIRO_BIOREACTOR_IMAGE_URL")
+    if "crop" in normalized or "agri" in normalized:
+        env_names.append("DATAROOT_MIRO_FIELD_IMAGE_URL")
+    env_names.extend(["DATAROOT_MIRO_LAB_IMAGE_URL", "DATAROOT_MIRO_IMAGE_URL"])
+    for env_name in env_names:
+        value = (os.environ.get(env_name) or "").strip()
+        if value:
+            return value
+    return None
+
+
+def _demo_visual_fallback(context_label: str) -> tuple[str, str]:
+    normalized = context_label.lower()
+    if "bio" in normalized or "ferment" in normalized:
+        return ("BIOREACTOR", "Strains, assays, QC, and scale-up readiness.")
+    if "crop" in normalized or "agri" in normalized:
+        return ("FIELD + LAB", "Cultivars, genes, trials, inventory, and readiness.")
+    return ("LAB WORKSPACE", "Source files, linked evidence, and cited answer flow.")
+
+
+def _is_demo_title_item(item: dict) -> bool:
+    text = _plain_item_text(item).lower()
+    return "dataroot" in text and "cited decision board" in text
+
+
+def _is_demo_legend_item(item: dict) -> bool:
+    text = _plain_item_text(item).lower()
+    return "source key" in text and "badges keep citations" in text
+
+
+def _is_demo_flow_symbol(item: dict) -> bool:
+    text = _plain_item_text(item).lower()
+    return "cited proof" in text and "proof" in text
+
+
+def _is_demo_visual_item(item: dict) -> bool:
+    title = _item_title(item).lower()
+    text = _plain_item_text(item).lower()
+    return title.startswith("dataroot visual") or "field + lab" in text or "strains, assays" in text or "lab workspace" in text
+
+
+def _render_demo_flow_connectors(client: MiroClient, board_id: str, ids: dict[str, str]) -> None:
+    for source, target, label, start_snap_to, end_snap_to in DEMO_FLOW_CONNECTORS:
+        client.create_connector(
+            board_id,
+            start_id=ids[source],
+            end_id=ids[target],
+            caption=label,
+            start_snap_to=start_snap_to,
+            end_snap_to=end_snap_to,
+        )
+
+
+def _ensure_live_ask_question_input(
+    client: MiroClient,
+    board_id: str,
+    *,
+    section_title: str,
+    section_id: str | None,
+    children: list[dict],
+    x_offset: float = 0,
+) -> None:
+    if not section_id or not _is_live_ask_section_title(section_title):
+        return
+
+    for item in children:
+        if _is_legacy_live_ask_affordance(item):
+            _delete_item_if_exists(client, board_id, _item_id(item) or "", item_type=_item_type(item))
+
+    if not any(_is_live_ask_run_affordance(item) for item in children):
+        _render_live_ask_run_affordance(client, board_id, section_id, x_offset=x_offset)
+
+    for item in children:
+        if is_live_ask_question_input(item):
+            if not extract_live_ask_question_text(item):
+                item_id = _item_id(item)
+                if item_id:
+                    client.update_text(board_id, item_id, content=DEMO_ASK_INPUT_HTML)
+            return
+    client.create_text(
+        board_id,
+        content=DEMO_ASK_INPUT_HTML,
+        x=x_offset + DEMO_ASK_INPUT_X,
+        y=DEMO_ASK_INPUT_Y,
+        w=DEMO_ASK_INPUT_W,
+        parent_id=section_id,
+        font_size=DEMO_TEXT_FONT_SIZE,
+        color="#172033",
+        text_align="left",
+    )
+
+
+def _render_live_ask_run_affordance(
+    client: MiroClient,
+    board_id: str,
+    section_id: str,
+    *,
+    x_offset: float = 0,
+) -> None:
+    x = x_offset + DEMO_LIVE_ASK_RUN_X
+    client.create_shape(
+        board_id,
+        content=DEMO_LIVE_ASK_RUN_HTML,
+        x=x,
+        y=DEMO_LIVE_ASK_RUN_Y,
+        w=DEMO_LIVE_ASK_RUN_W,
+        h=DEMO_LIVE_ASK_RUN_H,
+        fill_color="#d1fae5",
+        parent_id=section_id,
+        border_color="#047857",
+        border_width=4,
+        font_size=22,
+        shape="round_rectangle",
+        text_align="center",
+        text_color="#064e3b",
+    )
+    root_id = client.create_shape(
+        board_id,
+        content="<p><strong>ROOT</strong></p>",
+        x=x - 178,
+        y=DEMO_LIVE_ASK_RUN_Y,
+        w=86,
+        h=86,
+        fill_color="#ecfdf3",
+        parent_id=section_id,
+        border_color="#047857",
+        border_width=3,
+        font_size=16,
+        shape="circle",
+        text_align="center",
+        text_color="#064e3b",
+    )
+    branch_ids = []
+    for dx, dy in ((-62, -36), (-48, 38), (52, 0)):
+        branch_ids.append(
+            client.create_shape(
+                board_id,
+                content="",
+                x=x - 178 + dx,
+                y=DEMO_LIVE_ASK_RUN_Y + dy,
+                w=34,
+                h=34,
+                fill_color="#ffffff",
+                parent_id=section_id,
+                border_color="#047857",
+                border_width=3,
+                font_size=10,
+                shape="circle",
+                text_align="center",
+                text_color="#064e3b",
+            )
+        )
+    for branch_id in branch_ids:
+        client.create_connector(board_id, start_id=root_id, end_id=branch_id, caption="")
+
+
+def _is_live_ask_run_affordance(item: dict) -> bool:
+    text = _plain_item_text(item).lower()
+    return "dataroot run live ask" in text and "root submit action" in text
+
+
+def _is_live_ask_section_title(title: str) -> bool:
+    return title.strip().endswith(" - Live Ask")
+
+
+def _is_legacy_live_ask_affordance(item: dict) -> bool:
+    text = _plain_item_text(item).lower()
+    return "ask your question" in text and "dataroot panel" in text
+
+
+def _plain_item_text(item: dict) -> str:
+    return plain_miro_item_text(item)
+
+
+def _normalize_demo_flow_connectors(
+    client: MiroClient,
+    board_id: str,
+    flow_ids: dict[str, str],
+    connectors: list[dict],
+) -> None:
+    connectors_by_endpoints: dict[tuple[str, str], list[dict]] = defaultdict(list)
+    for connector in connectors:
+        connectors_by_endpoints[_connector_endpoint_ids(connector)].append(connector)
+    expected_endpoints = {
+        (flow_ids[source], flow_ids[target])
+        for source, target, _label, _start_snap_to, _end_snap_to in DEMO_FLOW_CONNECTORS
+    }
+    normalized_connector_ids: set[str] = set()
+    for source, target, label, start_snap_to, end_snap_to in DEMO_FLOW_CONNECTORS:
+        start_id = flow_ids[source]
+        end_id = flow_ids[target]
+        endpoint_matches = connectors_by_endpoints.get((start_id, end_id), [])
+        connector = endpoint_matches[0] if endpoint_matches else None
+        connector_id = _item_id(connector or {})
+        if connector_id:
+            normalized_connector_ids.add(connector_id)
+            client.update_connector(
+                board_id,
+                connector_id,
+                caption=label,
+                shape="elbowed",
+                start_id=start_id,
+                end_id=end_id,
+                start_snap_to=start_snap_to,
+                end_snap_to=end_snap_to,
+            )
+        else:
+            client.create_connector(
+                board_id,
+                start_id=start_id,
+                end_id=end_id,
+                caption=label,
+                start_snap_to=start_snap_to,
+                end_snap_to=end_snap_to,
+            )
+
+    flow_item_ids = set(flow_ids.values())
+    for connector in connectors:
+        connector_id = _item_id(connector)
+        endpoints = _connector_endpoint_ids(connector)
+        if (
+            connector_id
+            and endpoints[0] in flow_item_ids
+            and endpoints[1] in flow_item_ids
+            and (endpoints not in expected_endpoints or connector_id not in normalized_connector_ids)
+        ):
+            _delete_item_if_exists(client, board_id, connector_id, item_type="connector")
 
 
 def _render_demo_segments(
@@ -602,6 +1405,7 @@ def _render_demo_segments(
     cards_by_stage: dict[str, list[BoardCard]] = defaultdict(list)
     for card in plan.evidence_cards:
         cards_by_stage[card.stage].append(card)
+    source_badges = _source_badges(plan)
 
     shape_ids = {}
     lanes_top = group_top + DEMO_TOP_FRAME_H + HEADER_TO_LANES_GAP
@@ -624,13 +1428,14 @@ def _render_demo_segments(
                 y=150,
                 w=STORY_LANE_W - 120,
                 parent_id=frame_id,
+                font_size=DEMO_TEXT_FONT_SIZE,
             )
             continue
         for index, card in enumerate(cards):
             y = 96 + index * (DEMO_EVIDENCE_CARD_H + DEMO_EVIDENCE_CARD_GAP_Y) + DEMO_EVIDENCE_CARD_H / 2
             shape_ids[card.id] = client.create_shape(
                 board_id,
-                content=_card_html(card),
+                content=_card_html(card, source_badge=source_badges.get(card.id)),
                 x=STORY_LANE_W / 2,
                 y=y,
                 w=DEMO_EVIDENCE_CARD_W,
@@ -639,8 +1444,38 @@ def _render_demo_segments(
                 parent_id=frame_id,
                 border_color=_card_border(card),
                 border_width=3 if card.emphasis in {"primary", "rejected"} else 2,
+                font_size=DEMO_CARD_FONT_SIZE,
+                shape="round_rectangle",
+                text_align="left",
             )
     return shape_ids
+
+
+def _render_answer_support_connectors(
+    client: MiroClient,
+    board_id: str,
+    *,
+    evidence_shape_ids: dict[str, str],
+    selected_support_cards: list[BoardCard],
+    answer_shape_id: str,
+) -> None:
+    for index, card in enumerate(selected_support_cards[:2]):
+        shape_id = evidence_shape_ids.get(card.id)
+        if not shape_id:
+            continue
+        start_snap_to, end_snap_to = _answer_support_snap_pair(index)
+        client.create_connector(
+            board_id,
+            start_id=shape_id,
+            end_id=answer_shape_id,
+            caption="",
+            start_snap_to=start_snap_to,
+            end_snap_to=end_snap_to,
+        )
+
+
+def _answer_support_snap_pair(index: int) -> tuple[str, str]:
+    return ("left", "bottom") if index == 0 else ("left", "left")
 
 
 def _render_precise_proof_frame(
@@ -657,7 +1492,7 @@ def _render_precise_proof_frame(
     proof_h = _demo_proof_height(plan)
     proof_frame_id = client.create_frame(
         board_id,
-        title="Precise Proof",
+        title=DEMO_PROOF_FRAME_TITLE,
         x=total_width / 2,
         y=proof_top + proof_h / 2,
         w=total_width,
@@ -670,6 +1505,7 @@ def _render_precise_proof_frame(
         y=proof_h / 2,
         w=total_width - 120,
         parent_id=proof_frame_id,
+        font_size=18,
     )
 
 
@@ -718,6 +1554,53 @@ def _delete_dynamic_section_area(
         _delete_frame_if_exists(client, board_id, _item_id(frame))
 
 
+def _delete_demo_section_area(
+    client: MiroClient,
+    board_id: str,
+    *,
+    section: dict,
+    frames: list[dict],
+    items: list[dict],
+    connectors: list[dict],
+) -> None:
+    section_id = _item_id(section)
+    if not section_id:
+        return
+    section_top = _item_top_global(section)
+    dynamic_top = _item_bottom(section) - 1
+    section_bottom = _next_section_top(frames, section_top) or (section_top + _demo_section_height(None))
+    frame_ids = {
+        _item_id(frame)
+        for frame in frames
+        if _item_id(frame)
+        and (_item_id(frame) == section_id or dynamic_top <= _item_top_global(frame) < section_bottom)
+    }
+    selected_ids = set(frame_ids)
+    changed = True
+    while changed:
+        changed = False
+        for item in items:
+            item_id = _item_id(item)
+            if item_id and item_id not in selected_ids and _parent_id(item) in selected_ids:
+                selected_ids.add(item_id)
+                changed = True
+
+    for connector in connectors:
+        start_id, end_id = _connector_endpoint_ids(connector)
+        if start_id in selected_ids or end_id in selected_ids:
+            _delete_item_if_exists(client, board_id, _item_id(connector), item_type="connector")
+    for item in items:
+        item_id = _item_id(item)
+        if item_id in selected_ids and _item_type(item) != "frame":
+            _delete_item_if_exists(client, board_id, item_id, item_type=_item_type(item))
+    for frame in sorted(
+        (frame for frame in frames if _item_id(frame) in frame_ids),
+        key=lambda item: (_item_top_global(item), _item_id(item)),
+        reverse=True,
+    ):
+        _delete_frame_if_exists(client, board_id, _item_id(frame))
+
+
 def _delete_item_if_exists(client: MiroClient, board_id: str, item_id: str, *, item_type: str | None = None) -> None:
     if not item_id:
         return
@@ -739,13 +1622,20 @@ def _delete_frame_if_exists(client: MiroClient, board_id: str, frame_id: str) ->
 
 
 def _find_section_frame(client: MiroClient, board_id: str, section_title: str) -> dict:
+    match = _find_section_frame_or_none(client, board_id, section_title)
+    if match is None:
+        raise RuntimeError(f'No Miro section titled "{section_title}" was found. Run dataroot miro-refresh-board first.')
+    return match
+
+
+def _find_section_frame_or_none(client: MiroClient, board_id: str, section_title: str) -> dict | None:
     matches = [
         frame
         for frame in client.list_frames(board_id)
         if _item_title(frame).strip() == section_title
     ]
     if not matches:
-        raise RuntimeError(f'No Miro section titled "{section_title}" was found. Run dataroot miro-refresh-board first.')
+        return None
     matches.sort(key=lambda item: (_item_position_y(item), _item_id(item)))
     return matches[0]
 
@@ -785,6 +1675,10 @@ def _demo_section_width(plan: BoardPlan) -> float:
     return max(DEMO_SECTION_W, evidence_width)
 
 
+def _demo_top_x_offset(total_width: float) -> float:
+    return max(0.0, (total_width - DEMO_SECTION_W) / 2)
+
+
 def _demo_section_height(plan: BoardPlan | None) -> float:
     return max(DEMO_SECTION_MIN_H, DEMO_TOP_FRAME_H + HEADER_TO_LANES_GAP + _demo_max_lane_height(plan) + HEADER_TO_LANES_GAP + DEMO_AUDIT_H)
 
@@ -815,29 +1709,119 @@ def _demo_retrieval_html(plan: BoardPlan) -> str:
 
 def _demo_evidence_html(plan: BoardPlan) -> str:
     evidence_count = len(plan.evidence_cards)
+    support_count = len(_selected_answer_support_cards(plan))
     if evidence_count == 0:
         detail = "No cited records were returned for this answer."
     else:
-        plural = "" if evidence_count == 1 else "s"
-        detail = f"{evidence_count} interpreted evidence claim{plural} with citations preserved for proof mode."
+        evidence_plural = "" if evidence_count == 1 else "s"
+        support_plural = "" if support_count == 1 else "s"
+        detail = (
+            f"{evidence_count} interpreted evidence claim{evidence_plural}; "
+            f"{support_count} connected support arrow{support_plural}."
+        )
     return _flow_html(FIXED_FLOW_TITLES["evidence"], detail)
 
 
 def _demo_answer_html(plan: BoardPlan) -> str:
-    return _flow_html(FIXED_FLOW_TITLES["answer"], _truncate(plan.answer, 240))
+    return _flow_html(FIXED_FLOW_TITLES["answer"], _truncate(plan.answer, 360))
+
+
+def _source_badges(plan: BoardPlan) -> dict[str, str]:
+    key_badges: dict[str, str] = {}
+    card_badges: dict[str, str] = {}
+    for card in plan.evidence_cards:
+        key = _source_key(card)
+        if key not in key_badges:
+            key_badges[key] = f"S{len(key_badges) + 1}"
+        card_badges[card.id] = key_badges[key]
+    return card_badges
+
+
+def _source_reference_rows(plan: BoardPlan) -> list[tuple[str, str, str]]:
+    badges = _source_badges(plan)
+    rows: list[tuple[str, str, str]] = []
+    seen: set[str] = set()
+    for card in plan.evidence_cards:
+        key = _source_key(card)
+        if key in seen:
+            continue
+        seen.add(key)
+        rows.append((badges.get(card.id, f"S{len(rows) + 1}"), card.title, _source_display(card)))
+    return rows
+
+
+def _source_key(card: BoardCard) -> str:
+    return card.citation or card.source or card.id
+
+
+def _source_display(card: BoardCard) -> str:
+    source_label = card.source
+    if card.citation and card.citation != card.source:
+        citation_label = _short_slug(card.citation)
+        source_label = f"{source_label} | {citation_label}" if source_label else citation_label
+    return source_label or card.citation or card.id
+
+
+def _selected_answer_support_cards(plan: BoardPlan) -> list[BoardCard]:
+    selected: list[BoardCard] = []
+    seen: set[str] = set()
+    for emphasis in ("primary", "secondary", "normal"):
+        for card in plan.evidence_cards:
+            if card.id in seen:
+                continue
+            if _answer_support_bucket(card) != emphasis:
+                continue
+            selected.append(card)
+            seen.add(card.id)
+            if len(selected) >= 2:
+                return selected
+    return selected
+
+
+def _answer_support_bucket(card: BoardCard) -> str | None:
+    emphasis = (card.emphasis or "normal").strip().lower()
+    if emphasis in {"primary", "secondary"}:
+        return emphasis
+    if emphasis in {"rejected", "gap"}:
+        return None
+    return "normal"
+
+
+def _record_answer_support_audit(plan: BoardPlan, selected_support_cards: list[BoardCard]) -> None:
+    prefix = "Evidence-to-answer arrows:"
+    plan.audit_notes = [note for note in plan.audit_notes if not note.startswith(prefix)]
+    if not plan.evidence_cards:
+        plan.audit_notes.append(f"{prefix} none rendered because no evidence cards were available.")
+    elif selected_support_cards:
+        selected_ids = ", ".join(card.id for card in selected_support_cards[:2])
+        plan.audit_notes.append(f"{prefix} {len(selected_support_cards[:2])} rendered from {selected_ids}.")
+    else:
+        plan.audit_notes.append(f"{prefix} none rendered because no primary, secondary, or normal evidence card was available.")
 
 
 def _demo_proof_height(plan: BoardPlan) -> float:
-    visible_rows = max(1, min(len(plan.proof_rows), 10))
-    return max(DEMO_PROOF_MIN_H, 120 + visible_rows * DEMO_PROOF_ROW_H)
+    visible_rows = max(1, min(len(_source_reference_rows(plan)), 8) + min(len(plan.proof_rows), 8))
+    return max(DEMO_PROOF_MIN_H, 140 + visible_rows * DEMO_PROOF_ROW_H)
 
 
 def _demo_proof_html(plan: BoardPlan, *, trace: dict, provenance_slug: str | None) -> str:
-    parts = ["<p><strong>Precise proof</strong></p>"]
+    parts = [f"<p><strong>{html.escape(DEMO_PROOF_FRAME_TITLE)}</strong></p>"]
     if provenance_slug:
         parts.append(f"<p><small>Provenance trace: {html.escape(provenance_slug)}</small></p>")
+    source_rows = _source_reference_rows(plan)
+    if source_rows:
+        parts.append("<p><strong>Source key</strong></p>")
+        for badge, title, source in source_rows[:12]:
+            parts.append(
+                "<p>"
+                f"<strong>{html.escape(badge)}</strong> {html.escape(_truncate(title, 90))}<br>"
+                f"<small>{html.escape(_truncate(source, 180))}</small>"
+                "</p>"
+            )
     if not plan.proof_rows:
-        parts.append("<p>No exact proof rows were available for this answer.</p>")
+        parts.append("<p>No exact proof rows were available beyond the source key above.</p>")
+    else:
+        parts.append("<p><strong>Exact proof rows</strong></p>")
     for row in plan.proof_rows[:10]:
         detail = row.raw_detail or row.detail
         source = " | ".join(part for part in [row.source_label, _humanize(row.stage)] if part)
@@ -1020,14 +2004,20 @@ def _render_flow(
             fill_color=color,
             parent_id=parent_id,
             border_color="#33415f",
-            font_size=16,
+            border_width=3,
+            font_size=20,
+            shape="round_rectangle",
+            text_align="left",
         )
-    for source, target, label in [
-        ("question", "retrieval", "asks"),
-        ("retrieval", "evidence", "retrieves"),
-        ("evidence", "answer", "answers"),
-    ]:
-        client.create_connector(board_id, start_id=ids[source], end_id=ids[target], caption=label)
+    for source, target, label, start_snap_to, end_snap_to in STORY_FLOW_CONNECTORS:
+        client.create_connector(
+            board_id,
+            start_id=ids[source],
+            end_id=ids[target],
+            caption=label,
+            start_snap_to=start_snap_to,
+            end_snap_to=end_snap_to,
+        )
     return ids
 
 
@@ -1059,6 +2049,9 @@ def _render_evidence_cards(
                 parent_id=frame_ids[stage],
                 border_color=_card_border(card),
                 border_width=3 if card.emphasis in {"primary", "rejected"} else 2,
+                font_size=18,
+                shape="round_rectangle",
+                text_align="left",
             )
             node_positions[card.id] = (x, y, frame_ids[stage])
             note = _card_note(card)
@@ -1140,6 +2133,9 @@ def _render_alternatives_and_audit(
                 fill_color=_card_color(card),
                 parent_id=alt_frame_id,
                 border_color=_card_border(card),
+                font_size=16,
+                shape="round_rectangle",
+                text_align="left",
             )
         audit_x = alt_w + STORY_FRAME_GAP + audit_w / 2
     else:
@@ -1173,20 +2169,37 @@ def _render_alternatives_and_audit(
     )
 
 
-def _flow_html(title: str, detail: str) -> str:
-    return f"<p><strong>{html.escape(title)}</strong></p><p>{html.escape(detail)}</p>"
+def _flow_html(title: str, detail: str, *, footer: str = "") -> str:
+    return f"<p><strong>{html.escape(title)}</strong></p><p>{html.escape(detail)}</p>{footer}"
 
 
-def _card_html(card: BoardCard) -> str:
-    source_label = card.source
-    if card.citation and card.citation != card.source:
-        citation_label = _short_slug(card.citation)
-        source_label = f"{source_label} | {citation_label}" if source_label else citation_label
-    source = f"<p><small>{html.escape(_truncate(source_label, 72))}</small></p>" if source_label else ""
+def _card_html(card: BoardCard, *, source_badge: str | None = None) -> str:
+    source = _proof_footer_html(card, source_badge=source_badge)
     return (
-        f"<p><strong>{html.escape(_truncate(card.title, 62))}</strong></p>"
-        f"<p>{html.escape(_truncate(card.detail, 150))}</p>"
+        f"<p><strong>{html.escape(_truncate(card.title, 72))}</strong></p>"
+        f"<p>{html.escape(_truncate(card.detail, 190))}</p>"
         f"{source}"
+    )
+
+
+def _proof_footer_html(card: BoardCard, *, source_badge: str | None = None) -> str:
+    if not (source_badge or card.source or card.citation):
+        return ""
+
+    pieces = []
+    if card.source:
+        pieces.append(f"Dataset/store: {_truncate(card.source, 56)}")
+    if card.citation:
+        pieces.append(f"File/path: {_truncate(_short_slug(card.citation), 56)}")
+    citation_id = card.citation or card.id
+    if citation_id:
+        pieces.append(f"Citation/id: {_truncate(_short_slug(citation_id), 56)}")
+
+    label = f"{source_badge} proof" if source_badge else "Proof"
+    return (
+        "<p><small>"
+        f"<strong>{html.escape(label)}</strong>: {html.escape('; '.join(pieces))}"
+        "</small></p>"
     )
 
 

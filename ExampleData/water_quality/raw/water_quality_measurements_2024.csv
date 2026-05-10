@@ -1,0 +1,7 @@
+sample_id,station_id,sample_date,nitrate_mg_l,lead_ppb,turbidity_ntu,temperature_c,collector,notes
+SAMP-2024-001,STATION_001,2024-02-14,8.2,2.1,1.4,16.2,AReed,below nitrate limit
+SAMP-2024-002,STATION_001,2024-05-18,12.7,2.5,1.8,19.6,AReed,nitrate exceedance after storm
+SAMP-2024-003,STATION_002,2024-04-09,3.4,1.7,2.9,18.1,LChen,normal spring reading
+SAMP-2024-004,STATION_002,2024-09-22,11.3,1.9,3.1,24.4,LChen,nitrate above drinking-water threshold
+SAMP-2024-005,STATION_003,2024-06-11,6.8,16.2,2.1,22.9,MPatel,lead exceedance only
+SAMP-2024-006,STATION_004,2024-07-03,2.2,1.1,0.8,21.0,MPatel,inactive station audit sample

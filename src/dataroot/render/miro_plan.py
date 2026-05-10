@@ -78,7 +78,7 @@ def plan_miro_board(
         context_label=context_label,
         interpretation=interpretation,
     )
-    if os.environ.get("DATAROOT_USE_MIRO_PLANNER") == "0" or not os.environ.get("OPENAI_API_KEY"):
+    if os.environ.get("DATAROOT_USE_MIRO_PLANNER") == "0" or not (os.environ.get("OPENAI_API_KEY") or os.environ.get("MINIMAX_API_KEY")):
         return fallback
 
     try:

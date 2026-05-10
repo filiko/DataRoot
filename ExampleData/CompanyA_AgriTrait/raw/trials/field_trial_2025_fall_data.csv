@@ -1,0 +1,17 @@
+Block,Plot,Row,Cultivar ID,Cultivar Name,Rep,Plants per Plot,Planting Date,Harvest Date,Plot Weight kg,Avg Fruit Weight g,Fruit Count,Marketable kg,Marketable %,Brix Avg,Brix SD,Color Score,Disease Score,Water Stress Score,PMR Symptoms,Leaf Roll Index,Chlorosis Index,Technician,Notes,QA
+A-FLD-BLOCK-3,1,1,A-CUL-TOM-014,Solara-14,1,24,2025-09-12,2025-12-01,43.2,152,284,41.8,96.8,5.2,0.3,8.5,1.0,1.6,None,1.2,0.8,CMendez,clean fruit,-
+A-FLD-BLOCK-3,2,2,A-CUL-TOM-014,Solara-14,2,24,2025-09-12,2025-12-01,41.8,148,282,40.2,96.1,5.4,0.4,8.4,1.1,1.9,None,1.3,0.9,CMendez,slight green shoulder,-
+A-FLD-BLOCK-3,3,3,A-CUL-TOM-014,Solara-14,3,24,2025-09-12,2025-12-01,42.8,150,285,41.5,96.9,5.3,0.3,8.5,1.1,1.8,None,1.2,0.7,CMendez,excellent color,-
+A-FLD-BLOCK-3,4,4,A-CUL-TOM-022,DryShield-22,1,24,2025-09-12,2025-12-01,38.2,138,277,35.1,91.9,4.8,0.5,7.9,2.2,2.1,suspected PMR les,2.4,1.5,CMendez,"Block1 Rep1 unexpected symptoms -采样",YES
+A-FLD-BLOCK-3,5,5,A-CUL-TOM-022,DryShield-22,2,24,2025-09-12,2025-12-01,41.5,142,292,38.9,93.7,5.1,0.4,8.2,1.3,1.8,None observed,1.5,0.9,CMendez,healthy lookin,-
+A-FLD-BLOCK-3,6,6,A-CUL-TOM-022,DryShield-22,3,24,2025-09-12,2025-12-01,39.6,140,283,36.2,91.4,4.9,0.4,8.0,1.4,1.9,None observed,1.6,1.0,CMendez,minor scarring,-
+A-FLD-BLOCK-3,7,7,A-CUL-TOM-031,Arida-31,1,24,2025-09-12,2025-12-01,44.1,155,285,42.5,96.4,4.6,0.5,7.5,2.9,1.4,high PMR les,1.8,1.2,CMendez,"no PMR marker, expected susceptibility",-
+A-FLD-BLOCK-3,8,8,A-CUL-TOM-031,Arida-31,2,24,2025-09-12,2025-12-01,42.3,152,278,40.1,94.8,4.7,0.4,7.4,2.8,1.7,high lesions,1.9,1.3,CMendez,confirm lack of PMR gene,-
+A-FLD-BLOCK-3,9,9,A-CUL-TOM-031,Arida-31,3,24,2025-09-12,2025-12-01,43.0,153,281,41.2,95.8,4.5,0.5,7.3,2.7,1.6,high lesions,1.7,1.1,CMendez,good yield but disease,-
+A-FLD-BLOCK-3,10,4,A-CUL-TOM-015,EarlyGlade-15,1,24,2025-09-12,2025-11-25,31.4,128,245,28.2,89.8,5.8,0.4,9.1,2.1,2.4,None,1.1,0.6,CMendez,early harvest window,-
+A-FLD-BLOCK-3,11,5,A-CUL-TOM-017,ShieldLeaf-17,1,24,2025-09-12,2025-12-02,44.8,158,283,42.1,94.0,4.4,0.4,7.1,1.6,1.9,None,1.4,1.0,CMendez,good blight resist,-
+A-FLD-BLOCK-3,12,6,A-CUL-TOM-019,LycoMax-19,1,24,2025-09-12,2025-12-03,36.2,135,268,33.5,92.5,7.2,0.5,8.8,1.5,2.0,None,1.2,0.8,CMendez,high lycopene confirmed,-
+A-FLD-BLOCK-3,13,7,A-CUL-TOM-020,NemaFree-20,1,24,2025-09-12,2025-11-28,28.6,118,242,24.1,84.3,4.9,0.5,7.8,2.3,1.9,minor root gall,2.1,1.4,CMendez,nematode pressure present,-
+A-FLD-BLOCK-3,14,8,A-CUL-TOM-021,FusariumBloc-21,1,24,2025-09-12,2025-12-01,40.1,145,276,37.5,93.5,5.0,0.4,8.2,1.2,1.7,None,1.3,0.9,CMendez,low wilt pressure this season,-
+A-FLD-BLOCK-3,15,9,A-CUL-TOM-023,DoubleDrought-23,1,24,2025-09-12,2025-12-02,41.2,150,275,39.0,94.7,4.8,0.4,7.6,1.6,1.5,None,1.2,0.8,CMendez,dual drought markers ok,-
+A-FLD-BLOCK-3,16,10,A-CUL-TOM-026,VerseFree-26,1,24,2025-09-12,2025-12-01,33.4,130,257,29.8,89.2,5.1,0.4,8.3,1.7,2.3,None,1.5,1.1,CMendez,cool season verticillium,

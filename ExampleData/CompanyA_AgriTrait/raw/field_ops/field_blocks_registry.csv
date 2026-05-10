@@ -1,0 +1,15 @@
+Block_ID,Region,Soil_Type,Irrigation_Status,Soil_Test_Date,Available_Area_m2,Planting_Window_Start,Planting_Window_End,Current_Crop,Previous_Crop,Rotation_Years,Notes,Soil_Report_Ref,Status
+A-FLD-BLOCK-1,Texas Zone 8,sandy_loam,ready,2026-03-20,950,2026-04-15,2026-05-20,tomato,fallow,1,Primary drought trial block - deficit irrigation compatible,SOIL-RPT-2026-034,ACTIVE
+A-FLD-BLOCK-2,Arizona Zone 9b,clay_loam,limited,2026-03-22,1100,2026-03-25,2026-04-30,tomato,cover crop,2,Heat stress zone - supplemental irrigation only - high temp concern,SOIL-RPT-2026-035,ACTIVE
+A-FLD-BLOCK-3,Texas Zone 8,sandy_loam,ready,2026-03-25,1200,2026-04-20,2026-05-18,tomato,fallow,1,Suitable for drought package trial or seed increase - primary spring block,SOIL-RPT-2026-033,ACTIVE
+A-FLD-BLOCK-4,Florida Zone 9a,organic_muck,ready,2026-02-18,800,2026-04-01,2026-05-15,tomato,solanaceous,2,High humidity - disease pressure block - use blight resistant cultivars,SOIL-RPT-2026-036,ACTIVE
+A-FLD-BLOCK-5,Texas Zone 8,sandy_loam,ready,2026-03-15,1450,2026-04-18,2026-05-25,tomato,legume,1,Nutritional trait evaluation block - avoid high N,NULL,ACTIVE
+A-FLD-BLOCK-6,California Central Valley,clay,ready,2026-03-10,1300,2026-03-15,2026-04-30,tomato,fallow,1,Nematode pressure known - use resistant cultivars only,SOIL-RPT-2026-037,ACTIVE
+A-FLD-BLOCK-7,Texas Zone 8,sandy_loam,ready,2026-04-01,650,2026-04-25,2026-05-10,tomato,fallow,1,Small block - retest of A-CUL-TOM-022 pending,NULL,ACTIVE
+A-FLD-BLOCK-8,Florida Zone 9a,organic_muck,ready,2026-02-20,900,2026-04-05,2026-05-20,tomato,solanaceous,2,Dual disease screening block - blight and PMR evaluation,NULL,ACTIVE
+A-FLD-BLOCK-9,Texas Zone 8,loam,planned,2026-03-28,1000,2026-05-01,2026-06-15,tomato,cover crop,1,New block - soil prep ongoing - expansion area,NULL,PLANNED
+A-FLD-BLOCK-10,California Central Valley,sandy,ready,2026-03-12,1700,2026-03-20,2026-05-05,pepper,fallow,2,Saline irrigation testing site - salt tolerance screening,NULL,ACTIVE
+A-FLD-BLOCK-11,Arizona Zone 9b,sandy_clay,limited,2026-02-25,750,2026-03-25,2026-04-25,tomato,cover crop,1,Heat extreme - supplemental water required - high temp varieties only,NULL,ACTIVE
+A-FLD-BLOCK-12,Texas Zone 8,sandy_loam,ready,2026-04-05,550,2026-04-22,2026-05-08,tomato,fallow,1,Small area for PMR retest - A-CUL-TOM-024,NULL,ACTIVE
+A-FLD-BLOCK-13,California Central Valley,clay_loam,ready,2026-03-08,1400,2026-03-18,2026-05-01,pepper,fallow,1,Pepper heat tolerance block,NULL,ACTIVE
+A-FLD-BLOCK-14,Texas Zone 8,loam,planned,2026-04-10,1800,2026-05-10,2026-06-20,tomato,cover crop,1,Expansion area for spring 2026,NULL,PLANNED

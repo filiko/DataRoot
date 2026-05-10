@@ -1,0 +1,41 @@
+Protocol_ID,Parameter,Value,Unit,Range,Tolerance,Instrument,Method_Ref,Notes
+B-PROT-001,Temperature setpoint,14,degC,12-16,+-0.5,Bioreactor controller,B-PROT-001,Low temp ester optimal
+B-PROT-001,pH start,5.2,units,5.0-5.4,+-0.1,pH probe,B-PROT-001,Initial pH
+B-PROT-001,pH end target,4.4,units,4.2-4.6,na,pH probe,B-PROT-001,End of run expectation
+B-PROT-001,Duration,96,hours,90-100,+-2,Timer,B-PROT-001,Standard cycle
+B-PROT-001,Aeration,0.5,vvm,0.3-0.7,na,Mass flow controller,B-PROT-001,Low aeration for esters
+B-PROT-001,Inoculum ratio,5,percent,na,+-0.5,na,B-PROT-001,v/v ratio
+B-PROT-001,Initial OD600,0.5,AU,na,+-0.05,Spec,B-PROT-001,Target inoculum density
+B-PROT-001,Media, B-MEDIA-EST-04,na,na,na,na,B-PROT-001,LowTemp Ester Media
+B-PROT-001,Carbon source,glucose,g/L,20,na,na,B-PROT-001,20 g/L initial
+B-PROT-001,Nitrogen source,yeast extract,g/L,5,na,na,na,B-PROT-001,5 g/L
+B-PROT-001,EHEX target,35,mg/L,na,na,GC-MS,B-PROT-001,Acceptance threshold
+B-PROT-001,EBUT target,25,mg/L,na,na,GC-MS,B-PROT-001,Acceptance threshold
+B-PROT-001,EOCT target,15,mg/L,na,na,GC-MS,B-PROT-001,Acceptance threshold
+B-PROT-001,Combined ester min,85,mg/L,na,na,GC-MS,B-PROT-001,Sum of three target esters
+B-PROT-001,Off-note DIAC max,5,mg/L,na,na,GC-MS,B-PROT-001,Diacetyl threshold
+B-PROT-002,Injection volume,1,uL,na,na,GC-MS,B-PROT-002,Split mode 20:1
+B-PROT-002,Inlet temp,250,degC,na,na,GC-MS,B-PROT-002,
+B-PROT-002,Oven start,40,degC,na,na,GC-MS,B-PROT-002,40C 3min
+B-PROT-002,Ramp rate,8,degC/min,na,na,GC-MS,B-PROT-002,To 220C
+B-PROT-002,Oven final,220,degC,na,na,GC-MS,B-PROT-002,5min hold
+B-PROT-002,Carrier gas,Helium,na,1.2,mL/min,GC-MS,B-PROT-002,Constant flow
+B-PROT-002,Transfer line,280,degC,na,na,GC-MS,B-PROT-002,
+B-PROT-002,MS source,230,degC,na,na,GC-MS,B-PROT-002,EI mode 70eV
+B-PROT-002,IS compound,4-methyl-2-pentanol,mg/L,50,na,na,B-PROT-002,Internal standard
+B-PROT-002,IS recovery min,85,percent,na,na,GC-MS,B-PROT-002,85-115% acceptable
+B-PROT-002,R2 min,0.99,correlation,na,na,GC-MS,B-PROT-002,Calibration quality
+B-PROT-002,Duplicate RSD max,10,percent,na,na,GC-MS,B-PROT-002,Injection precision
+B-PROT-003,Contamination screen,negative,na,na,na,Culture method,B-PROT-003,YPD agar streak
+B-PROT-003,Identity check yeast,match,na,na,na,SNP PCR,B-PROT-003,Strain-specific markers
+B-PROT-003,Identity check LAB,match,na,na,na,16S seq,B-PROT-003,BLAST >=99%
+B-PROT-003,Yeast viability min,90,percent,na,na,Methylene blue,B-PROT-003,Pre-inoculum
+B-PROT-003,LAB viability min,85,percent,na,na,Methylene blue,B-PROT-003,Pre-inoculum
+B-PROT-003,Yeast passage max,6,passage,na,na,na,B-PROT-003,Release limit
+B-PROT-003,LAB passage max,7,passage,na,na,na,B-PROT-003,Release limit
+B-PROT-004,Pilot run volume min,20,L,na,na,na,B-PROT-004,Scale threshold
+B-PROT-004,Min bench runs,2,run,na,na,na,B-PROT-004,Before scale-up
+B-PROT-004,Ester target pilot,85,mg/L,na,na,GC-MS,B-PROT-004,Combined ester at scale
+B-PROT-004,Bioreactor advance book,2,weeks,na,na,na,B-PROT-004,Reservation lead time
+B-PROT-004,QC release days,3,days,2-4,na,na,B-PROT-004,Standard turnaround
+B-PROT-004,Scale-up candidate,yes,na,na,na,na,B-PROT-004,Criteria met

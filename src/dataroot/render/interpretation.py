@@ -54,7 +54,7 @@ def interpret_data_tidbits(
         inquiry_slug=inquiry_slug,
         answer_text=answer_text,
     )
-    if os.environ.get("DATAROOT_USE_TIDBIT_INTERPRETER") == "0" or not os.environ.get("OPENAI_API_KEY"):
+    if os.environ.get("DATAROOT_USE_TIDBIT_INTERPRETER") == "0" or not (os.environ.get("OPENAI_API_KEY") or os.environ.get("MINIMAX_API_KEY")):
         return fallback
 
     try:

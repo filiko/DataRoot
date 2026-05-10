@@ -1,0 +1,21 @@
+gene_id,gene_symbol,marker_name,trait_id,crop,chromosome,marker_type,confidence,source_note
+A-GEN-DRT2,DRT2,Drought Response Marker 2,A-TRT-DRT,tomato,chr03,SNP,0.91,Synthetic marker used for demo traversal
+A-GEN-PMR3,PMR3,Powdery Mildew Resistance Marker 3,A-TRT-PMR,tomato,chr06,InDel,0.88,Synthetic marker used for demo traversal
+A-GEN-SAL1,SAL1,Salt Tolerance Marker 1,A-TRT-SAL,pepper,chr02,SNP,0.85,Synthetic marker for demo
+A-GEN-EAR-FL1,EARFL1,Early Flowering Marker 1,A-TRT-EAR-FL,tomato,chr01,SSR,0.79,Synthetic marker for demo
+A-GEN-HEAT1,HEAT1,Heat Tolerance Marker 1,A-TRT-HEAT,tomato,chr05,SNP,0.82,Synthetic marker for demo
+A-GEN-BLIGHT1,BLIGHT1,Blight Resistance Marker 1,A-TRT-BLIGHT,tomato,chr08,InDel,0.76,Synthetic marker for demo
+A-GEN-FW1,FW1,Fruit Worm Resistance Marker 1,A-TRT-FW,tomato,chr04,SNP,0.71,Synthetic marker for demo
+A-GEN-LYC1,LYC1,Lycopene Enhancement Marker 1,A-TRT-LYC,tomato,chr07,SNP,0.89,Synthetic marker for demo
+A-GEN-NEM1,NEM1,Nematode Resistance Marker 1,A-TRT-NEM,tomato,chr09,InDel,0.74,Synthetic marker for demo
+A-GEN-FUS1,FUS1,Fusarium Wilt Marker 1,A-TRT-FUS,tomato,chr02,SNP,0.87,Synthetic marker for demo
+A-GEN-VERT1,VERT1,Verticillium Wilt Marker 1,A-TRT-VERT,tomato,chr10,SSR,0.78,Synthetic marker for demo
+A-GEN-SALT2,SALT2,Salt Tolerance Marker 2,A-TRT-SALT,tomato,chr06,SNP,0.83,Synthetic marker for demo
+A-GEN-DRT3,DRT3,Drought Response Marker 3,A-TRT-DRT,tomato,chr11,InDel,0.86,Related drought marker
+A-GEN-PMR4,PMR4,Powdery Mildew Resistance Marker 4,A-TRT-PMR,tomato,chr12,SNP,0.84,Alternative PMR marker
+A-GEN-HEAT2,HEAT2,Heat Shock Marker 2,A-TRT-HEAT,tomato,chr03,SSR,0.77,Complementary heat marker
+A-GEN-LYC2,LYC2,Lycopene Synthase Marker 2,A-TRT-LYC,tomato,chr05,SNP,0.91,Direct lycopene pathway
+A-GEN-BX1,BX1,BRIX/ sweetness Marker 1,other,tomato,chr04,SNP,0.72,Quality trait marker
+A-GEN-FIRM1,FIRM1,Firmness Marker 1,other,tomato,chr08,InDel,0.69,Post-harvest quality
+A-GEN-COL1,COL1,Color Development Marker 1,other,tomato,chr09,SSR,0.75,Visual quality trait
+A-GEN-SHED1,SHED1,Shed Load Tolerance Marker 1,other,tomato,chr01,SNP,0.68,Structural trait

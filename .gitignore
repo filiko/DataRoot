@@ -1,24 +1,52 @@
+# --- secrets ---
 .env
-.opencode/
-CUsersajfil/
+
+# --- Python build / test artifacts ---
 __pycache__/
 *.py[cod]
+*.egg
+*.egg-info/
+build/
+dist/
 .pytest_cache/
-.kb/
 
-# Local DataRoot workspace state and generated knowledge-base data
+# --- virtual environments ---
+.venv/
+venv/
+env/
+
+# --- IDE / editor ---
+.idea/
+.vscode/
+.opencode/
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- JS tooling (when nested deps escape into the tree) ---
+node_modules/
+
+# --- DataRoot runtime / generated state ---
+.kb/
+.kb/.cache/
+.kb/store/
+.kb/workspace/
+.kb/workspaces/
 .dataroot/
 artifacts/
 
-# Local/test datasets
-ExampleData/
+# --- agent / claude-code session state ---
+.claude/
+
+# --- internal working notes (kept locally, never committed) ---
+docs/internal/
+
+# --- local fixture / scratch data ---
 test_data/
 test-data/
 tests/data/
 tests/fixtures/
 
-# GitKB
-.kb/.cache/
-.kb/store/
-.kb/workspace/
-.kb/workspaces/
+# --- path-mistake artifact (contains U+F03A, not a real colon) ---
+C*Usersajfil/

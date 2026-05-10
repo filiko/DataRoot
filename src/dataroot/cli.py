@@ -66,6 +66,8 @@ def main(argv: list[str] | None = None) -> int:
     serve_parser.add_argument("--port", type=int, default=8000)
     serve_parser.add_argument("--reload", action="store_true")
 
+    subparsers.add_parser("mcp", help="Run the DataRoot stdio MCP server (requires git-kb).")
+
     args = parser.parse_args(argv)
     root = Path.cwd()
 
@@ -74,6 +76,11 @@ def main(argv: list[str] | None = None) -> int:
 
         uvicorn.run("dataroot.server.app:app", host=args.host, port=args.port, reload=args.reload)
         return 0
+
+    if args.command == "mcp":
+        from dataroot.mcp.server import run_stdio
+
+        return run_stdio()
 
     if args.command == "init":
         config = DataRootConfig(root=root, kb_backend=args.backend)

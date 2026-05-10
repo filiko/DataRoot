@@ -1,0 +1,24 @@
+Timestamp,Entry_Type,Strain_ID,Obs_Type,Observer,Location,Data_Field_1,Data_Field_2,Data_Field_3,Data_Field_4,Notes,Verified,System
+2026-03-24 10:00:00,RESULT,B-STR-YE-017,RUN_RESULT,DrLOrtiz,Fermentation Bay,Run ID,B-RUN-FERM-033,Volume,20L,Status,completed,Ester profile excellent,OK,LIMS
+2026-03-24 10:30:00,RESULT,B-STR-YE-017,ASSAY_RESULT,DrLOrtiz,Analytical,B-MET-EHEX,42.3,mg/L,Target,35,Result,PASS,Above target threshold,OK,LIMS
+2026-03-24 10:45:00,RESULT,B-STR-YE-017,ASSAY_RESULT,DrLOrtiz,Analytical,B-MET-EBUT,31.7,mg/L,Target,25,Result,PASS,Above target threshold,OK,LIMS
+2026-03-24 11:00:00,RESULT,B-STR-YE-017,ASSAY_RESULT,DrLOrtiz,Analytical,B-MET-EOCT,18.4,mg/L,Target,15,Result,PASS,Above target threshold,OK,LIMS
+2026-03-24 11:15:00,RESULT,B-STR-YE-017,COMBINED_RESULT,DrLOrtiz,Analytical,Combined Esters,92.4,mg/L,Target,85,Result,PASS,Combined above threshold,OK,LIMS
+2026-03-24 11:30:00,RESULT,B-STR-YE-017,OFFNOTE_RESULT,DrLOrtiz,Analytical,B-MET-DIAC,3.1,mg/L,Limit,5,Result,PASS,Well below off-note threshold,OK,LIMS
+2026-03-24 14:00:00,COMMENT,B-STR-YE-017,FERM_REVIEW,DrLOrtiz,Office,Note,Scale-up from bench 5L to 20L successful - yields consistent with bench data,,Increased ester titers expected at scale,OK,LIMS
+2026-03-24 14:30:00,RESULT,B-STR-YE-021,RUN_RESULT,DrLOrtiz,Fermentation Bay,Run ID,B-RUN-FERM-036,Volume,2L,Status,completed,Bench scale only,OK,LIMS
+2026-03-24 14:45:00,RESULT,B-STR-YE-021,ASSAY_RESULT,DrLOrtiz,Analytical,B-MET-EHEX,38,mg/L,Target,35,Result,PASS,Good ester production,OK,LIMS
+2026-03-24 15:00:00,RESULT,B-STR-YE-021,ASSAY_RESULT,DrLOrtiz,Analytical,B-MET-EBUT,27,mg/L,Target,25,Result,PASS,Good ester production,OK,LIMS
+2026-03-24 15:15:00,STATUS,B-STR-YE-021,HOLD_REASON,DrLOrtiz,Office,Hold,scaleup_pending,Reason,No pilot run completed,Note,Needs pilot run before recommendation for B-INQ-001,OK,LIMS
+2026-04-08 09:00:00,VIABILITY_TEST,B-INV-STR-017,VIABILITY,MWebb,QC Lab,Cryobank Rack C,Strain,B-STR-YE-017,Passage,P5,Viability,96,percent,Timestamp,2026-04-08,Result,PASS,Released for use,OK,LIMS
+2026-04-08 09:30:00,VIABILITY_TEST,B-INV-STR-028,VIABILITY,MWebb,QC Lab,Cryobank Rack B,Strain,B-STR-YE-025,Passage,P2,Viability,86,percent,Timestamp,2026-04-08,Result,FAIL,Below 90% threshold,OK,LIMS
+2026-04-08 10:00:00,STATUS_UPDATE,B-INV-STR-028,RECLASSIFY,MWebb,QC Lab,Status,hold_early_stage,Reason,Viability below threshold,Note,Rebuild from earlier passage recommended,OK,LIMS
+2026-04-08 10:30:00,VIABILITY_TEST,B-INV-STR-025,VIABILITY,MWebb,QC Lab,Cryobank Rack A,Strain,B-STR-YE-023,Passage,P2,Viability,88,percent,Timestamp,2026-04-05,Result,BORDERLINE,Low viability - borderline,OK,LIMS
+2026-04-08 11:00:00,STATUS_UPDATE,B-INV-STR-025,RECLASSIFY,MWebb,QC Lab,Status,hold_lowviab,Reason,Viability below threshold,Note,Discuss with floral profile team,OK,LIMS
+2026-03-01 14:00:00,CALIBRATION,GCMS-A,GCMS_CAL,DrLOrtiz,Analytical,Calibration, EHEX EBUT EOCT,R2 min,0.99,Status,VERIFIED,Note,All esters calibrated - R2 >0.99,OK,LIMS
+2026-03-01 14:30:00,QC_TEST,GCMS-A,STANDARD_CHECK,DrLOrtiz,Analytical,Check,mid-cal,Recovery,92,percent,IS Recovery,94.2,Result,OK,Within 85-115% range,OK,LIMS
+2026-04-15 09:00:00,BOOKING,B-BR-R2,RESERVATION,SChen,Operations,Start,2026-04-28,End,2026-05-10,Capacity,50L,Status,AVAILABLE,Requested for B-INQ-001 scale-up,OK,LIMS
+2026-04-15 09:30:00,CONFLICT,B-BR-R2,BOOKING_CHECK,SChen,Operations,Note,B-RUN-FERM-044 still in vessel until 2026-04-26,Impact,Window depends on B-RUN-FERM-044 clearance,,Book B-BR-R2 after harvest,OK,LIMS
+2026-04-15 10:00:00,TIMELINE,B-INQ-001,PROJECTION,SChen,Operations,Inoculate,2026-04-28,Harvest,2026-05-02,QC release,2026-05-04,Target ready,2026-05-15,Achievable with buffer,OK,LIMS
+2026-04-28 11:00:00,REVIEW,Q1-2026,CAMPAIGN_SUMMARY,DrLOrtiz,Fermentation,Total runs,16,Completed,15,Failed,1,Best performer,B-STR-YE-017,Inquiries B-INQ-001 candidate identified,OK,LIMS
+2026-04-28 11:30:00,RESULT,B-STR-YE-017,SCALE_STATUS,DrLOrtiz,Office,Status,pilot_ready,Evidence,B-RUN-FERM-033 completed,Cryovials,42,Viability,96,Note,Ready for B-INQ-001 scale-up,OK,LIMS

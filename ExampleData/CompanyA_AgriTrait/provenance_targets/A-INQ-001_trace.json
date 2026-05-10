@@ -1,0 +1,46 @@
+{
+  "question": "Do we have a tomato line that is drought tolerant and powdery mildew resistant, and is it ready for spring planting?",
+  "inquiry_id": "A-INQ-001",
+  "stages": ["query", "traits", "genes", "cultivars", "greenhouse_trials", "field_trials", "inventory", "field_readiness", "answer"],
+  "nodes": [
+    {"id": "n1", "slug": "inquiries/A-INQ-001", "label": "A-INQ-001", "stage": "query", "description": "Customer inquiry: drought tolerance + powdery mildew resistance for tomato, spring planting in Texas Zone 8"},
+    {"id": "n2", "slug": "registries/trait_ontology.csv", "label": "A-TRT-DRT", "stage": "traits", "description": "Drought tolerance trait ontology entry"},
+    {"id": "n3", "slug": "registries/trait_ontology.csv", "label": "A-TRT-PMR", "stage": "traits", "description": "Powdery mildew resistance trait ontology entry"},
+    {"id": "n4", "slug": "registries/marker_gene_catalog.csv", "label": "A-GEN-DRT2", "stage": "genes", "description": "Drought response marker 2, linked to A-TRT-DRT, confidence 0.91"},
+    {"id": "n5", "slug": "registries/marker_gene_catalog.csv", "label": "A-GEN-PMR3", "stage": "genes", "description": "Powdery mildew resistance marker 3, linked to A-TRT-PMR, confidence 0.88"},
+    {"id": "n6", "slug": "registries/cultivar_registry.csv", "label": "A-CUL-TOM-014", "stage": "cultivars", "description": "Solara-14: best candidate with both DRT2 and PMR3 markers, status field_ready"},
+    {"id": "n7", "slug": "registries/cultivar_registry.csv", "label": "A-CUL-TOM-022", "stage": "cultivars", "description": "DryShield-22: has both markers but field validation incomplete, status greenhouse_validated"},
+    {"id": "n8", "slug": "registries/cultivar_registry.csv", "label": "A-CUL-TOM-031", "stage": "cultivars", "description": "Arida-31: drought only, lacks PMR3 marker, status field_ready"},
+    {"id": "n9", "slug": "trials/greenhouse_trials_2026_q1.csv", "label": "A-TRL-GH-001/002", "stage": "greenhouse_trials", "description": "Drought drydown assay results for A-CUL-TOM-014: pass, wilting scores 1.4-1.6"},
+    {"id": "n10", "slug": "trials/greenhouse_trials_2026_q1.csv", "label": "A-TRL-GH-003/004", "stage": "greenhouse_trials", "description": "PMR challenge results for A-CUL-TOM-014: pass, lesion scores 1.1-1.3"},
+    {"id": "n11", "slug": "trials/field_trials_2025.csv", "label": "A-TRL-FD-002", "stage": "field_trials", "description": "Field trial in A-FLD-BLOCK-3 (Texas Zone 8, 2025-Fall): pass, yield 42.6 kg/plot, disease 1.1"},
+    {"id": "n12", "slug": "inventory/seed_inventory.csv", "label": "A-INV-SEED-02", "stage": "inventory", "description": "LOT-TOM-014-2026A: 2,400 units, 94% germination, released"},
+    {"id": "n13", "slug": "field_ops/field_blocks.csv", "label": "A-FLD-BLOCK-3", "stage": "field_readiness", "description": "Texas Zone 8, sandy loam, ready, 1,200 m², planting window 2026-04-20 to 2026-05-18"},
+    {"id": "n14", "slug": "reports/soil_report_A-FLD-BLOCK-3.md", "label": "SOIL-RPT-2026-033", "stage": "field_readiness", "description": "Soil analysis confirming suitability for drought package cultivars"},
+    {"id": "n15", "slug": "expected_answers/A-INQ-001_expected_answer.md", "label": "Answer: Solara-14 Ready", "stage": "answer", "description": "A-CUL-TOM-014 is the recommended cultivar with full trait match and operational readiness"}
+  ],
+  "edges": [
+    {"from": "n1", "to": "n2", "label": "requests trait", "evidence": "A-INQ-001.requested_traits includes drought_tolerance"},
+    {"from": "n1", "to": "n3", "label": "requests trait", "evidence": "A-INQ-001.requested_traits includes powdery_mildew_resistance"},
+    {"from": "n2", "to": "n4", "label": "linked marker", "evidence": "trait_ontology.csv: linked_marker_ids = A-GEN-DRT2"},
+    {"from": "n3", "to": "n5", "label": "linked marker", "evidence": "trait_ontology.csv: linked_marker_ids = A-GEN-PMR3"},
+    {"from": "n4", "to": "n6", "label": "marker in cultivar", "evidence": "cultivar_registry.csv: A-CUL-TOM-014 has marker A-GEN-DRT2"},
+    {"from": "n5", "to": "n6", "label": "marker in cultivar", "evidence": "cultivar_registry.csv: A-CUL-TOM-014 has marker A-GEN-PMR3"},
+    {"from": "n4", "to": "n7", "label": "marker in cultivar", "evidence": "cultivar_registry.csv: A-CUL-TOM-022 has marker A-GEN-DRT2"},
+    {"from": "n5", "to": "n7", "label": "marker in cultivar", "evidence": "cultivar_registry.csv: A-CUL-TOM-022 has marker A-GEN-PMR3"},
+    {"from": "n4", "to": "n8", "label": "marker in cultivar", "evidence": "cultivar_registry.csv: A-CUL-TOM-031 has marker A-GEN-DRT2 only"},
+    {"from": "n6", "to": "n9", "label": "cultivar in trial", "evidence": "greenhouse_trials_2026_q1.csv: A-CUL-TOM-014 tested for A-TRT-DRT"},
+    {"from": "n6", "to": "n10", "label": "cultivar in trial", "evidence": "greenhouse_trials_2026_q1.csv: A-CUL-TOM-014 tested for A-TRT-PMR"},
+    {"from": "n9", "to": "n11", "label": "follow-up field trial", "evidence": "field_trials_2025.csv: A-CUL-TOM-014 advanced to A-TRL-FD-002"},
+    {"from": "n11", "to": "n12", "label": "cultivar inventory", "evidence": "seed_inventory.csv: A-CUL-TOM-014 inventory record A-INV-SEED-02"},
+    {"from": "n11", "to": "n13", "label": "trial location", "evidence": "field_trials_2025.csv: A-TRL-FD-002 in field block A-FLD-BLOCK-3"},
+    {"from": "n13", "to": "n14", "label": "soil analysis", "evidence": "field_ops/field_blocks.csv references soil report for A-FLD-BLOCK-3"}
+  ],
+  "provenance_summary": {
+    "primary_candidate": "A-CUL-TOM-014 (Solara-14)",
+    "confidence": "high",
+    "reasoning": "A-CUL-TOM-014 has both required markers (A-GEN-DRT2, A-GEN-PMR3), has passed both greenhouse and field trials, has released seed inventory sufficient for the 1,500 unit minimum request, and has a compatible field block available in Texas Zone 8 within the spring planting window.",
+    "secondary_candidates": ["A-CUL-TOM-022 (DryShield-22) - has markers and greenhouse validation but field trial incomplete"],
+    "insufficient_candidates": ["A-CUL-TOM-031 (Arida-31) - drought only, lacks PMR package"]
+  }
+}

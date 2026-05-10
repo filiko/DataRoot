@@ -1,0 +1,4 @@
+parameter,limit_value,unit,regulatory_basis,notes
+nitrate,10,mg/L,EPA MCL,values above 10 mg/L are exceedances
+lead,15,ppb,EPA action level,values above 15 ppb require action
+turbidity,5,NTU,operational threshold,values above 5 NTU trigger review

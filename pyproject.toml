@@ -4,7 +4,14 @@ version = "0.1.0"
 description = "DataRoot data-lineage agent prototype"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = ["fastapi>=0.115", "openai>=1.0", "requests>=2.31", "uvicorn>=0.30"]
+dependencies = [
+    "fastapi>=0.115,<0.116",
+    "mcp>=1.2,<2.0",
+    "openai>=1.0",
+    "requests>=2.31",
+    "starlette>=0.40,<0.42",
+    "uvicorn>=0.30",
+]
 
 [project.optional-dependencies]
 xlsx = ["openpyxl>=3.1"]
