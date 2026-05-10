@@ -1,0 +1,11 @@
+.env
+.git
+.kb
+.opencode
+.pytest_cache
+.dataroot/kb_docs
+.dataroot/server_cache
+artifacts
+CUsersajfil
+__pycache__
+*.py[cod]

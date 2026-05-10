@@ -1,0 +1,24 @@
+.env
+.opencode/
+CUsersajfil/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.kb/
+
+# Local DataRoot workspace state and generated knowledge-base data
+.dataroot/
+artifacts/
+
+# Local/test datasets
+ExampleData/
+test_data/
+test-data/
+tests/data/
+tests/fixtures/
+
+# GitKB
+.kb/.cache/
+.kb/store/
+.kb/workspace/
+.kb/workspaces/

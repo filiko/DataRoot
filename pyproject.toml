@@ -1,0 +1,28 @@
+[project]
+name = "dataroot"
+version = "0.1.0"
+description = "DataRoot data-lineage agent prototype"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["fastapi>=0.115", "openai>=1.0", "requests>=2.31", "uvicorn>=0.30"]
+
+[project.optional-dependencies]
+xlsx = ["openpyxl>=3.1"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+dataroot = "dataroot.cli:main"
+
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+dataroot = ["agent/prompts/*.md"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

@@ -1,0 +1,698 @@
+DataRoot — Project Context Master
+
+ARCHIVED NOTE: This file was split into ../CONTEXT.md and ../docs/*.md.
+Those active files are now the source of truth. Keep this file only for
+historical context; if it disagrees with CONTEXT.md or docs/, the active
+files win.
+
+Read CONTEXT.md before writing code. This archived master superseded old
+assumptions at the time it was written, but it no longer supersedes the
+split plan files.
+
+
+0. TL;DR
+
+DataRoot is a generic data-lineage agent that turns an arbitrary folder of heterogeneous files into a queryable provenance graph.
+
+It works in four stages:
+
+1. **Profile** — scan a folder and produce generic GitKB/KBStore documents for files, tables, columns, row groups, candidate entities, measurements, and relationships.
+2. **Infer Domain Spec** — an AI agent reads the generic KB documents and proposes a reviewable domain spec: entities, relationships, aliases, units, important columns, traversal hints, and common question patterns.
+3. **Apply Domain Spec** — DataRoot enriches the KB with tags, labels, wikilinks, and domain-specific entity names, without hardcoding those names into core logic.
+4. **Answer + Provenance** — the query agent searches and traverses the graph, answers with citations, logs the inquiry, and optionally renders a Miro provenance board.
+
+The hackathon demo uses a polished lab/research domain pack, plus a small OpenData water-quality smoke test to prove the architecture is not hardcoded.
+
+Differentiator: every other RAG demo answers a question. DataRoot returns a question plus a provenance graph the researcher uses to design the next experiment.
+
+1. Why this exists
+1.1 The real problem
+Research organizations — biotech, pharma, agriculture R&D, materials labs — have data scattered across:
+
+Spreadsheets (cultivar registries, harvest logs, assay results)
+Sequence files (FASTA, GenBank)
+Compound databases (internal CSVs, external refs to PubChem/ChEMBL)
+Protocol PDFs and markdown lab notebooks
+Instrument exports (HPLC traces, mass spec runs)
+Field/cultivation logs
+Customer inquiry records
+
+When someone asks "do we have anything that can do X," answering it correctly means traversing all of these and stitching together a coherent picture. Today this requires asking three different teams and waiting two weeks. The work isn't hard — it's mechanical, lookup-heavy, and exactly the kind of thing an agent should excel at.
+1.2 Why agents specifically
+This isn't a RAG problem. It's a planning problem. The agent has to:
+
+Decompose a domain question into typed retrieval steps (compound lookup ≠ sequence search ≠ inventory check).
+Pick the right tool for each step.
+Recover when an upstream artifact is missing ("we don't have this cultivar's titer data, but we have its parent line's — substitute with confidence note").
+Produce a structured output (the lineage graph) not just text.
+Project forward when relevant ("seeds in inventory, ~9 months to first harvest").
+
+This is the kind of work the Agents Track judges are looking for: "systems that do work, not just answer questions." DataRoot literally writes things — Miro boards, possibly an inquiry log entry, possibly a draft follow-up experiment doc.
+1.3 Why the lab/research demo
+
+The lab/research demo is the polished story because it is intuitive, high-value, and agentic: a customer asks a product/spec question, and the answer requires traversing genetics, experiments, QC, inventory, and product documents.
+
+But CompanyA/CompanyB are not the core architecture. They are demo domain packs produced from, or compatible with, the Domain Spec Generator.
+
+The core DataRoot system should also work on a random OpenData folder by first profiling the files and generating a domain spec.
+
+2. Scope
+
+### 2.1 In scope for Tier 1
+
+- Generic workspace profiler for CSV, XLSX, JSON, Markdown/text, and FASTA if present.
+- Generic KB document generation for:
+  - workspace
+  - source_file
+  - table
+  - column
+  - row_group
+  - candidate_entity
+  - measurement
+  - relationship
+  - domain_spec
+  - inquiry
+  - provenance_trace
+- KBStore adapter with GitKBStore preferred and LocalMarkdownStore fallback.
+- Generic linker for:
+  - file → table
+  - table → column
+  - likely primary keys
+  - likely foreign keys
+  - repeated IDs
+  - date/time columns
+  - geo/location columns
+  - measurement/unit columns
+  - text mentions
+- Domain Spec Generator agent that proposes `.dataroot/domain_spec.yaml`.
+- `apply-domain` command that enriches KB docs using the domain spec.
+- Generic traversal tools:
+  - kb_search
+  - kb_show
+  - kb_graph
+  - profile_workspace
+  - infer_domain_spec
+  - apply_domain_spec
+  - find_candidate_paths
+  - query_table
+  - log_inquiry
+- CLI demo with cited answers and provenance JSON.
+- Lab/research demo pack.
+- Small OpenData water-quality smoke test.
+
+### 2.2 Tier 2
+
+- Miro REST renderer using `MIRO_ACCESS_TOKEN`.
+- Cytoscape/HTML fallback.
+- Web UI.
+- Better confidence scoring.
+- Better domain spec review UI.
+
+### 2.3 Out of scope
+
+- Perfect arbitrary dataset understanding.
+- Production OAuth.
+- Multi-user auth.
+- Live external datastore integrations.
+- Mirage integration.
+- Full Miro MCP integration.
+- Production-grade ontology extraction.
+
+
+3. Architecture
+3.1 High-level
+
+Raw Folder / ExampleData / OpenData
+        ↓
+DataRoot Workspace Profiler
+        ↓
+Generic KB Docs
+  - source_file
+  - table
+  - column
+  - row_group
+  - candidate_entity
+  - measurement
+  - relationship
+        ↓
+GitKB / KBStore
+        ↓
+Domain Spec Generator Agent
+        ↓
+Reviewable .dataroot/domain_spec.yaml
+        ↓
+Apply Domain Spec
+        ↓
+Enriched KB Graph
+        ↓
+Query Agent
+        ↓
+Cited Answer + Provenance JSON + Inquiry Log
+        ↓
+Optional Miro Board
+
+3.2 Why GitKB as the substrate
+Recapping what GitKB gives us so we don't accidentally re-build it:
+
+Document model: Markdown + YAML frontmatter, typed (task, spec, incident, note, context, and we'll add custom types like cultivar, gene, compound, harvest, protocol, inquiry).
+Wikilinks: [[cultivars/tbf-lime-04]] becomes a real graph edge GitKB tracks.
+FTS5 search via kb_search.
+Semantic search via kb_semantic (alpha, optional).
+Graph traversal via kb_graph with directional and depth controls.
+MCP server with 42 tools — we don't write our own agent tooling for documents, just call git-kb mcp as a subprocess.
+Workspace checkout/commit semantics if we want to let the agent edit docs.
+Backup/export as KB invariants.
+
+What GitKB does not do (and DataRoot must add):
+
+Native parsing of .xlsx, .fasta, .csv into structured row/cell-level facts. GitKB sees them as opaque files unless we extract content into Markdown documents.
+Domain-specific edge inference (e.g., "this column in harvests.csv is a foreign key into cultivars.xlsx"). DataRoot's edge inference pass turns these into explicit [[wikilinks]] between KB docs.
+Miro rendering.
+Domain ontology (compounds, genes, cultivars, biosynthesis pathways).
+
+Implication for the build: every time you'd reach for a generic indexing/search/graph primitive, ask "does GitKB already do this?" first. Almost always yes.
+
+3.2.1 KBStore backends
+
+Implement two KBStore backends:
+
+1. GitKBStore — preferred, wraps GitKB CLI commands (git kb init, git kb code index, etc.). Used when GitKB is installed and working.
+
+2. LocalMarkdownStore — fallback, stores Markdown docs in .dataroot/kb_docs/ and builds an in-memory graph from wikilinks at startup. Used if GitKB install or CLI behavior is problematic.
+
+Tier 1 must pass with either backend. The CLI commands (dataroot init, dataroot ingest, dataroot link) work identically regardless of which backend is configured. The backend is selected in .dataroot/config.toml.
+3.3 Data model
+Two layers:
+Layer 1 — Source artifacts (raw files in /data/, never modified by the agent):
+
+cultivars.xlsx — plant lines with IDs, lineage, traits
+compounds.csv — compound definitions, properties, flavor descriptors
+terpene_synthases.fasta — gene sequences with structured headers
+field_plantings_2025.csv — what's planted where, when
+harvest_logs/*.csv — historical yields and titers
+protocols/*.md — experimental protocols with referenced cultivar/gene IDs
+inquiries/*.json — customer inquiries (input)
+
+Layer 2 — KB documents (in .kb/, created by ingestion + agent):
+
+Type cultivar: one per plant line, frontmatter has IDs, traits, parent lineage; body has [[wikilinks]] to genes, harvests, plantings.
+Type gene: one per terpene synthase, links to cultivars and compounds.
+Type compound: one per terpene/aromatic, with flavor descriptors and links to genes that produce it.
+Type harvest: one per harvest event, links to cultivar and field planting.
+Type planting: one per field planting, links to cultivar.
+Type protocol: one per protocol doc, links to all referenced entities.
+Type inquiry: one per customer question, written by the agent, with the provenance trace as body content.
+Type provenance: one per agent answer, structured representation of the lineage that informed the answer.
+
+This is the key insight: we use GitKB's document model as our domain knowledge graph. Source files stay as files; KB documents are the structured, linked, searchable layer the agent operates on.
+3.4 The dataroot CLI
+User-facing commands (very small surface):
+dataroot init                    # runs `git kb init` + `git kb init claude`,
+                                 # scaffolds .dataroot/ config
+dataroot ingest <path>           # walks data dir, parses files, writes KB docs
+dataroot link                    # runs edge inference pass over KB docs
+dataroot ask "<question>"        # runs the agent loop, prints streaming answer
+dataroot serve                   # starts FastAPI + Next.js UI on localhost
+dataroot miro <provenance_slug>  # renders a saved provenance trace to Miro
+Everything else is internal.
+3.5 Project layout
+dataroot/
+├── CONTEXT.md                  # this file (or copy of it)
+├── README.md                   # public-facing
+├── pyproject.toml              # uv-managed
+├── .env.example
+├── .kb/                        # created by GitKB, not committed
+├── .dataroot/                  # our config
+│   └── config.toml
+├── src/dataroot/
+│   ├── __init__.py
+│   ├── cli.py                  # typer entrypoint
+│   ├── ingest/
+│   │   ├── walker.py           # directory traversal
+│   │   ├── parsers/
+│   │   │   ├── csv.py
+│   │   │   ├── xlsx.py
+│   │   │   ├── fasta.py
+│   │   │   └── markdown.py
+│   │   └── kb_writer.py        # writes parsed facts as KB docs
+│   ├── link/
+│   │   ├── fk_inference.py     # column-name FK detection
+│   │   ├── id_extraction.py    # regex-based ID refs in text
+│   │   └── linker.py           # adds [[wikilinks]] to KB docs
+│   ├── agent/
+│   │   ├── loop.py             # tool-calling loop (your harness)
+│   │   ├── tools.py            # tool definitions + dispatch
+│   │   ├── kb_client.py        # subprocess wrapper for `git-kb mcp`
+│   │   └── system_prompt.md    # the agent's brain
+│   ├── render/
+│   │   ├── miro.py             # Miro REST renderer
+│   │   ├── miro_layout.py      # swimlane layout math
+│   │   └── cytoscape.py        # HTML fallback
+│   └── server/
+│       ├── app.py              # FastAPI
+│       └── routes.py
+├── ui/                         # Next.js web app (Tier 2+)
+│   ├── package.json
+│   └── app/
+│       └── page.tsx
+├── ExampleData/                  # synthetic demo dataset
+│   ├── companyA/
+│   │   ├── cultivars.xlsx
+│   │   ├── compounds.csv
+│   │   ├── terpene_synthases.fasta
+│   │   ├── field_plantings_2025.csv
+│   │   ├── harvest_logs/
+│   │   ├── protocols/
+│   │   └── inquiries/
+│   └── companyB/
+│       ├── cultivars.xlsx
+│       ├── compounds.csv
+│       ├── terpene_synthases.fasta
+│       ├── field_plantings_2025.csv
+│       ├── harvest_logs/
+│       └── protocols/
+└── tests/
+    ├── test_parsers.py
+    ├── test_linker.py
+    └── test_demo_e2e.py        # the demo path must pass
+
+4. The agent
+4.1 Harness
+User has their own agent harness ("I have my own"). Build the agent loop in a way that's harness-agnostic — tools are defined as JSON schemas in src/dataroot/agent/tools.py, the loop driver is a thin wrapper that any harness can plug into. Don't depend on Anthropic SDK specifics in the tool layer.
+4.2 Tools (final list)
+Order roughly matches typical use sequence in a query.
+From GitKB MCP (we just pass these through; the agent calls them directly):
+
+kb_search(query) — FTS5 over all KB docs.
+kb_semantic(query, limit) — vector search if enabled, else falls back to FTS.
+kb_show(slug) — full doc content with frontmatter.
+kb_list(type, status, tags, path) — filtered list of docs.
+kb_graph(slug, direction, depth) — graph traversal from a doc.
+
+DataRoot-specific (thin wrappers over KB plus domain logic):
+
+resolve_compound(query) — natural language ("citrus", "minty floral") → list of compound slugs with confidence. Uses a small embedding lookup over compound flavor descriptors. Falls back to FTS.
+find_cultivars_producing(compound_slugs) — given compounds, walks compound → gene → cultivar via kb_graph.
+check_inventory(cultivar_slug) — answers "is this planted? where? when's harvest?" by walking cultivar → planting → harvest.
+project_timeline(cultivar_slug, target) — given a cultivar's planting/harvest state, projects when product would be available. Returns a structured timeline object.
+render_provenance(trace, mode) — mode is "miro" or "html". Takes a structured trace (list of nodes + edges) and renders.
+
+4.3 System prompt outline
+The system prompt (full text in src/dataroot/agent/system_prompt.md) covers:
+
+Identity: "You are DataRoot, an agent that answers research-data questions by traversing a knowledge graph of research artifacts."
+Domain primer: a short paragraph explaining the cultivar → gene → compound → field pipeline, so the agent knows the standard traversal.
+Tool usage rules:
+
+Always start with resolve_compound if the question mentions a flavor/profile.
+Always check inventory and timeline before answering — never claim availability without checking.
+Cite every factual claim with [citation: <slug>] referring to a KB doc.
+
+
+Output format:
+
+Streaming natural-language answer.
+At the end, emit a <provenance> block with the structured trace (node list, edge list, labels). Backend parses this and either renders to Miro or stores for later rendering.
+
+
+Failure modes:
+
+If a compound can't be resolved, say so and suggest alternatives.
+If no cultivar produces the desired profile, say so explicitly — don't fabricate.
+If lineage is incomplete (e.g., harvest data missing for the parent cultivar), explicitly note the gap.
+
+
+
+The provenance block format:
+xml<provenance>
+{
+  "question": "...",
+  "nodes": [
+    {"id": "n1", "slug": "compounds/limonene", "label": "Limonene", "stage": "compound"},
+    {"id": "n2", "slug": "genes/tps-lim", "label": "TPS-Lim", "stage": "gene"},
+    ...
+  ],
+  "edges": [
+    {"from": "n1", "to": "n2", "label": "produced by", "evidence": "compounds/limonene → wikilink"},
+    ...
+  ],
+  "stages": ["query", "compound", "gene", "cultivar", "field", "answer"]
+}
+</provenance>
+4.4 The traversal pattern (memorize this)
+For the demo question "customer wants a citrus essential oil, what can we deliver?":
+[Query] "citrus essential oil"
+    │ resolve_compound("citrus")
+    ▼
+[Compounds] limonene, citral, linalool   (with confidence scores)
+    │ find_cultivars_producing(...)
+    │   under the hood: for each compound, kb_graph to genes, then to cultivars
+    ▼
+[Genes] tps-lim, tps-cit-syn, tps-lin    (terpene synthases)
+    │
+    ▼
+[Cultivars] tbf-lime-04, tbf-citrus-12   (with parent lineage notes)
+    │ check_inventory(...) for each
+    ▼
+[Inventory]
+    tbf-lime-04: planted Field B, 2025-Sep, expected harvest 2026-Jun
+    tbf-citrus-12: not planted, seeds in inventory
+    │ project_timeline(...) for each
+    ▼
+[Timeline]
+    tbf-lime-04: 5–6 weeks to harvest, 2.3% projected limonene titer
+    tbf-citrus-12: ~9 months to first harvest if planted now
+    │
+    ▼
+[Answer] structured response + provenance block
+This is the exact path the agent should take. The system prompt should describe this pattern explicitly.
+
+5. Ingestion and linking
+5.1 Ingestion
+dataroot ingest <path>:
+
+Walk directory recursively.
+Dispatch by extension to a parser.
+Each parser produces a list of "facts" — (entity_type, entity_id, attributes, source_ref).
+kb_writer materializes facts as KB documents:
+
+One doc per row of cultivars.xlsx (type cultivar).
+One doc per FASTA entry (type gene).
+One doc per row of compounds.csv (type compound).
+One doc per row of harvest logs (type harvest).
+One doc per row of field plantings (type planting).
+One doc per protocol .md (type protocol).
+
+
+Each doc's frontmatter records the source file + row/line offset for citations.
+Body content includes the raw row data (so FTS can hit it) plus a placeholder for wikilinks (filled in by link).
+
+Example KB doc:
+markdown---
+type: cultivar
+slug: cultivars/tbf-lime-04
+title: TBF-Lime-04
+source_file: data/cultivars.xlsx
+source_row: 7
+parent_id: TBF-Citrus-Base
+target_compounds: [limonene]
+field_status: planted
+---
+
+# TBF-Lime-04
+
+A citrus-profile cultivar bred for high limonene expression. Parent: TBF-Citrus-Base.
+
+## Lineage references
+(filled in by `dataroot link`)
+
+## Source data
+| Field | Value |
+|-------|-------|
+| ID | TBF-Lime-04 |
+| Parent | TBF-Citrus-Base |
+| Target compound | limonene |
+| Field status | planted |
+| ... | ... |
+5.2 Linking
+dataroot link walks the KB docs and adds [[wikilinks]]:
+
+FK detection: if doc A's frontmatter has a field whose value matches doc B's slug or its id field, add a link from A to B.
+ID extraction: regex over body content for known ID patterns (cultivar IDs, gene names, compound names) — for each match, add a wikilink.
+FASTA header → cultivar: parse FASTA headers like >TBF-Lime-04|TPS-Lim|variant_A and link the gene doc to the cultivar doc.
+Protocol references: scan protocol bodies for cultivar/gene/compound IDs and add wikilinks.
+
+Each link gets a confidence score (1.0 for FK match, 0.8 for FASTA header parse, 0.6 for body text mention) stored as edge metadata if GitKB supports it; otherwise as a comment in the wikilink (e.g., [[cultivars/tbf-lime-04|cultivar match (FK, 1.0)]]).
+After dataroot link, the agent can use kb_graph to traverse the network.
+
+6. Miro renderer
+6.1 Why Miro
+The user explicitly chose Miro as the diagrammer. It's a strong fit because:
+
+Researchers already use whiteboards for experiment planning.
+The provenance graph becomes the input artifact for the next experiment — they can drag, annotate, add stickies.
+It hits the Miro sponsor track at AITX.
+The official Miro MCP server (released Dec 2025) is solid; community alternatives (olgasafonova/miro-mcp-server, aryehbeitz/miro-mcp) have 40+ shape types and bulk operations.
+
+6.2 Implementation
+Use Miro REST API v2 directly as the implementation path. Miro MCP is optional sponsor-track polish — use REST for deterministic rendering, MCP only if time permits and MCP is already working.
+
+Reasons for REST-first:
+- Fewer moving parts than launching another MCP subprocess.
+- Bulk endpoints handle 20 items per call.
+- Precise positioning (swimlane layout) is straightforward via REST.
+- Deterministic behavior is critical for live demo reliability.
+
+The renderer supports only boring primitives: frames, shapes, sticky notes/text, and connectors. Not all Miro item types are supported programmatically; stick to these four.
+6.3 Layout
+Swimlanes left-to-right, one per stage:
+│ Query     │ Compounds   │ Genes      │ Cultivars      │ Field/Inventory │ Answer    │
+│           │             │            │                │                 │           │
+│ "citrus   │ limonene    │ tps-lim    │ tbf-lime-04   ─┼─ Field B,       │ "Lime-04 │
+│  oil"     │ citral      │ tps-cit    │ tbf-citrus-12  │   planted Sep   │  in 5–6  │
+│           │ linalool    │ tps-lin    │                │   ↓             │  weeks"  │
+│           │             │            │                │   Harvest Jun   │           │
+└───────────┴─────────────┴────────────┴────────────────┴─────────────────┴───────────┘
+
+Each stage is a Miro frame.
+Each entity is a shape (rectangle for cultivar, circle for compound, hexagon for gene — pick distinct shapes per type).
+Each shape has a sticky note attached with the citation (file + row).
+Connectors run between stages with labels ("produced by", "encoded in", "planted as").
+Color-code by stage.
+
+6.4 Rendering pseudocode
+pythondef render_provenance_to_miro(trace: ProvenanceTrace, board_id: str) -> str:
+    """Returns the Miro board URL."""
+    miro = MiroClient(token=os.environ["MIRO_TOKEN"])
+
+    # 1. Create stage frames
+    frames = {}
+    for i, stage in enumerate(trace.stages):
+        frame = miro.create_frame(board_id, title=stage, x=i*900, y=0, w=800, h=1200)
+        frames[stage] = frame
+
+    # 2. Create shapes for each node (bulk)
+    shape_ids = {}
+    by_stage = group_by_stage(trace.nodes)
+    for stage, nodes in by_stage.items():
+        items = [build_shape_payload(n, frames[stage], idx) for idx, n in enumerate(nodes)]
+        created = miro.bulk_create_items(board_id, items)
+        for n, c in zip(nodes, created):
+            shape_ids[n.id] = c.id
+
+    # 3. Create connectors (bulk)
+    connectors = [
+        {"start_item_id": shape_ids[e.from_], "end_item_id": shape_ids[e.to],
+         "caption": e.label}
+        for e in trace.edges
+    ]
+    miro.bulk_create_connectors(board_id, connectors)
+
+    # 4. Attach citation stickies near each shape
+    stickies = [
+        {"text": f"[{n.slug}]\n{n.citation}", "x": pos.x + 200, "y": pos.y, "color": "yellow"}
+        for n in trace.nodes if n.citation
+    ]
+    miro.bulk_create_items(board_id, stickies)
+
+    return f"https://miro.com/app/board/{board_id}/"
+6.5 Fallback
+If Miro fails (rate limit, auth error, network), fall back to Cytoscape.js renderer in the web UI. The provenance trace JSON is the same; only the rendering target changes. The fallback must work cleanly in the demo so a Miro outage doesn't kill us.
+
+7. Web UI
+7.1 Stack
+Next.js 15 with the App Router, Tailwind, shadcn/ui. Single page. Server actions or direct fetch to FastAPI.
+7.2 Layout
+┌────────────────────────────────────────────────────────┐
+│ DataRoot                          [Index Data] [Help]  │
+├──────────────────────────┬─────────────────────────────┤
+│                          │                             │
+│  Chat                    │  Provenance                 │
+│                          │                             │
+│  > customer wants a      │  ┌─────────────────────┐   │
+│    citrus essential oil  │  │  [Miro embed iframe]│   │
+│  ...                     │  │                     │   │
+│  Lime-04 in 5-6 weeks,   │  │  or Cytoscape       │   │
+│  Citrus-12 ~9 months     │  │  fallback           │   │
+│  [citation: cultivars/   │  │                     │   │
+│   tbf-lime-04]           │  └─────────────────────┘   │
+│                          │                             │
+│  [Show provenance →]     │  [Open in Miro] [Reset]    │
+│                          │                             │
+└──────────────────────────┴─────────────────────────────┘
+
+Chat panel streams agent output via SSE.
+Citations in the answer are clickable and highlight the corresponding node in the provenance panel.
+"Show provenance" button triggers Miro render (or shows the already-rendered board).
+Indexing status shown in a toast when dataroot ingest runs.
+
+7.3 Streaming
+FastAPI route /ask returns an SSE stream. Each event is one of:
+
+token — text token from the agent
+tool_call — agent invoked a tool (show "Searching cultivars..." indicator)
+citation — agent emitted a citation (highlight in UI)
+provenance — final provenance block (frontend renders to Miro/Cytoscape)
+done — stream complete
+
+
+8. Synthetic dataset specification
+The dataset has to be just real enough to make the demo land. Use Claude (or any LLM) to generate this in ~1 hour with the following constraints.
+8.1 Cultivars (ExampleData/companyA/cultivars.xlsx, 15 rows)
+Columns: id, name, parent_id, target_compound_ids, flavor_descriptors, field_status, notes.
+15 plant lines. Mix of citrus, floral, herbal, woody profiles. ~5 should be planted, ~5 in seed inventory, ~5 in concept stage.
+8.2 Compounds (ExampleData/companyA/compounds.csv, ~50 rows)
+Columns: id, name, iupac, family (monoterpene, sesquiterpene, etc.), flavor_descriptors (comma-separated: citrus, floral, etc.), produced_by_genes, boiling_point_c, cas_number.
+Cover the major terpenes you'd expect in essential oils: limonene, linalool, citral, pinene, myrcene, geraniol, eugenol, etc.
+8.3 Terpene synthases (ExampleData/companyA/terpene_synthases.fasta, ~20 entries)
+Headers structured as: >{gene_id}|{cultivar_id}|{variant}|{produces_compound_id}
+Sequences can be 200–400 random AA characters — they're never matched biologically, just parsed for headers.
+8.4 Field plantings (ExampleData/companyA/field_plantings_2025.csv, ~8 rows)
+Columns: id, cultivar_id, field, planted_date, area_m2, expected_first_harvest, notes.
+8.5 Harvest logs (ExampleData/companyA/harvest_logs/*.csv, 5 files)
+One file per cultivar that has been harvested before. Columns: harvest_date, cultivar_id, field, mass_kg, compound_id, titer_pct, notes.
+8.6 Protocols (ExampleData/companyA/protocols/*.md, 3 files)
+Markdown files for: "Limonene assay protocol," "Cultivar genotyping protocol," "Field plot setup." Each references cultivar/gene/compound IDs in prose so the linker has something to extract.
+8.7 Inquiries (data/inquiries/*.json, 3 files)
+Sample customer inquiries to seed the demo:
+
+"Looking for an essential oil with bright citrus notes, ideally high in limonene"
+"We need a soothing floral blend with linalool dominance"
+"Customer wants something with menthol or cooling characteristics"
+
+The first one is the demo question.
+
+9. Build plan (hour-by-hour)
+Assumes ~30 hours of focused build over the hackathon weekend (Friday eve through Sunday demo). Adjust to your real available time.
+Hour 0–2: Foundation
+
+git kb init in fresh repo, scaffold dataroot/ Python project with uv.
+Install GitKB locally, verify git kb mcp runs.
+Create FastAPI skeleton, healthcheck endpoint.
+Commit CONTEXT.md (this doc) into the repo.
+
+Hour 2–4: Synthetic dataset
+
+Generate all the data files from §8 using Claude. Don't spend more than 2 hours on this.
+Sanity check: open each file, make sure IDs cross-reference.
+
+Hour 4–8: Ingestion
+
+CSV/XLSX parsers (use pandas or polars, doesn't matter at this scale).
+FASTA parser (just splits on >, parses pipe-delimited headers).
+kb_writer that converts parsed rows to KB doc Markdown with frontmatter.
+Test: run dataroot ingest data/, verify ~80 KB docs created, run kb_search "limonene" and see hits.
+
+Hour 8–11: Linking
+
+FK inference: walk frontmatter fields, match against other docs' slugs.
+ID extraction: regex over body, scan for known patterns.
+FASTA header → cultivar/compound link.
+Test: run kb_graph cultivars/tbf-lime-04 depth=2 — should show genes, harvests, plantings.
+
+Hour 11–14: Domain ontology + agent tools
+
+Hand-author the compound flavor descriptor mapping (no agent needed — just a JSON file the resolve_compound tool reads).
+Implement DataRoot-specific tools: resolve_compound, find_cultivars_producing, check_inventory, project_timeline.
+Wire the GitKB MCP subprocess client.
+
+Hour 14–18: Agent loop
+
+Plug in user's existing harness.
+System prompt (src/dataroot/agent/system_prompt.md).
+Tool schemas.
+CLI: dataroot ask "..." runs the full loop, prints streaming output.
+Test the demo question end-to-end. Iterate on the system prompt until the traversal is clean.
+
+Hour 18–22: Miro renderer
+
+OAuth token in .env, create a test board manually.
+MiroClient with create_frame, bulk_create_items, bulk_create_connectors.
+Layout math for swimlanes.
+render_provenance tool emits the board URL.
+Test: trigger from CLI, see board populate.
+
+Hour 22–27: Web UI
+
+Next.js scaffold, single page.
+Chat panel with SSE streaming from FastAPI.
+Provenance panel with Miro embed iframe + Cytoscape fallback.
+Polish: loading states, citation hover, "Open in Miro" button.
+
+Hour 27–29: Demo polish
+
+Record a backup video in case live demo fails.
+Pre-warm the demo: ensure the Miro board exists, the dataset is indexed, the agent's first response is fast.
+Write the 3-minute demo script.
+Practice it twice.
+
+Hour 29–30: Buffer
+
+Inevitably needed for the bug you didn't anticipate. Don't allocate this to features.
+
+Cut order if behind
+At any checkpoint, if you're more than 2 hours behind, cut from the bottom of Tier 3, then Tier 2. Demo polish and buffer are non-negotiable — a polished Tier 1 demo wins more often than a janky Tier 3.
+
+10. Demo script
+3 minutes. Exact words to rehearse.
+
+[0:00] Open terminal next to web browser.
+"Research orgs have data scattered across spreadsheets, FASTAs, lab logs, protocols. When a customer asks a real question — 'do you have an essential oil with bright citrus notes' — answering it correctly takes three teams two weeks. DataRoot does it in 30 seconds."
+[0:25] Show the data folder.
+"Here's a folder with 30 files: cultivar registry, compound database, FASTAs of terpene synthases, harvest logs, field plantings, protocols. I've already run dataroot ingest and dataroot link — it parsed everything, profiled it, and inferred cross-references. All 80-something facts are now a queryable graph."
+[0:55] Switch to web UI.
+"The customer's email said: 'looking for an essential oil with bright citrus notes, ideally high in limonene.' I'll paste it in."
+[1:10] Submit. Agent streams.
+"Watch what happens. The agent decomposes — flavor profile to compounds, compounds to genes, genes to cultivars, cultivars to field status. It's calling tools — resolve_compound, find_cultivars_producing, check_inventory, project_timeline — each one walking a different slice of the graph."
+[1:50] Answer renders with citations.
+"Two cultivars match. TBF-Lime-04 is in Field B, harvest in 5–6 weeks, projected 2.3% limonene. TBF-Citrus-12 has the trait but isn't planted — seeds in inventory, ~9 months to first harvest. Every claim is cited back to a specific cell in a specific spreadsheet."
+[2:15] Click "Show provenance."
+"But here's the agentic part. The reasoning trace renders to a Miro board the researcher can use as the input artifact for the next experiment. Six swimlanes — query, compounds, genes, cultivars, field, answer. Every node is a cited entity. Every edge is a typed relationship. The researcher drags this into their experiment planning session and starts annotating directly."
+[2:45] Wrap.
+"DataRoot doesn't just answer the question. It produces the artifact the next experiment is designed against. Built in a weekend on top of GitKB and Miro. Repo's open. Thanks."
+
+What to emphasize for judges
+
+Planning: the agent decomposes a fuzzy domain question into typed steps.
+Tool use: 6 tools, agent picks the right one in sequence.
+Recovery: if Citrus-12 wasn't in seed inventory, the agent would say so explicitly. Mention this if it doesn't come up naturally.
+Real utility: "this question really takes 2 weeks to answer in the field" — mention it. Judges who haven't worked in a research org need this context.
+Agentic write: the Miro board is something the agent creates. It's not a pre-existing template being filled in.
+
+
+11. Risks and mitigations
+RiskLikelihoodImpactMitigationGitKB has a bug or limitation we hit lateMediumHighTest ingestion → linking → search → graph end-to-end in the first 8 hours. If GitKB blocks us, fall back to a SQLite + FTS5 layer we control (~4 hours of work).Miro auth or rate limits fail mid-demoLowHighPre-render the demo board the night before. Fall back to Cytoscape if Miro is down. Test the fallback path.Agent's traversal is wrong/inconsistentMediumHighIterate on the system prompt with the exact demo question until it's deterministic. Pin model + temperature. Save a known-good transcript as a backup video.Synthetic data has internal inconsistenciesMediumMediumAfter generating, run dataroot ingest && dataroot link and kb_graph cultivars/tbf-lime-04 depth=3 — the graph should look like the §4.4 traversal pattern. If it doesn't, fix the data.Web UI doesn't workLowMediumCLI demo is acceptable. If Next.js bites, drop to Tier 1: terminal recording on the projector.User's agent harness has quirksUnknownMediumBuild the tool layer harness-agnostic (JSON schemas only). Keep the loop driver in one file we can rewrite quickly.Spend too long on polishMediumHighTime-box every section. If Tier 1 isn't done by hour 14, kill all Tier 2 work and ship what you have.Demo dependency hell on the laptopLowCatastrophicTest the full demo path on the actual demo laptop, on demo network, the day before. Pin every dependency.
+
+12.3 README contents
+
+One-sentence pitch.
+Animated GIF or thumbnail of the demo.
+"Why this is an agent, not RAG" — explicit framing for judges.
+Architecture diagram (the one in §3.1).
+Quickstart: dataroot init && dataroot ingest data/ && dataroot link && dataroot serve.
+Credits to GitKB and Miro.
+
+13. Glossary
+
+GitKB: distributed knowledge graph protocol with sparse sync, MCP server, FTS5 + vector search, tree-sitter code intelligence. See https://gitkb.com/.
+MCP: Model Context Protocol. Standardized way for agents to call tools.
+PenFile / RootFile: from the DFDMaker prior project, the canonical project format. We're not using it directly — GitKB's KB is our equivalent.
+Provenance trace: the structured record of what artifacts informed an agent's answer. In DataRoot, it's a JSON object with nodes, edges, and stages.
+Lineage edge: an inferred relationship between two artifacts (e.g., harvest log row references cultivar ID).
+Cultivar: a plant line with specific genetic and phenotypic traits.
+Terpene synthase (TPS): a class of enzymes that produce terpenoid compounds. The genes encoding these are what we trace through FASTAs.
+Titer: the concentration of a compound in a sample (typical units: % w/w or mg/g).
+
+15. Pointers for the agent reading this doc
+If you (the agent) are starting work on this project from scratch:
+
+Read this entire document. Don't skim §3 (architecture) or §4 (agent design).
+Verify GitKB is installed and git kb mcp runs. If not, install it before doing anything else.
+Start at §9 hour 0. Do not skip ahead to the agent loop before ingestion works.
+Every time you're about to write generic indexing/search/graph code, stop and check whether GitKB already does it (§3.2).
+Test the full demo path (the §4.4 traversal) at every checkpoint. If it stops working, fix it before adding features.
+When in doubt about scope, look at §2.3 tier list. If something isn't in Tier 1, don't build it until Tier 1 works.
+Ask the human (§14) before deciding anything that affects demo viability.
+
+
+End of context master.
