@@ -16,7 +16,14 @@ from dataroot.cli import main
 from dataroot.config import load_config
 from dataroot.kb.base import DocumentRecord
 from dataroot.kb.local_store import LocalMarkdownStore
-from dataroot.render.miro import MiroClient, clear_live_ask_section_to_miro, render_provenance_to_miro
+from dataroot.render.miro import (
+    FIXED_FLOW_TITLES,
+    FLOW_DETAIL_LIMITS,
+    MiroClient,
+    _palette_color_for_stage,
+    clear_live_ask_section_to_miro,
+    render_provenance_to_miro,
+)
 from dataroot.render.miro_refresh import plan_miro_board_refresh, refresh_ask_board
 
 
@@ -108,7 +115,7 @@ class MiroRendererTests(unittest.TestCase):
             call["json"]["style"]["fontSize"]
             for call in fake.posts("shapes")
             if "<strong>Question</strong>" in call["json"]["data"]["content"]
-            or "<strong>GitKB retrieval</strong>" in call["json"]["data"]["content"]
+            or "<strong>DataRoot Parsing &amp; Retrieval</strong>" in call["json"]["data"]["content"]
             or "<strong>Evidence Path</strong>" in call["json"]["data"]["content"]
             or "<strong>Final Answer</strong>" in call["json"]["data"]["content"]
         ]
@@ -149,7 +156,7 @@ class MiroRendererTests(unittest.TestCase):
 
         shapes = fake.posts("shapes")
         question = next(call for call in shapes if "<strong>Question</strong>" in call["json"]["data"]["content"])
-        retrieval = next(call for call in shapes if "<strong>GitKB retrieval</strong>" in call["json"]["data"]["content"])
+        retrieval = next(call for call in shapes if "<strong>DataRoot Parsing &amp; Retrieval</strong>" in call["json"]["data"]["content"])
         evidence = next(call for call in shapes if "<strong>Evidence Path</strong>" in call["json"]["data"]["content"])
         answer = next(call for call in shapes if "<strong>Final Answer</strong>" in call["json"]["data"]["content"])
 
@@ -511,7 +518,7 @@ class MiroRendererTests(unittest.TestCase):
             ],
             existing_items=[
                 _shape_item("question-shape", "Question", "live-frame"),
-                _shape_item("retrieval-shape", "GitKB retrieval", "live-frame"),
+                _shape_item("retrieval-shape", "DataRoot Parsing & Retrieval", "live-frame"),
                 _shape_item("evidence-shape", "Evidence Path", "live-frame"),
                 _shape_item("answer-shape", "Final Answer", "live-frame"),
                 _shape_item("old-card", "Old evidence", "old-stage"),
@@ -612,7 +619,7 @@ class MiroRendererTests(unittest.TestCase):
             ],
             existing_items=[
                 _shape_item("question-shape", "Question", "live-frame"),
-                _shape_item("retrieval-shape", "GitKB retrieval", "live-frame"),
+                _shape_item("retrieval-shape", "DataRoot Parsing & Retrieval", "live-frame"),
                 _shape_item("evidence-shape", "Evidence Path", "live-frame"),
                 _shape_item("answer-shape", "Final Answer", "live-frame"),
                 _live_input_item("input-text", "How soon can Solara-14 ship?", "live-frame"),
@@ -675,7 +682,7 @@ class MiroRendererTests(unittest.TestCase):
             ],
             existing_items=[
                 _shape_item("question-shape", "Question", "live-frame"),
-                _shape_item("retrieval-shape", "GitKB retrieval", "live-frame"),
+                _shape_item("retrieval-shape", "DataRoot Parsing & Retrieval", "live-frame"),
                 _shape_item("evidence-shape", "Evidence Path", "live-frame"),
                 _shape_item("answer-shape", "Final Answer", "live-frame"),
                 _live_input_item("input-text", "", "live-frame"),
@@ -1063,6 +1070,37 @@ def _cwd(path: Path):
         yield
     finally:
         os.chdir(previous)
+
+
+class StagePaletteTests(unittest.TestCase):
+    def test_known_austin_stages_get_distinct_colors(self) -> None:
+        colors = {
+            stage: _palette_color_for_stage(stage)
+            for stage in ("permits", "reviews", "code_complaints", "code_tasks")
+        }
+        self.assertEqual(len(set(colors.values())), 4)
+        for color in colors.values():
+            self.assertNotEqual(color, "#eaeaea")
+            self.assertNotEqual(color, "#f0f0f0")
+
+    def test_unknown_stage_uses_deterministic_palette(self) -> None:
+        first = _palette_color_for_stage("brand_new_dataset")
+        second = _palette_color_for_stage("brand_new_dataset")
+        self.assertEqual(first, second)
+        self.assertNotEqual(first, "#f0f0f0")
+
+    def test_blank_stage_returns_neutral_grey(self) -> None:
+        self.assertEqual(_palette_color_for_stage(""), "#f0f0f0")
+
+
+class FlowStylingConsistencyTests(unittest.TestCase):
+    def test_retrieval_label_uses_dataroot_branding(self) -> None:
+        self.assertEqual(FIXED_FLOW_TITLES["retrieval"], "DataRoot Parsing & Retrieval")
+
+    def test_flow_detail_limits_are_shared(self) -> None:
+        self.assertEqual(FLOW_DETAIL_LIMITS["question"], 190)
+        self.assertEqual(FLOW_DETAIL_LIMITS["retrieval"], 190)
+        self.assertEqual(FLOW_DETAIL_LIMITS["answer"], 360)
 
 
 if __name__ == "__main__":

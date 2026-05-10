@@ -7,15 +7,15 @@ This document is the non-negotiable behavior contract for the DataRoot Miro demo
 - The board has one protected top area named `DataRoot Provenance`.
 - Content below that area is recreated by `dataroot miro-refresh-board`.
 - Each mock company has a `Standard Demo` section and a `Live Ask` section.
-- Each section keeps the same top skeleton: `Question`, `GitKB retrieval`, `Evidence Path`, and `Final Answer`.
+- Each section keeps the same top skeleton: `Question`, `DataRoot Parsing & Retrieval`, `Evidence Path`, and `Final Answer`.
 - `Final Answer` is positioned under `Question`.
 
 ## Required Arrows
 
 - Every section must have a fixed right-angle arrow from `Question` to `Final Answer`.
 - Every section must have the fixed right-angle flow chain:
-  - `Question -> GitKB retrieval`
-  - `GitKB retrieval -> Evidence Path`
+  - `Question -> DataRoot Parsing & Retrieval`
+  - `DataRoot Parsing & Retrieval -> Evidence Path`
   - `Evidence Path -> Final Answer`
 - Every answer with evidence cards must draw up to two evidence support arrows from specific cards in the reference/data-type sections to `Final Answer`.
 - Evidence support arrow selection order is:

@@ -52,7 +52,7 @@ class MiroPlanTests(unittest.TestCase):
         self.assertEqual(plan.recommendation, "A-CUL-TOM-014 / Solara-14")
         self.assertEqual(plan.context_label, "CropProtectorAI")
         self.assertEqual(plan.title, "CropProtectorAI evidence path")
-        self.assertIn("GitKB found 1 cited evidence record", plan.retrieval_summary)
+        self.assertIn("DataRoot found 1 cited evidence record", plan.retrieval_summary)
         self.assertEqual(plan.evidence_cards[0].citation, "row_groups/registries/cultivar_registry.csv/a-cul-tom-014")
         self.assertEqual(plan.evidence_cards[0].source, "registries/cultivar_registry.csv")
         self.assertIn("Solara-14", plan.evidence_cards[0].title)
@@ -93,7 +93,7 @@ class MiroPlanTests(unittest.TestCase):
                     "answer": "Friendly answer.",
                     "recommendation": "Use the cited record.",
                     "confidence": "high",
-                    "retrieval_summary": "GitKB found one useful record.",
+                    "retrieval_summary": "DataRoot found one useful record.",
                     "evidence_cards": [
                         {
                             "id": "claim_1",

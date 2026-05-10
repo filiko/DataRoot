@@ -11,6 +11,7 @@ from dataroot.kb.local_store import LocalMarkdownStore
 from dataroot.link import link_workspace
 from dataroot.profile import profile_workspace
 from dataroot.query import _extract_provenance, answer_question, persist_answer_artifacts
+from dataroot.render.interpretation import _sanitize_final_answer_text
 from dataroot.render.miro import (
     DEMO_SECTION_GAP,
     DEMO_SECTION_MIN_H,
@@ -210,13 +211,8 @@ def _canonical_answer_text(root: Path, demo: AskBoardDemo, trace: dict) -> str:
             answer_body = answer_file.read_text(encoding="utf-8").strip()
     if not answer_body:
         summary = trace.get("provenance_summary") if isinstance(trace.get("provenance_summary"), dict) else {}
-        answer_body = "\n".join(
-            [
-                f"Question: {demo.question}",
-                "",
-                str(summary.get("reasoning") or "DataRoot found a cited evidence path for this standard demo."),
-            ]
-        )
+        answer_body = str(summary.get("reasoning") or "DataRoot found a cited evidence path for this standard demo.")
+    answer_body = _sanitize_final_answer_text(answer_body) or answer_body
     return "\n".join(
         [
             answer_body,

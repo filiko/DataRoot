@@ -110,7 +110,7 @@ def _deterministic_interpretation(
         source_text = "the linked knowledge base"
     retrieved = len(proof_rows)
     retrieval_explanation = (
-        f"GitKB found {retrieved} cited evidence record{'s' if retrieved != 1 else ''} from {source_text} "
+        f"DataRoot found {retrieved} cited evidence record{'s' if retrieved != 1 else ''} from {source_text} "
         "and kept the citation refs attached for proof mode."
     )
 
@@ -192,7 +192,7 @@ def _interpretation_from_payload(
         )
 
     return DataTidbitInterpretation(
-        takeaway=_clean(str(data.get("takeaway") or fallback.takeaway)),
+        takeaway=_sanitize_final_answer_text(str(data.get("takeaway") or fallback.takeaway)),
         confidence=_clean(str(data.get("confidence") or fallback.confidence)),
         retrieval_explanation=_clean(str(data.get("retrieval_explanation") or fallback.retrieval_explanation)),
         claims=claims or fallback.claims,
@@ -214,22 +214,22 @@ def _json_object_from_model_text(value: str) -> dict:
 
 def _answer_from_inputs(trace: dict, *, store=None, inquiry_slug: str | None, answer_text: str | None) -> str:
     if answer_text:
-        return _clean(_strip_provenance(answer_text))
+        return _sanitize_final_answer_text(answer_text)
     if store and inquiry_slug:
         try:
             record = store.read(inquiry_slug)
             answer = _extract_answer_summary(record.body)
             if answer:
-                return answer
+                return _sanitize_final_answer_text(answer)
         except Exception:
             pass
     summary = trace.get("provenance_summary")
     if isinstance(summary, dict):
         reasoning = summary.get("reasoning") or summary.get("summary")
         if reasoning:
-            return _clean(str(reasoning))
+            return _sanitize_final_answer_text(str(reasoning))
     if isinstance(summary, str):
-        return _clean(summary)
+        return _sanitize_final_answer_text(summary)
     return "DataRoot found a cited evidence path for this question."
 
 
@@ -237,6 +237,8 @@ def _node_context(node: dict, *, store=None) -> dict[str, str]:
     slug = _clean(str(node.get("slug") or ""))
     label = _clean(str(node.get("label") or node.get("id") or slug or "Evidence"))
     stage = _normalize_stage(str(node.get("stage") or "evidence"))
+    if stage in _GENERIC_NODE_STAGES:
+        stage = _stage_from_slug(slug) or stage
     detail = _clean(str(node.get("citation_snippet") or node.get("description") or node.get("detail") or ""))
     source = _source_from_slug(slug)
     raw_detail = detail
@@ -380,6 +382,55 @@ def _strip_provenance(answer: str) -> str:
     return re.sub(r"\n?<provenance>\s*.*?\s*</provenance>\s*", "", answer, flags=re.DOTALL).strip()
 
 
+_FINAL_ANSWER_HEADING_RE = re.compile(r"^#{1,6}\s")
+_FINAL_ANSWER_HRULE_RE = re.compile(r"^(?:-{3,}|={3,}|\*{3,})$")
+_FINAL_ANSWER_QUESTION_LINE_RE = re.compile(r"^\*{0,2}question\s*:?\*{0,2}", re.IGNORECASE)
+_FINAL_ANSWER_PREFIX_RE = re.compile(r"^\*{0,2}answer\s*:\s*\*{0,2}", re.IGNORECASE)
+_FINAL_ANSWER_CITATION_RE = re.compile(r"\s*\[citation:[^\]]*\]")
+
+
+def _sanitize_final_answer_text(text: str) -> str:
+    """Strip headers, repeated questions, "Answer:" prefix, and [citation: …] markers."""
+    if not text:
+        return ""
+    cleaned = _strip_provenance(str(text))
+    kept_lines = []
+    for line in cleaned.splitlines():
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if _FINAL_ANSWER_HEADING_RE.match(stripped):
+            continue
+        if _FINAL_ANSWER_HRULE_RE.match(stripped):
+            continue
+        if _FINAL_ANSWER_QUESTION_LINE_RE.match(stripped):
+            continue
+        kept_lines.append(stripped)
+    collapsed = _clean(" ".join(kept_lines))
+    collapsed = _FINAL_ANSWER_PREFIX_RE.sub("", collapsed, count=1).strip()
+    collapsed = _FINAL_ANSWER_CITATION_RE.sub("", collapsed)
+    return _clean(collapsed)
+
+
+_GENERIC_NODE_STAGES = {"", "evidence", "evidence_path", "row_group", "row_groups", "search", "result"}
+_SLUG_STAGE_PREFIXES = ("row_groups/", "tables/", "columns/", "measurements/", "candidates/", "source_files/")
+
+
+def _stage_from_slug(slug: str) -> str:
+    """Derive a per-dataset stage from a KB slug (e.g. row_groups/permits/... → permits)."""
+    if not slug:
+        return ""
+    cleaned = slug.replace("\\", "/").strip("/").lower()
+    for prefix in _SLUG_STAGE_PREFIXES:
+        if cleaned.startswith(prefix):
+            remainder = cleaned[len(prefix):]
+            head, _, rest = remainder.partition("/")
+            if not head or "." in head or not rest:
+                return ""
+            return _normalize_stage(head)
+    return ""
+
+
 def _list_of_strings(value: Any) -> list[str]:
     if isinstance(value, str):
         return [_clean(value)]
@@ -433,4 +484,6 @@ __all__ = [
     "InterpretedClaim",
     "ProofRow",
     "interpret_data_tidbits",
+    "_sanitize_final_answer_text",
+    "_stage_from_slug",
 ]

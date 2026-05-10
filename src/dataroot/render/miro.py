@@ -100,9 +100,14 @@ DEMO_LIVE_ASK_RUN_HTML = (
 DEMO_PROOF_FRAME_TITLE = "Sources / Precise Proof"
 FIXED_FLOW_TITLES = {
     "question": "Question",
-    "retrieval": "GitKB retrieval",
+    "retrieval": "DataRoot Parsing & Retrieval",
     "evidence": "Evidence Path",
     "answer": "Final Answer",
+}
+FLOW_DETAIL_LIMITS = {
+    "question": 190,
+    "retrieval": 190,
+    "answer": 360,
 }
 DEMO_FLOW_CONNECTORS = (
     ("question", "answer", "answers", "bottom", "top"),
@@ -138,9 +143,23 @@ STAGE_COLORS = {
     "qc": "#e8d4f5",
     "field_readiness": "#ffd6e7",
     "bioreactor": "#ffd6e7",
+    "permits": "#d0e8ff",
+    "reviews": "#fffac8",
+    "code_complaints": "#ffd6d6",
+    "code_tasks": "#d4f5d4",
     "row_group": "#eaeaea",
     "evidence": "#eaeaea",
 }
+STAGE_PALETTE_FALLBACK = (
+    "#d0e8ff",
+    "#fffac8",
+    "#d4f5d4",
+    "#ffe5b4",
+    "#e8d4f5",
+    "#ffd6e7",
+    "#cfead6",
+    "#fde2cf",
+)
 
 ICONIFY_BASE = "https://api.iconify.design"
 FLOW_ICON_URLS = {
@@ -1700,11 +1719,11 @@ def _demo_lane_height(cards: list[BoardCard]) -> float:
 
 
 def _demo_question_html(plan: BoardPlan) -> str:
-    return _flow_html(FIXED_FLOW_TITLES["question"], _truncate(plan.question, 190))
+    return _flow_html(FIXED_FLOW_TITLES["question"], _truncate(plan.question, FLOW_DETAIL_LIMITS["question"]))
 
 
 def _demo_retrieval_html(plan: BoardPlan) -> str:
-    return _flow_html(FIXED_FLOW_TITLES["retrieval"], _truncate(plan.retrieval_summary, 190))
+    return _flow_html(FIXED_FLOW_TITLES["retrieval"], _truncate(plan.retrieval_summary, FLOW_DETAIL_LIMITS["retrieval"]))
 
 
 def _demo_evidence_html(plan: BoardPlan) -> str:
@@ -1723,7 +1742,7 @@ def _demo_evidence_html(plan: BoardPlan) -> str:
 
 
 def _demo_answer_html(plan: BoardPlan) -> str:
-    return _flow_html(FIXED_FLOW_TITLES["answer"], _truncate(plan.answer, 360))
+    return _flow_html(FIXED_FLOW_TITLES["answer"], _truncate(plan.answer, FLOW_DETAIL_LIMITS["answer"]))
 
 
 def _source_badges(plan: BoardPlan) -> dict[str, str]:
@@ -1964,11 +1983,11 @@ def _story_stages(plan: BoardPlan) -> list[str]:
 def _decision_html(plan: BoardPlan, *, provenance_slug: str | None) -> str:
     parts = [
         f"<p><strong>Demo dataset</strong>: {html.escape(_truncate(plan.context_label, 160))}</p>",
-        f"<p><strong>Question</strong>: {html.escape(_truncate(plan.question, 360))}</p>",
-        f"<p><strong>Answer</strong>: {html.escape(_truncate(plan.answer, 560))}</p>",
+        f"<p><strong>Question</strong>: {html.escape(_truncate(plan.question, FLOW_DETAIL_LIMITS['question']))}</p>",
+        f"<p><strong>Answer</strong>: {html.escape(_truncate(plan.answer, FLOW_DETAIL_LIMITS['answer']))}</p>",
         f"<p><strong>Recommendation</strong>: {html.escape(_truncate(plan.recommendation, 240))} "
         f"<small>Confidence: {html.escape(_truncate(plan.confidence, 80))}</small></p>",
-        f"<p><small>{html.escape(_truncate(plan.retrieval_summary, 300))}</small></p>",
+        f"<p><small>{html.escape(_truncate(plan.retrieval_summary, FLOW_DETAIL_LIMITS['retrieval']))}</small></p>",
     ]
     if provenance_slug:
         parts.append(f"<p><small>Audit trace: {html.escape(provenance_slug)}</small></p>")
@@ -1987,10 +2006,10 @@ def _render_flow(
     x_positions = [120 + step_w / 2 + index * (step_w + gap) for index in range(4)]
     y = STORY_FLOW_H / 2
     steps = [
-        ("question", "Question", _truncate(plan.question, 120), "#d0e8ff", x_positions[0], y),
-        ("retrieval", "GitKB retrieval", _truncate(plan.retrieval_summary, 130), "#e8d4f5", x_positions[1], y),
-        ("evidence", "Evidence path", f"{len(plan.evidence_cards)} cited records grouped by source.", "#fffac8", x_positions[2], y),
-        ("answer", "Final answer", _truncate(plan.answer, 140), "#d4f5d4", x_positions[3], y),
+        ("question", FIXED_FLOW_TITLES["question"], _truncate(plan.question, FLOW_DETAIL_LIMITS["question"]), "#d0e8ff", x_positions[0], y),
+        ("retrieval", FIXED_FLOW_TITLES["retrieval"], _truncate(plan.retrieval_summary, FLOW_DETAIL_LIMITS["retrieval"]), "#e8d4f5", x_positions[1], y),
+        ("evidence", FIXED_FLOW_TITLES["evidence"], f"{len(plan.evidence_cards)} cited records grouped by source.", "#fffac8", x_positions[2], y),
+        ("answer", FIXED_FLOW_TITLES["answer"], _truncate(plan.answer, FLOW_DETAIL_LIMITS["answer"]), "#d4f5d4", x_positions[3], y),
     ]
     ids = {}
     for key, title, detail, color, x, y in steps:
@@ -2228,7 +2247,16 @@ def _card_color(card: BoardCard) -> str:
         return "#ffd6d6"
     if card.emphasis == "gap":
         return "#ffe5b4"
-    return STAGE_COLORS.get(card.stage, "#f0f0f0")
+    return _palette_color_for_stage(card.stage)
+
+
+def _palette_color_for_stage(stage: str) -> str:
+    if stage in STAGE_COLORS:
+        return STAGE_COLORS[stage]
+    if not stage:
+        return "#f0f0f0"
+    bucket = sum(ord(ch) for ch in stage) % len(STAGE_PALETTE_FALLBACK)
+    return STAGE_PALETTE_FALLBACK[bucket]
 
 
 def _card_border(card: BoardCard) -> str:

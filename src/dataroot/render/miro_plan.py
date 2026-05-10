@@ -11,8 +11,13 @@ from typing import Any
 from dataroot.render.interpretation import (
     DataTidbitInterpretation,
     ProofRow,
+    _sanitize_final_answer_text,
+    _stage_from_slug,
     interpret_data_tidbits,
 )
+
+
+_GENERIC_NODE_STAGES = {"", "evidence", "evidence_path", "row_group", "row_groups", "search", "result"}
 
 
 @dataclass
@@ -152,7 +157,7 @@ def _deterministic_plan(
     sources = sorted({card.source for card in evidence_cards if card.source})
     stages = sorted({card.stage for card in evidence_cards if card.stage})
     retrieval_summary = interpretation.retrieval_explanation or (
-        f"GitKB retrieved {len(evidence_cards)} cited records across "
+        f"DataRoot retrieved {len(evidence_cards)} cited records across "
         f"{len(sources) or len(stages) or 1} data sources: {', '.join(sources[:4] or stages[:4])}."
     )
 
@@ -277,7 +282,7 @@ def _model_plan(trace: dict, fallback: BoardPlan) -> BoardPlan:
         "You turn interpreted DataRoot claims into a concise Miro board plan for a demo viewer. "
         "Return only JSON with title, context_label, question, answer, recommendation, confidence, "
         "retrieval_summary, evidence_cards, alternatives, connections, and audit_notes. "
-        "Keep the fixed board story Question -> GitKB retrieval -> Evidence path -> Final answer. "
+        "Keep the fixed board story Question -> DataRoot Parsing & Retrieval -> Evidence path -> Final answer. "
         "Do not invent citations; reuse only citations already present in proof_rows or evidence_cards. "
         "Do not add new scientific facts beyond the interpreted claims."
     )
@@ -356,7 +361,7 @@ def _plan_from_payload(data: dict, *, fallback: BoardPlan, allowed_citations: se
         title=_clean(str(data.get("title") or fallback.title)),
         context_label=_clean(str(data.get("context_label") or fallback.context_label)),
         question=_clean(str(data.get("question") or fallback.question)),
-        answer=_clean(str(data.get("answer") or fallback.answer)),
+        answer=_sanitize_final_answer_text(str(data.get("answer") or fallback.answer)),
         recommendation=_clean(str(data.get("recommendation") or fallback.recommendation)),
         confidence=_clean(str(data.get("confidence") or fallback.confidence)),
         retrieval_summary=_clean(str(data.get("retrieval_summary") or fallback.retrieval_summary)),
@@ -372,22 +377,22 @@ def _plan_from_payload(data: dict, *, fallback: BoardPlan, allowed_citations: se
 
 def _answer_from_inputs(trace: dict, *, store=None, inquiry_slug: str | None, answer_text: str | None) -> str:
     if answer_text:
-        return _clean(_strip_provenance(answer_text))
+        return _sanitize_final_answer_text(answer_text)
     if store and inquiry_slug:
         try:
             record = store.read(inquiry_slug)
             answer = _extract_answer_summary(record.body)
             if answer:
-                return answer
+                return _sanitize_final_answer_text(answer)
         except Exception:
             pass
     summary = trace.get("provenance_summary")
     if isinstance(summary, dict):
         reasoning = summary.get("reasoning") or summary.get("summary")
         if reasoning:
-            return _clean(str(reasoning))
+            return _sanitize_final_answer_text(str(reasoning))
     if isinstance(summary, str):
-        return _clean(summary)
+        return _sanitize_final_answer_text(summary)
     return "DataRoot found a cited evidence path for this question."
 
 
@@ -404,6 +409,8 @@ def _node_context(node: dict, *, store=None) -> dict[str, str]:
     slug = _clean(str(node.get("slug") or ""))
     label = _clean(str(node.get("label") or node.get("id") or slug or "Evidence"))
     stage = _normalize_stage(str(node.get("stage") or "evidence"))
+    if stage in _GENERIC_NODE_STAGES:
+        stage = _stage_from_slug(slug) or stage
     detail = _clean(str(node.get("citation_snippet") or node.get("description") or node.get("detail") or ""))
     source = _source_from_slug(slug)
     if store and slug and not node.get("visual_only"):

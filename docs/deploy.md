@@ -122,7 +122,7 @@ preserved. The default board keeps:
 
 - a direct `Question -> Final Answer` arrow,
 - the process chain
-  `Question -> GitKB retrieval -> Evidence Path -> Final Answer`,
+  `Question -> DataRoot Parsing & Retrieval -> Evidence Path -> Final Answer`,
 - and up to two evidence-card arrows into `Final Answer`.
 
 Evidence cards use compact `S1`/`S2` source badges; the final answer

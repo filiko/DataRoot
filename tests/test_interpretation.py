@@ -9,7 +9,11 @@ from unittest.mock import patch
 
 from dataroot.kb.base import DocumentRecord
 from dataroot.kb.local_store import LocalMarkdownStore
-from dataroot.render.interpretation import interpret_data_tidbits
+from dataroot.render.interpretation import (
+    _sanitize_final_answer_text,
+    _stage_from_slug,
+    interpret_data_tidbits,
+)
 
 
 class InterpretationTests(unittest.TestCase):
@@ -61,7 +65,7 @@ class InterpretationTests(unittest.TestCase):
                 payload = {
                     "takeaway": "Solara carries PMR evidence.",
                     "confidence": "high",
-                    "retrieval_explanation": "GitKB found one useful record.",
+                    "retrieval_explanation": "DataRoot found one useful record.",
                     "claims": [
                         {
                             "claim": "Solara carries the PMR marker.",
@@ -115,6 +119,51 @@ class InterpretationTests(unittest.TestCase):
 
         self.assertEqual(interpretation.source, "deterministic_fallback")
         self.assertEqual(interpretation.takeaway, "Fallback answer.")
+
+
+class FinalAnswerSanitizerTests(unittest.TestCase):
+    def test_strips_live_ask_prefix_and_citations(self) -> None:
+        raw = "Answer: foo bar baz [citation: rows/x] qux [citation: rows/y]"
+        self.assertEqual(_sanitize_final_answer_text(raw), "foo bar baz qux")
+
+    def test_strips_expected_answer_header_and_question_line(self) -> None:
+        raw = (
+            "# Expected Answer — Inquiry B-INQ-001\n"
+            "**Question:** \"Which microbial strain produces ester?\"\n"
+            "---\n"
+            "## Best Candidate: B-STR-YE-017\n"
+            "Body text follows."
+        )
+        sanitized = _sanitize_final_answer_text(raw)
+        self.assertNotIn("Expected Answer", sanitized)
+        self.assertNotIn("Question:", sanitized)
+        self.assertNotIn("---", sanitized)
+        self.assertIn("Body text follows.", sanitized)
+
+    def test_passes_plain_answer_through(self) -> None:
+        raw = "DataRoot identified strain B-STR-YE-017 as the strongest match."
+        self.assertEqual(_sanitize_final_answer_text(raw), raw)
+
+    def test_strips_provenance_block(self) -> None:
+        raw = "Plain answer text\n<provenance>{\"x\": 1}</provenance>"
+        self.assertEqual(_sanitize_final_answer_text(raw), "Plain answer text")
+
+
+class SlugStageTests(unittest.TestCase):
+    def test_row_groups_dataset_segment(self) -> None:
+        self.assertEqual(
+            _stage_from_slug("row_groups/permits/issued_construction_permits.csv/abc"),
+            "permits",
+        )
+
+    def test_tables_dataset_segment(self) -> None:
+        self.assertEqual(_stage_from_slug("tables/reviews/plan_review_cases.csv"), "reviews")
+
+    def test_unrecognized_slug_returns_empty(self) -> None:
+        self.assertEqual(_stage_from_slug("inquiries/A-INQ-001"), "")
+
+    def test_blank_slug_returns_empty(self) -> None:
+        self.assertEqual(_stage_from_slug(""), "")
 
 
 if __name__ == "__main__":
