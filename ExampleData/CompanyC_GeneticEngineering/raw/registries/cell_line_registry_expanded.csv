@@ -1,0 +1,31 @@
+cell_line_id,name,species,tissue_origin,disease_context,passage_number_received,passage_range_used,authentication_method,authentication_date,source_vendor,mycoplasma_status,notes
+CL-001,HEK293T,Homo sapiens,embryonic kidney,none (transformed),12,12-35,STR profiling,2022-03-15,ATCC (CRL-3216),negative,High transfection efficiency
+CL-002,HeLa,Homo sapiens,cervical carcinoma,cervical cancer (HPV18+),25,25-50,STR profiling,2022-04-10,ATCC (CCL-2),negative,HeLa Kyoto preferred for imaging
+CL-003,Jurkat E6-1,Homo sapiens,T lymphoblast,acute T cell leukemia,8,8-25,STR profiling,2022-05-20,ATCC (TIB-152),negative,TCR signaling - PDCD1 KO
+CL-004,K562,Homo sapiens,bone marrow,CML,15,15-40,STR profiling,2022-06-01,ATCC (CCL-243),negative,BCR-ABL+ CML model
+CL-005,HAP1,Homo sapiens,near-haploid,CML-derived haploid,5,5-18,STR profiling,2022-07-12,Horizon Discovery,negative,Near-haploid - simplifies recessive KO
+CL-006,U2OS,Homo sapiens,osteosarcoma,osteosarcoma,18,18-45,STR profiling,2022-08-05,ATCC (HTB-96),negative,Good nuclear spreading - HDR template opt
+CL-007,MCF-7,Homo sapiens,breast adenocarcinoma,ER+ breast cancer,22,22-50,STR profiling,2022-09-18,ATCC (HTB-22),negative,BRCA1 editing target
+CL-008,Primary CD4+ T cells (donor 01),Homo sapiens,peripheral blood,healthy donor,0,0-3 days,flow cytometry,2023-01-10,Internal (IRB-2022-045),negative,PDCD1/TRAC dual KO CAR-T
+CL-009,Primary CD8+ T cells (donor 02),Homo sapiens,peripheral blood,healthy donor,0,0-3 days,flow cytometry,2023-02-14,Internal (IRB-2022-045),negative,B2M KO universalization
+CL-010,Primary dermal fibroblasts (donor 03),Homo sapiens,dermis,healthy donor,2,2-8,morphology + vimentin,2023-03-05,LONZA (CC-2511),negative,iPSC reprogramming base
+CL-011,WTC-11 iPSC,Homo sapiens,iPSC,healthy,30,30-55,STR + pluripotency markers,2023-04-22,Coriell (GM25256),negative,Rosa26-targeted knock-in
+CL-012,HCT116,Homo sapiens,colorectal carcinoma,KRAS G13D,10,10-30,STR profiling,2023-05-08,ATCC (CCL-247),negative,KRAS allele-specific editing
+CL-013,PANC-1,Homo sapiens,pancreatic ductal carcinoma,KRAS G12D,14,14-35,STR profiling,2023-06-15,ATCC (CRL-1469),negative,hard to transfect - electroporation
+CL-014,THP-1,Homo sapiens,monocyte,AML,9,9-25,STR profiling,2023-07-02,ATCC (TIB-202),negative,PMA-differentiable to macrophage
+CL-015,NIH 3T3,Mus musculus,embryonic fibroblast,immortalized,20,20-45,karyotyping,2023-01-18,ATCC (CRL-1658),negative,Trp53 editing platform
+CL-016,C2C12,Mus musculus,myoblast,immortalized,11,11-28,karyotyping,2023-02-20,ATCC (CRL-1772),negative,Differentiation to myotubes
+CL-017,Primary mouse hepatocytes (C57BL/6),Mus musculus,liver,WT C57BL/6,0,fresh iso,albumin/ASGPR1 stain,2023-03-30,In-house iso,negative,Pcsk9 base editing - short viability
+CL-018,Neuro-2a,Mus musculus,neuroblastoma,neuroblastoma,16,16-40,karyotyping,2023-04-12,ATCC (CCL-131),negative,Pten editing - RA differentiation
+CL-019,Primary mouse CD8+ T cells (C57BL/6),Mus musculus,spleen/lymph node,WT,0,0-2 days,flow cytometry,2023-05-25,In-house iso,negative,OT-I background - antigen-specific
+CL-020,Arabidopsis T87,Arabidopsis thaliana,leaf callus,none,0,weekly subculture,PCR genotyping,2023-06-10,RIKEN BRC (RPC00003),N/A (plant),FT and FLC editing
+CL-021,N. benthamiana protoplasts,Nicotiana benthamiana,leaf mesophyll,none,0,fresh same day,GFP viability check,2023-07-08,In-house greenhouse,N/A (plant),NbPDS editing - PEG-mediated
+CL-022,Ramos,Homo sapiens,B cell lymphoma,Burkitt lymphoma,7,7-22,STR profiling,2023-08-03,ATCC (CRL-1596),negative,CD274 (PD-L1) KO - B cell checkpoint
+CL-023,HepG2,Homo sapiens,liver cancer,liver cancer,19,19-45,STR profiling,2023-09-14,ATCC (HB-8065),negative,PCSK9 KO - lipofection optimized
+CL-024,Bruce4 mESC (C57BL/6),Mus musculus,blastocyst ICM,none,10,10-25,karyotyping + Oct4/Nanog,2023-10-01,ATCC (SCRC-1002),negative,Rosa26 landing pad KI - 2i medium
+CL-025,HUVEC (pooled),Homo sapiens,umbilical vein endothelium,none (primary),2,2-7,CD31/VWF stain,2023-11-20,LONZA (CC-2519A),negative,KRAS/TP53 angiogenesis - limited window
+CL-026,HEK293T-ACTIN-GLuc,Homo sapiens,embryonic kidney,stable cell line,8,8-20,STR profiling,2024-01-15,In-house selection,negative,Generated in lab - Gaussia luciferase
+CL-027,LNCaP,Homo sapiens,prostate carcinoma,prostate cancer,12,12-30,STR profiling,2024-02-20,ATCC (CRL-1740),negative,AR signaling model
+CL-028,PC-12,Rattus norvegicus,adrenal pheochromocytoma,PC12,5,5-18,karyotyping,2024-03-10,ATCC (CRL-1721),negative,NGF differentiation capability
+CL-029,A549,Homo sapiens,lung carcinoma,NSCLC,14,14-35,STR profiling,2024-04-05,ATCC (CCL-185),negative,p53 wildtype - common transfection host
+CL-030,Primary neurons (donor 04),Homo sapiens,cortex,healthy donor,0,fresh,MAP2 IHC,2024-05-12,Internal (IRB-2023-102),negative,For neurodegeneration studies

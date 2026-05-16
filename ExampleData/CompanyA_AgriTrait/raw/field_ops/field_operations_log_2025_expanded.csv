@@ -1,0 +1,40 @@
+entry_date,block_id,cultivar_id,cultivar_name,action,seeds_planted,plot,row,area_m2,technician,verified,notes
+2025-01-15,FB-001,A-CUL-TOM-014,Solara-14,planting,50,A1,1,45,JMartinez,yes,Greenhouse seeding
+2025-01-22,FB-001,A-CUL-TOM-014,Solara-14,transplant,45,A1,1,45,JMartinez,yes,
+2025-02-01,FB-002,A-CUL-TOM-022,DryShield-22,planting,40,G1,7,38,RThompson,yes,Greenhouse seeding
+2025-02-10,FB-002,A-CUL-TOM-022,DryShield-22,transplant,38,G1,7,38,RThompson,yes,
+2025-02-15,FB-003,A-CUL-TOM-031,Arida-31,planting,55,B2,3,42,JMartinez,yes,
+2025-03-01,FB-001,,Solara-14,irrigation,na,A1,1,45,,yes,Drought stress trial start
+2025-03-05,FB-002,,DryShield-22,fertilization,na,G1,7,38,,yes,Calcium suppliment
+2025-03-10,FB-004,A-CUL-PEP-008,SaltKing-08,planting,35,H4,12,35,kim.lee,yes,Field planting
+2025-03-15,FB-003,A-CUL-TOM-031,,transplant,50,B2,3,42,RThompson,yes,
+2025-03-20,FB-001,A-CUL-TOM-014,Solara-14,scouting,na,A1,1,45,JMartinez,no,Minor powdery mildew - treated
+2025-04-01,FB-002,A-CUL-TOM-022,DryShield-22,scouting,na,G1,7,38,RThompson,yes,
+2025-04-05,FB-005,A-CUL-TOM-015,EarlyGlade-15,planting,60,C3,5,50,JMartinez,yes,Direct field
+2025-04-10,FB-004,A-CUL-PEP-008,,fertilization,na,H4,12,35,kim.lee,yes,
+2025-04-15,FB-003,A-CUL-TOM-031,Arida-31,scouting,na,B2,3,42,RThompson,yes,Good growth - no issues
+2025-04-20,FB-001,A-CUL-TOM-014,,harvest soil sample,na,A1,1,45,JMartinez,yes,For soil report
+2025-05-01,FB-006,A-CUL-TOM-016,HeatKing-16,planting,45,D4,8,40,RThompson,yes,Heat trial block
+2025-05-10,FB-005,A-CUL-TOM-015,EarlyGlade-15,scouting,na,C3,5,50,,yes,Early flowering observed
+2025-05-15,FB-002,A-CUL-TOM-022,,irrigation audit,na,G1,7,38,kim.lee,yes,
+2025-06-01,FB-007,A-CUL-TOM-017,ShieldLeaf-17,planting,50,E5,10,45,JMartinez,yes,
+2025-06-05,FB-003,A-CUL-TOM-031,,scouting,na,B2,3,42,RThompson,no,Some chlorosis - monitoring
+2025-06-10,FB-004,A-CUL-PEP-008,SaltKing-08,scouting,na,H4,12,35,kim.lee,yes,Salt tolerance looking good
+2025-06-15,FB-001,A-CUL-TOM-014,Solara-14,harvest,42,A1,1,45,JMartinez,yes,First yield data collected
+2025-06-20,FB-006,A-CUL-TOM-016,HeatKing-16,scouting,na,D4,8,40,RThompson,yes,Heat stress visible
+2025-07-01,FB-008,A-CUL-TOM-018,WormGuard-18,planting,40,F6,11,38,JMartinez,yes,
+2025-07-10,FB-007,A-CUL-TOM-017,ShieldLeaf-17,scouting,na,E5,10,45,RThompson,yes,Blight resistance confirmed
+2025-07-15,FB-002,A-CUL-TOM-022,DryShield-22,harvest,35,G1,7,38,kim.lee,yes,QC sample taken
+2025-08-01,FB-009,A-CUL-TOM-019,LycoMax-19,planting,55,G2,14,52,JMartinez,yes,Nutritional market trial
+2025-08-10,FB-008,A-CUL-TOM-018,,scouting,na,F6,11,38,,yes,Fruit worm pressure noted
+2025-09-01,FB-010,A-CUL-TOM-020,NemaFree-20,planting,48,H3,15,44,RThompson,yes,Nematode trial
+2025-09-10,FB-009,A-CUL-TOM-019,LycoMax-19,scouting,na,G2,14,52,JMartinez,yes,High lycopene visually
+2025-10-01,FB-011,A-CUL-TOM-021,FusariumBloc-21,planting,42,I4,18,40,kim.lee,yes,Fusarium trial
+2025-10-15,FB-010,A-CUL-TOM-020,NemaFree-20,scouting,na,H3,15,44,RThompson,yes,Root development good
+2025-11-01,FB-001,A-CUL-TOM-014,,cover crop,na,A1,1,45,JMartinez,yes,Winter cover crop
+2025-11-15,FB-012,A-CUL-TOM-023,DoubleDrought-23,planting,38,J5,20,36,RThompson,yes,Drought package trial
+2026-01-10,FB-012,A-CUL-TOM-023,,scouting,na,J5,20,36,,yes,Winter germination check
+2026-02-01,FB-013,A-CUL-TOM-024,MilResist-24,planting,45,K6,22,42,JMartinez,yes,PMR trial
+2026-02-15,FB-013,A-CUL-TOM-024,,scouting,na,K6,22,42,RThompson,yes,Seedling stage - looks good
+2026-03-01,FB-002,A-CUL-TOM-022,DryShield-22,soil prep,na,G1,7,38,kim.lee,yes,Spring prep
+2026-03-10,FB-014,A-CUL-PEP-009,HeatPepper-09,planting,32,L7,25,30,RThompson,yes,Heat trial

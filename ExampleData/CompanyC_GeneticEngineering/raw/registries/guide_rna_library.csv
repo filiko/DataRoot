@@ -1,0 +1,121 @@
+guide_id,target_gene_symbol,target_gene_id,spacer_sequence_20nt,pam_sequence,strand,gc_pct,on_target_score_rs2,predicted_off_target_count,design_tool,design_date,status,notes
+GRN-0001,FT,GENE-001,AAGCGGTTTAATGCAGCATT,TGG,+,42,0.6364,10,Cas-OFFinder+scoring,2022-10-07,in_testing,Cas9 variant: SpCas9; exon target: exon 1
+GRN-0002,FT,GENE-001,CTCTTAGCTCAGCGAATCTG,CGG,+,49,0.7715,8,CHOPCHOP,2024-07-19,active,Cas9 variant: SpCas9; exon target: exon 4
+GRN-0003,FT,GENE-001,GTTTGATGTCGAGTTGCTCA,TGG,+,43,0.3283,5,CHOPCHOP,2021-01-08,deprecated,Cas9 variant: SpCas9; exon target: exon 2
+GRN-0004,FT,GENE-001,CTGACTTTCATTCTTCTCAG,GGG,-,40,0.4,2,Cas-OFFinder+scoring,2024-08-08,in_testing,Cas9 variant: SpCas9; exon target: exon 7
+GRN-0005,AP1,GENE-002,ACGTAGTTTCCAAAAGGCGT,TGG,-,47,0.8986,12,CRISPOR,2022-07-23,failed_cloning,Cas9 variant: SpCas9; exon target: exon 9
+GRN-0006,AP1,GENE-002,CGCCACTGAGCTCCTGACGA,AGG,-,66,0.6848,9,CRISPRscan,2020-09-07,active,Cas9 variant: SpCas9; exon target: exon 3
+GRN-0007,AP1,GENE-002,GTGCAGCTAATCCTCAACCC,TGG,+,57,0.3283,11,Benchling CRISPR,2024-01-27,active,Cas9 variant: SpCas9; exon target: exon 9
+GRN-0008,AP1,GENE-002,AAACTATCAGGGTTGCCTTG,AGG,+,44,0.5289,4,CRISPRscan,2022-06-21,active,Cas9 variant: SpCas9; exon target: exon 11
+GRN-0009,CESA1,GENE-003,ATGTCGATGGCGACCGCCCG,TGG,+,69,0.6809,4,CRISPOR,2024-01-10,active,Cas9 variant: SpCas9; exon target: exon 7
+GRN-0010,CESA1,GENE-003,CTCACACAGGGTGAGTGTAG,AGG,-,55,0.3433,7,Cas-OFFinder+scoring,2024-10-11,failed_cloning,Cas9 variant: SpCas9; exon target: exon 8
+GRN-0011,CESA1,GENE-003,AACCGAGAGGGACGGTTGCC,GGG,-,67,0.7774,6,Cas-OFFinder+scoring,2024-10-08,active,Cas9 variant: SpCas9; exon target: exon 5
+GRN-0012,CESA1,GENE-003,TAACCCCGCCAACGCCAACA,AGG,+,62,0.417,7,CRISPRscan,2024-04-15,in_testing,Cas9 variant: SpCas9; exon target: exon 6
+GRN-0013,ABI3,GENE-004,AAGTTCCTCCCGACTATTCT,GGG,-,45,0.5754,11,Cas-OFFinder+scoring,2022-06-28,active,Cas9 variant: SpCas9; exon target: exon 2
+GRN-0014,ABI3,GENE-004,AGGAATCGGTATCCGGCATT,GGG,-,52,0.4396,4,Benchling CRISPR,2020-12-07,active,Cas9 variant: SpCas9; exon target: exon 12
+GRN-0015,ABI3,GENE-004,CGGATGCCCGAGCACTCCCA,CGG,+,69,0.8178,4,CRISPRscan,2021-02-18,in_testing,Cas9 variant: SpCas9; exon target: exon 10
+GRN-0016,ABI3,GENE-004,CTCGTTCCAAACGTAAAGGG,AGG,+,49,0.3661,4,Cas-OFFinder+scoring,2024-05-15,active,Cas9 variant: SpCas9; exon target: exon 12
+GRN-0017,JAZ1,GENE-005,CTGTGGACACTGAGCTTGGT,AGG,-,54,0.3116,4,CHOPCHOP,2020-07-28,active,Cas9 variant: SpCas9; exon target: exon 1
+GRN-0018,JAZ1,GENE-005,CGGGCAGCGGGGAGATGATC,CGG,+,69,0.4434,12,CRISPOR,2022-09-09,deprecated,Cas9 variant: SpCas9; exon target: exon 5
+GRN-0019,JAZ1,GENE-005,GCATTGCCCAGTCAACACAG,GGG,-,54,0.7049,5,Cas-OFFinder+scoring,2023-06-21,in_testing,Cas9 variant: SpCas9; exon target: exon 8
+GRN-0020,JAZ1,GENE-005,GGCGCGACAATGCGCCCTTC,TGG,-,69,0.7243,2,CRISPRscan,2023-06-19,active,Cas9 variant: SpCas9; exon target: exon 7
+GRN-0021,FLC,GENE-006,TGGTTCGGGCTTTATCGTAG,AGG,-,51,0.4787,6,Benchling CRISPR,2021-03-26,active,Cas9 variant: SpCas9; exon target: exon 6
+GRN-0022,FLC,GENE-006,CGGCACAGCGGCTAGCTCTC,CGG,+,68,0.6948,7,CHOPCHOP,2023-02-05,active,Cas9 variant: SpCas9; exon target: exon 1
+GRN-0023,FLC,GENE-006,GCCTTTGTCAGTGCCAACTC,CGG,+,54,0.8009,3,CRISPRscan,2024-04-19,active,Cas9 variant: SpCas9; exon target: exon 4
+GRN-0024,FLC,GENE-006,TCCTCACCCAGCCAGAGAAA,AGG,-,56,0.7487,7,CRISPRscan,2020-06-20,active,Cas9 variant: SpCas9; exon target: exon 3
+GRN-0025,RPS5,GENE-007,GTCAAGCCGATCGTCTCTTT,GGG,+,52,0.5376,10,CRISPOR,2020-05-20,active,Cas9 variant: SpCas9; exon target: exon 2
+GRN-0026,RPS5,GENE-007,ACGCCTCTACCATGTGGCCC,TGG,-,67,0.3602,4,CHOPCHOP,2024-10-03,deprecated,Cas9 variant: SpCas9; exon target: exon 3
+GRN-0027,RPS5,GENE-007,CTGAAATATTGGTGCGAACG,TGG,+,45,0.5718,1,CHOPCHOP,2024-07-19,active,Cas9 variant: SpCas9; exon target: exon 11
+GRN-0028,RPS5,GENE-007,GTGAAGATGGTGTCGGCTGC,GGG,-,61,0.3557,1,CRISPOR,2023-11-10,in_testing,Cas9 variant: SpCas9; exon target: exon 10
+GRN-0029,GI,GENE-008,TGTTGCTTTCAGTTAGAGAG,AGG,-,38,0.2961,1,Cas-OFFinder+scoring,2023-05-09,in_testing,Cas9 variant: SpCas9; exon target: exon 11
+GRN-0030,GI,GENE-008,TCTCGTTCGATCTTGCAAGT,CGG,-,44,0.358,2,Cas-OFFinder+scoring,2021-12-15,active,Cas9 variant: SpCas9; exon target: exon 6
+GRN-0031,GI,GENE-008,GACCGCATCTGATTACTTCC,TGG,-,50,0.9013,6,CRISPRscan,2023-09-12,active,Cas9 variant: SpCas9; exon target: exon 2
+GRN-0032,GI,GENE-008,AGGGGTGTGATTCGAGCACC,GGG,-,58,0.2511,5,Benchling CRISPR,2024-07-06,in_testing,Cas9 variant: SpCas9; exon target: exon 2
+GRN-0033,NbSGT1,GENE-009,CGCAGCTCCGGGCCATTCGT,TGG,-,68,0.4273,12,Benchling CRISPR,2022-06-28,in_testing,Cas9 variant: SpCas9; exon target: exon 11
+GRN-0034,NbSGT1,GENE-009,GACGCCAGGAGATGACAAAG,AGG,+,56,0.8441,10,CRISPOR,2020-03-03,active,Cas9 variant: SpCas9; exon target: exon 11
+GRN-0035,NbSGT1,GENE-009,AGGTGGTGTGAGCAGGTTGG,CGG,-,58,0.6061,1,Benchling CRISPR,2021-04-26,active,Cas9 variant: SpCas9; exon target: exon 6
+GRN-0036,NbSGT1,GENE-009,GGCGGACTGCACGATGGCGT,CGG,-,70,0.3376,4,Cas-OFFinder+scoring,2024-02-17,in_testing,Cas9 variant: SpCas9; exon target: exon 10
+GRN-0037,NbRAR1,GENE-010,AGTCACATGGATCGTCCATT,GGG,+,44,0.4734,7,CRISPRscan,2022-08-08,active,Cas9 variant: SpCas9; exon target: exon 1
+GRN-0038,NbRAR1,GENE-010,CACAGCAATCCGCCACATAG,AGG,-,53,0.603,12,Cas-OFFinder+scoring,2022-10-22,in_testing,Cas9 variant: SpCas9; exon target: exon 3
+GRN-0039,NbRAR1,GENE-010,CTAAGACCTGGCCTAATATA,GGG,+,41,0.755,9,CRISPOR,2021-09-21,in_testing,Cas9 variant: SpCas9; exon target: exon 7
+GRN-0040,NbRAR1,GENE-010,GGCATCGCGGTATTTATTTG,GGG,+,44,0.7332,7,CHOPCHOP,2023-06-18,failed_cloning,Cas9 variant: SpCas9; exon target: exon 12
+GRN-0041,NbPDS,GENE-011,GCTATGCTTGCAGCATCAGA,TGG,+,52,0.7791,4,CHOPCHOP,2022-11-02,deprecated,Cas9 variant: SpCas9; exon target: exon 2
+GRN-0042,NbPDS,GENE-011,TCGGCTAACCCCTCTTGATA,CGG,-,49,0.8289,8,CHOPCHOP,2020-07-22,active,Cas9 variant: SpCas9; exon target: exon 3
+GRN-0043,NbPDS,GENE-011,GGACGTGGGCAAAGTCTCGC,TGG,-,65,0.3047,9,CRISPRscan,2020-09-17,active,Cas9 variant: SpCas9; exon target: exon 9
+GRN-0044,NbPDS,GENE-011,ATAAGCGAAACCGGAACGTT,CGG,-,44,0.333,8,CRISPOR,2024-03-24,failed_cloning,Cas9 variant: SpCas9; exon target: exon 1
+GRN-0045,NbRDR6,GENE-012,AATTTGGAGTCCTAGTTAAG,CGG,-,36,0.8634,10,Cas-OFFinder+scoring,2021-07-10,active,Cas9 variant: SpCas9; exon target: exon 9
+GRN-0046,NbRDR6,GENE-012,TGCCAGATTTGACCTGACTT,AGG,+,46,0.3817,12,Cas-OFFinder+scoring,2024-04-16,active,Cas9 variant: SpCas9; exon target: exon 6
+GRN-0047,NbRDR6,GENE-012,ACTGCGATGACCGCTATGCA,CGG,-,54,0.6354,10,CHOPCHOP,2022-08-24,in_testing,Cas9 variant: SpCas9; exon target: exon 8
+GRN-0048,NbRDR6,GENE-012,ACTCGGCGCCACTGAGTTCC,AGG,+,64,0.4187,9,Cas-OFFinder+scoring,2022-06-09,in_testing,Cas9 variant: SpCas9; exon target: exon 2
+GRN-0049,NbACT,GENE-013,AGTCAGCTCGAGGTTGCGTC,AGG,+,58,0.6609,12,CRISPOR,2020-05-06,in_testing,Cas9 variant: SpCas9; exon target: exon 10
+GRN-0050,NbACT,GENE-013,AAGTTCCCCCGTGGGTTTGC,CGG,-,59,0.4717,1,CRISPRscan,2020-05-15,active,Cas9 variant: SpCas9; exon target: exon 5
+GRN-0051,NbACT,GENE-013,CAGTAGTGAAAGTGGTAATG,CGG,-,41,0.3249,4,CRISPRscan,2023-06-27,in_testing,Cas9 variant: SpCas9; exon target: exon 6
+GRN-0052,NbACT,GENE-013,CCACGCAACGACTGGGGTCA,CGG,-,63,0.8024,1,CRISPOR,2024-08-19,active,Cas9 variant: SpCas9; exon target: exon 9
+GRN-0053,NbCLA1,GENE-014,TCCGTCCTGCGCAGCACAAT,AGG,+,61,0.4938,5,CRISPOR,2021-09-16,active,Cas9 variant: SpCas9; exon target: exon 2
+GRN-0054,NbCLA1,GENE-014,CAGGGCTCGCTGCATAAGCC,TGG,+,63,0.4336,7,Cas-OFFinder+scoring,2022-10-13,in_testing,Cas9 variant: SpCas9; exon target: exon 10
+GRN-0055,NbCLA1,GENE-014,ACTCACCATGAGTACAATAG,TGG,-,42,0.5409,7,CRISPOR,2021-02-19,active,Cas9 variant: SpCas9; exon target: exon 4
+GRN-0056,NbCLA1,GENE-014,CGGACTGATCTTATCCTGGC,CGG,+,53,0.8138,9,CHOPCHOP,2024-05-20,active,Cas9 variant: SpCas9; exon target: exon 6
+GRN-0057,PDCD1,GENE-015,ACACTCACGGGCTGCTCAAA,ATGART,-,53,0.8274,7,CHOPCHOP,2022-05-11,active,Cas9 variant: SaCas9; exon target: exon 3
+GRN-0058,PDCD1,GENE-015,TATGTCCGTGGAACCCCCGC,TAGART,-,66,0.822,6,Benchling CRISPR,2023-02-08,active,Cas9 variant: SaCas9; exon target: exon 12
+GRN-0059,PDCD1,GENE-015,TACTGTCTTGTAGACAAAGC,TGGART,+,41,0.5964,1,Benchling CRISPR,2023-11-20,active,Cas9 variant: SaCas9; exon target: exon 1
+GRN-0060,PDCD1,GENE-015,CACGCAGCGTCTTTGCGATC,CAGART,+,58,0.8972,1,CRISPOR,2024-10-02,active,Cas9 variant: SaCas9; exon target: exon 12
+GRN-0061,CD274,GENE-016,GCATGTATGACGTTGGTTAA,AAGART,+,42,0.5802,6,Benchling CRISPR,2021-01-18,deprecated,Cas9 variant: SaCas9; exon target: exon 12
+GRN-0062,CD274,GENE-016,CTGCGATGCGGGAACTCAAG,GAGGRT,-,61,0.3228,8,Benchling CRISPR,2023-08-02,failed_cloning,Cas9 variant: SaCas9; exon target: exon 3
+GRN-0063,CD274,GENE-016,CAGGACAATTAGCCCGGTTT,CTGGRT,-,52,0.4355,1,CRISPRscan,2021-11-10,deprecated,Cas9 variant: SaCas9; exon target: exon 12
+GRN-0064,CD274,GENE-016,TGGCTAGAATACTATTTGCA,GAGART,-,37,0.2854,9,CRISPOR,2023-08-01,active,Cas9 variant: SaCas9; exon target: exon 7
+GRN-0065,BRCA1,GENE-017,GCTGGAAGGGGCGCTTTTTA,TGG,-,57,0.7868,3,Benchling CRISPR,2020-04-22,active,Cas9 variant: SpCas9; exon target: exon 9
+GRN-0066,BRCA1,GENE-017,ATCTGCAGTATCACCTCATT,CGG,-,38,0.2917,2,Cas-OFFinder+scoring,2021-02-28,active,Cas9 variant: SpCas9; exon target: exon 6
+GRN-0067,BRCA1,GENE-017,TCGCAATGTTGAATTTGGGT,AGG,+,39,0.4928,5,Benchling CRISPR,2020-12-22,in_testing,Cas9 variant: SpCas9; exon target: exon 6
+GRN-0068,BRCA1,GENE-017,GTTGGCATACGCCTAGGGGG,TGG,+,63,0.6751,6,Benchling CRISPR,2020-02-11,active,Cas9 variant: SpCas9; exon target: exon 4
+GRN-0069,KRAS,GENE-018,GCACCGATGGGCAGCGAACG,GGG,+,70,0.836,9,CRISPRscan,2021-12-22,active,Cas9 variant: SpCas9; exon target: exon 11
+GRN-0070,KRAS,GENE-018,ACTACACCGCCCTATTGTGG,AGG,-,57,0.6395,8,CHOPCHOP,2022-09-15,deprecated,Cas9 variant: SpCas9; exon target: exon 1
+GRN-0071,KRAS,GENE-018,ACACCGGGATCCTCCGCTGC,GGG,-,68,0.7918,5,CHOPCHOP,2023-10-21,active,Cas9 variant: SpCas9; exon target: exon 8
+GRN-0072,KRAS,GENE-018,GAAGGAAAGGCCAGTTTTCC,GGG,+,48,0.4495,6,CRISPRscan,2021-10-25,failed_cloning,Cas9 variant: SpCas9; exon target: exon 4
+GRN-0073,TP53,GENE-019,CATAGGACGTCAGACTGCAA,GGG,+,48,0.355,12,Benchling CRISPR,2020-10-13,in_testing,Cas9 variant: SpCas9; exon target: exon 11
+GRN-0074,TP53,GENE-019,CTTCGTTTCTCCTTAGTGAG,GGG,-,43,0.5746,1,CRISPOR,2020-11-19,in_testing,Cas9 variant: SpCas9; exon target: exon 10
+GRN-0075,TP53,GENE-019,TTAAGCCTAGAAGATCTTGG,TGG,+,39,0.2764,3,CHOPCHOP,2020-06-25,deprecated,Cas9 variant: SpCas9; exon target: exon 4
+GRN-0076,TP53,GENE-019,GCTTATAAATTAGACTCTGG,AGG,+,36,0.7134,10,CRISPRscan,2020-12-04,active,Cas9 variant: SpCas9; exon target: exon 7
+GRN-0077,PCSK9,GENE-020,TCGGTAGATTCCCCGGCCCG,CAGART,+,70,0.8833,10,Benchling CRISPR,2023-05-09,active,Cas9 variant: SaCas9; exon target: exon 2
+GRN-0078,PCSK9,GENE-020,ACAGCGCAACACGATTTTGA,GAGART,-,46,0.8943,1,CRISPOR,2023-01-03,active,Cas9 variant: SaCas9; exon target: exon 6
+GRN-0079,PCSK9,GENE-020,CATACTTCCTCTAACATATC,ATGGRT,-,35,0.3116,7,CRISPOR,2022-02-16,in_testing,Cas9 variant: SaCas9; exon target: exon 1
+GRN-0080,PCSK9,GENE-020,CACTTTAGTTTCAACGCTCT,AGGART,+,41,0.3345,6,Benchling CRISPR,2023-04-23,active,Cas9 variant: SaCas9; exon target: exon 7
+GRN-0081,TRAC,GENE-021,GCCTTATTTACTGGCTGATA,CGG,+,42,0.6869,4,CHOPCHOP,2021-12-21,failed_cloning,Cas9 variant: SpCas9; exon target: exon 3
+GRN-0082,TRAC,GENE-021,CACAACCAACCCAGCTCCCC,AGG,-,67,0.5213,12,CHOPCHOP,2024-01-01,in_testing,Cas9 variant: SpCas9; exon target: exon 4
+GRN-0083,TRAC,GENE-021,CCTAGTCCACAGCCACTGCC,CGG,+,63,0.6144,12,Cas-OFFinder+scoring,2021-07-18,active,Cas9 variant: SpCas9; exon target: exon 2
+GRN-0084,TRAC,GENE-021,GCTTGGTTCGTCATTGCCAG,AGG,+,57,0.9301,12,Cas-OFFinder+scoring,2024-01-21,active,Cas9 variant: SpCas9; exon target: exon 11
+GRN-0085,B2M,GENE-022,CCACCGGGAGATCGTACCAA,AGGGRT,-,62,0.5266,10,CRISPRscan,2023-03-18,active,Cas9 variant: SaCas9; exon target: exon 12
+GRN-0086,B2M,GENE-022,CACTCGCACAACCTGGTACC,GAGGRT,+,60,0.3882,9,CRISPOR,2022-06-05,in_testing,Cas9 variant: SaCas9; exon target: exon 4
+GRN-0087,B2M,GENE-022,AGGCATCGAATGGTGTATTT,AAGART,-,41,0.7884,3,CRISPRscan,2024-05-18,deprecated,Cas9 variant: SaCas9; exon target: exon 9
+GRN-0088,B2M,GENE-022,TGGGGAGCTCTACTCCGGTC,TAGART,-,65,0.3223,8,CHOPCHOP,2022-10-18,in_testing,Cas9 variant: SaCas9; exon target: exon 7
+GRN-0089,DNMT3A,GENE-023,ACGGGCCGGCTTAAATCACG,CAGART,+,58,0.3664,2,Cas-OFFinder+scoring,2023-10-19,in_testing,Cas9 variant: SaCas9; exon target: exon 12
+GRN-0090,DNMT3A,GENE-023,GATGATCGTCCACGCGGTAA,TGGART,-,53,0.4106,12,CRISPOR,2023-06-19,deprecated,Cas9 variant: SaCas9; exon target: exon 12
+GRN-0091,DNMT3A,GENE-023,GCAAGCGGTTACTCATTAAA,GTGART,+,41,0.7735,7,Benchling CRISPR,2020-04-17,active,Cas9 variant: SaCas9; exon target: exon 6
+GRN-0092,DNMT3A,GENE-023,AGTGGCAGTGCCCGCCCTAC,CAGGRT,-,70,0.4972,6,CRISPOR,2024-04-17,active,Cas9 variant: SaCas9; exon target: exon 12
+GRN-0093,HBB,GENE-024,CGATGCTACACCTCAATTAA,CGGGRT,-,40,0.6116,0,CHOPCHOP,2021-05-03,active,Cas9 variant: SaCas9; exon target: exon 12
+GRN-0094,HBB,GENE-024,TTAGCGCGTCACAGGTCAGA,ATGGRT,+,56,0.6017,6,Benchling CRISPR,2023-02-23,active,Cas9 variant: SaCas9; exon target: exon 6
+GRN-0095,HBB,GENE-024,AGCTGAAAGAACACTTTAGA,GAGGRT,+,35,0.7334,0,Benchling CRISPR,2022-08-27,in_testing,Cas9 variant: SaCas9; exon target: exon 8
+GRN-0096,HBB,GENE-024,GTCACCTACTGGTCTACGGA,TGGGRT,-,56,0.7735,8,CRISPOR,2023-03-06,deprecated,Cas9 variant: SaCas9; exon target: exon 3
+GRN-0097,Trp53,GENE-025,AGGCGATTTGACAATCCGAG,TGG,-,51,0.8862,7,Cas-OFFinder+scoring,2021-02-15,active,Cas9 variant: SpCas9; exon target: exon 7
+GRN-0098,Trp53,GENE-025,TTTGGGATTGCACACCGCAT,AGG,-,51,0.6824,4,Cas-OFFinder+scoring,2023-04-11,active,Cas9 variant: SpCas9; exon target: exon 1
+GRN-0099,Trp53,GENE-025,GGGAGGACGAGCGTCGGGAA,CGG,-,69,0.5224,4,CHOPCHOP,2021-11-24,active,Cas9 variant: SpCas9; exon target: exon 9
+GRN-0100,Trp53,GENE-025,GGGGCGTGTACGTGTCGTCG,TGG,+,68,0.2649,6,CHOPCHOP,2021-05-02,active,Cas9 variant: SpCas9; exon target: exon 8
+GRN-0101,Pcsk9,GENE-026,GTCCGGAGCAGAACGGGGCT,AGG,+,69,0.375,0,Benchling CRISPR,2020-08-07,active,Cas9 variant: SpCas9; exon target: exon 10
+GRN-0102,Pcsk9,GENE-026,TCTCGCCGTAGTTGAGCCAG,TGG,+,59,0.7864,9,CHOPCHOP,2023-12-22,active,Cas9 variant: SpCas9; exon target: exon 2
+GRN-0103,Pcsk9,GENE-026,CCCCCATTCCTTCATCTTAA,GGG,+,45,0.316,7,CHOPCHOP,2021-03-09,active,Cas9 variant: SpCas9; exon target: exon 10
+GRN-0104,Pcsk9,GENE-026,TCTCGGTCACAGCTTCGATT,CGG,+,50,0.7215,6,CRISPOR,2024-10-17,active,Cas9 variant: SpCas9; exon target: exon 7
+GRN-0105,Trac,GENE-027,GCGAGAGCGCGTATGTTCGA,TAGART,+,60,0.7298,2,CRISPRscan,2020-12-02,active,Cas9 variant: SaCas9; exon target: exon 10
+GRN-0106,Trac,GENE-027,TACGTATAGATATGCCGACG,CTGART,-,44,0.5893,9,Cas-OFFinder+scoring,2020-03-07,active,Cas9 variant: SaCas9; exon target: exon 8
+GRN-0107,Trac,GENE-027,CCGCATTTCTGCGGTCGGGG,TCGART,+,70,0.6567,10,Benchling CRISPR,2021-05-23,in_testing,Cas9 variant: SaCas9; exon target: exon 9
+GRN-0108,Trac,GENE-027,CTTTAGCTATAAAGCTCGCC,CTGGRT,+,43,0.8465,7,CRISPOR,2021-03-07,active,Cas9 variant: SaCas9; exon target: exon 7
+GRN-0109,Rosa26,GENE-028,CTGTCTGACTCTCTGGTGTA,TTGGRT,-,52,0.5729,6,CHOPCHOP,2024-01-23,active,Cas9 variant: SaCas9; exon target: exon 3
+GRN-0110,Rosa26,GENE-028,GGCTCTCCTGACAGGCATCG,CCGART,+,64,0.5437,4,CRISPOR,2022-11-06,active,Cas9 variant: SaCas9; exon target: exon 3
+GRN-0111,Rosa26,GENE-028,AGCGTGGTGACTATATGAAC,TGGART,+,47,0.788,5,CHOPCHOP,2023-02-25,active,Cas9 variant: SaCas9; exon target: exon 9
+GRN-0112,Rosa26,GENE-028,GATCACTGTTGTCACATCTT,TTGART,-,39,0.4948,12,Benchling CRISPR,2020-11-07,in_testing,Cas9 variant: SaCas9; exon target: exon 5
+GRN-0113,Hprt,GENE-029,ACTCCTGGGACGCTAGACAA,GGG,+,54,0.4874,6,Cas-OFFinder+scoring,2021-10-20,active,Cas9 variant: SpCas9; exon target: exon 10
+GRN-0114,Hprt,GENE-029,AATGGTACGTACCGATATAG,AGG,+,42,0.4833,0,CRISPRscan,2024-11-24,active,Cas9 variant: SpCas9; exon target: exon 10
+GRN-0115,Hprt,GENE-029,GCTACGATCATTGCGGTTCG,GGG,-,54,0.4826,3,Cas-OFFinder+scoring,2020-08-19,active,Cas9 variant: SpCas9; exon target: exon 12
+GRN-0116,Hprt,GENE-029,TCGAGACAGGCGATGCAGCG,CGG,-,64,0.5187,5,Benchling CRISPR,2024-07-26,failed_cloning,Cas9 variant: SpCas9; exon target: exon 10
+GRN-0117,Pten,GENE-030,AGCGCCGCTGGATGCTTCCG,TGG,-,69,0.9432,9,CRISPRscan,2024-09-13,deprecated,Cas9 variant: SpCas9; exon target: exon 5
+GRN-0118,Pten,GENE-030,AGATCTAACCGTACGAATCA,CGG,-,38,0.6066,8,CRISPOR,2023-06-08,active,Cas9 variant: SpCas9; exon target: exon 10
+GRN-0119,Pten,GENE-030,TCTGCTACCAGTTTAATTGA,GGG,-,35,0.497,12,CHOPCHOP,2022-03-02,in_testing,Cas9 variant: SpCas9; exon target: exon 10
+GRN-0120,Pten,GENE-030,ACAACGGCCGCGTTAGTAGA,TGG,+,54,0.7125,11,Benchling CRISPR,2021-10-24,deprecated,Cas9 variant: SpCas9; exon target: exon 1

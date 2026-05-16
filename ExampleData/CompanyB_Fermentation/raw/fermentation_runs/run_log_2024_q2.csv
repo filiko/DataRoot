@@ -1,0 +1,46 @@
+run_id,date,strain_id,media_id,temperature_c,ph_start,ph_end,duration_hr,vessel_scale_l,run_status,peak_od600,final_titer_gl,notes
+B-RUN-FERM-099,2024-04-02,B-STR-YE-017,B-MEDIA-009,14,5.2,4.4,96,50,completed,9.6,5.8,EsterMax 17 Q2 production pilot; consistent titer
+B-RUN-FERM-100,2024-04-04,B-STR-YE-031,B-MEDIA-009,16,5.2,4.4,96,50,completed,9.4,5.5,TropicBlast 31 Q2 pilot; ethyl hexanoate spec met
+B-RUN-FERM-101,2024-04-06,B-STR-YE-033,B-MEDIA-003,17,5.1,4.3,72,5,completed,8.5,4.4,StrawApricot 33 5L scale run; hexyl acetate elevated
+B-RUN-FERM-102,2024-04-08,B-STR-LA-009,B-MEDIA-008,30,5.8,4.7,48,20,completed,6.5,19.0,LactoCream 09 20L scale run; lactic acid on target
+B-RUN-FERM-103,2024-04-10,B-STR-YE-036,B-MEDIA-004,18,5.2,4.5,96,50,completed,9.5,5.6,FloralMax 36 pilot 50L; Q2 production batch
+B-RUN-FERM-104,2024-04-12,B-STR-YE-034,B-MEDIA-022,15,5.0,4.4,96,5,completed,8.4,4.3,CitroHex 34 5L scale; dual ester profile confirmed
+B-RUN-FERM-105,2024-04-14,B-STR-YE-047,B-MEDIA-001,17,5.1,4.4,72,5,completed,8.7,4.6,CherryBright 47 5L scale; benzaldehyde within spec
+B-RUN-FERM-106,2024-04-16,B-STR-YE-052,B-MEDIA-001,14,5.2,4.3,96,5,completed,9.2,5.2,EthylStar 52 5L scale; ATF1 profile sustained
+B-RUN-FERM-107,2024-04-18,B-STR-AA-001,B-MEDIA-010,28,5.5,4.0,48,20,completed,5.1,13.8,AcetoBase 01 20L scale; acetic acid titer 13.8g/L
+B-RUN-FERM-108,2024-04-20,B-STR-YE-057,B-MEDIA-001,22,5.2,4.5,96,2,completed,8.0,3.8,GingerEst 57 first bench run; warm ferment ester confirmed
+B-RUN-FERM-109,2024-04-22,B-STR-YE-058,B-MEDIA-004,16,5.2,4.5,96,2,completed,8.8,4.7,WineFloral 58 first bench run; linalool and geraniol both high
+B-RUN-FERM-110,2024-04-24,B-STR-YE-059,B-MEDIA-005,28,5.1,4.3,72,2,completed,9.1,5.0,TropiHeat 59 first bench run; heat-tolerant tropical confirmed
+B-RUN-FERM-111,2024-04-26,B-STR-LA-016,B-MEDIA-012,29,5.8,4.7,48,5,completed,5.9,17.8,LactoCitroAcid 16 first run; citric acid notes alongside lactic
+B-RUN-FERM-112,2024-04-28,B-STR-YE-055,B-MEDIA-009,17,5.2,4.5,96,20,completed,9.3,5.4,TerpBoost 55 20L scale; terpene profile maintained
+B-RUN-FERM-113,2024-04-30,B-STR-YE-040,B-MEDIA-005,17,5.1,4.4,72,5,completed,8.2,4.1,RaspRed 40 5L scale; methyl anthranilate on target
+B-RUN-FERM-114,2024-05-02,B-STR-YE-044,B-MEDIA-003,16,5.0,4.3,72,5,completed,8.3,4.2,PineApple 44 5L scale; allyl hexanoate confirmed
+B-RUN-FERM-115,2024-05-04,B-STR-YE-050,B-MEDIA-022,15,5.0,4.3,96,5,completed,8.4,4.3,SourCitrus 50 5L scale; citronellol co-peak persistent
+B-RUN-FERM-116,2024-05-06,B-STR-YE-017,B-MEDIA-016,14,5.2,4.5,96,2,failed,4.2,0.6,EsterMax 17 fructose media trial; growth impaired; fructose uptake issue
+B-RUN-FERM-117,2024-05-08,B-STR-YE-051,B-MEDIA-025,16,5.0,4.3,96,5,completed,9.0,5.2,HighOct 51 5L scale; ethyl octanoate at spec; decanoate borderline
+B-RUN-FERM-118,2024-05-10,B-STR-YE-043,B-MEDIA-009,30,5.2,4.3,72,20,completed,9.5,5.7,HeatEster 43 20L retry; pressure issue resolved; ester confirmed
+B-RUN-FERM-119,2024-05-12,B-STR-LA-013,B-MEDIA-008,30,5.8,4.8,48,10,completed,6.0,17.2,LactoRose 13 scale; lactic dominant; rose oxide trace
+B-RUN-FERM-120,2024-05-14,B-STR-YE-048,B-MEDIA-004,16,5.2,4.5,96,5,completed,8.7,4.6,PlumDrop 48 5L scale; profile sustained
+B-RUN-FERM-121,2024-05-16,B-STR-AA-002,B-MEDIA-010,30,5.5,4.0,48,20,completed,5.0,13.6,AcetoClassic 02 20L scale; within acetate spec
+B-RUN-FERM-122,2024-05-18,B-STR-YE-041,B-MEDIA-025,19,5.1,4.3,96,5,completed,8.4,4.4,CoconutEst 41 5L scale; delta-decalactone confirmed elevated
+B-RUN-FERM-123,2024-05-20,B-STR-YE-032,B-MEDIA-005,18,5.0,4.3,72,5,completed,8.0,3.9,MangoDrift 32 5L scale; tropical profile stable
+B-RUN-FERM-124,2024-05-22,B-STR-YE-035,B-MEDIA-003,17,5.1,4.4,72,5,completed,7.9,3.8,PeachBloom 35 5L scale; peach profile confirmed
+B-RUN-FERM-125,2024-05-24,B-STR-YE-056,B-MEDIA-001,15,5.1,4.4,96,5,completed,8.6,4.5,IsoHex 56 5L scale; isobutyl acetate dominant
+B-RUN-FERM-126,2024-05-26,B-STR-YE-057,B-MEDIA-001,22,5.2,4.4,96,5,completed,8.3,4.2,GingerEst 57 5L scale; ginger ester profile stable
+B-RUN-FERM-127,2024-05-28,B-STR-YE-058,B-MEDIA-004,16,5.2,4.5,96,20,completed,9.4,5.5,WineFloral 58 20L scale; floral ester on target
+B-RUN-FERM-128,2024-05-30,B-STR-YE-059,B-MEDIA-005,28,5.1,4.3,72,20,completed,9.6,5.8,TropiHeat 59 20L scale; heat-tolerant tropical confirmed at scale
+B-RUN-FERM-129,2024-06-02,B-STR-LA-020,B-MEDIA-012,37,6.0,5.0,48,5,completed,5.6,18.8,LactoAcidoph 20 first run; food-grade lactic acid profile
+B-RUN-FERM-130,2024-06-04,B-STR-LA-017,B-MEDIA-012,25,5.8,4.6,48,5,completed,5.4,14.2,LactoBrevis 17 first run; CO2 production noted; heterofermentative confirmed
+B-RUN-FERM-131,2024-06-06,B-STR-YE-017,B-MEDIA-009,14,5.2,4.3,96,50,completed,9.7,5.9,EsterMax 17 Q2 final production batch; titer peak for Q2
+B-RUN-FERM-132,2024-06-08,B-STR-YE-046,B-MEDIA-001,15,5.0,4.4,72,2,completed,8.1,3.7,MelonMist 46 repeat bench run; clean growth after previous contamination
+B-RUN-FERM-133,2024-06-10,B-STR-YE-038,B-MEDIA-023,20,5.0,4.3,96,5,completed,7.8,3.4,VanillaPlus 38 5L run; vanillin still borderline; further optimization needed
+B-RUN-FERM-134,2024-06-12,B-STR-YE-031,B-MEDIA-009,16,5.2,4.4,96,50,completed,9.5,5.7,TropicBlast 31 Q2 final batch; approved for Q3 production
+B-RUN-FERM-135,2024-06-14,B-STR-AA-003,B-MEDIA-010,25,5.5,4.2,48,5,completed,4.2,8.9,GlucoOxid 03 first run; gluconate co-produced alongside acetate
+B-RUN-FERM-136,2024-06-16,B-STR-YE-049,B-MEDIA-005,16,5.1,4.3,72,5,completed,7.7,3.5,BlueberryEst 49 5L scale; linalool-ethyl butyrate co-peak sustained
+B-RUN-FERM-137,2024-06-18,B-STR-YE-052,B-MEDIA-001,14,5.2,4.4,96,20,completed,9.3,5.3,EthylStar 52 20L scale; pan-ethyl ester profile strong
+B-RUN-FERM-138,2024-06-20,B-STR-LA-021,B-MEDIA-008,30,5.8,4.7,48,10,completed,6.3,18.7,LactoScaleUp 21 first scale run; lactic acid production improved vs parent
+B-RUN-FERM-139,2024-06-22,B-STR-YE-055,B-MEDIA-009,17,5.2,4.5,96,50,completed,9.6,5.8,TerpBoost 55 pilot 50L; Q2 production batch approved
+B-RUN-FERM-140,2024-06-24,B-STR-YE-036,B-MEDIA-009,18,5.2,4.5,96,50,completed,9.6,5.7,FloralMax 36 Q2 final pilot; production batch released
+B-RUN-FERM-141,2024-06-26,B-STR-LA-018,B-MEDIA-012,28,5.8,4.7,48,5,failed,2.8,0.3,LactoBerry 18 first run; poor growth; media incompatibility suspected
+B-RUN-FERM-142,2024-06-28,B-STR-YE-057,B-MEDIA-001,22,5.2,4.4,96,20,completed,8.5,4.5,GingerEst 57 20L scale; warm ferment ester stable
+B-RUN-FERM-143,2024-06-30,B-STR-YE-043,B-MEDIA-009,30,5.2,4.3,72,50,completed,9.7,5.9,HeatEster 43 Q2 pilot; heat ester profile approved for scale

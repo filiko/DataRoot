@@ -1,0 +1,26 @@
+cross_id,cross_date,maternal_parent,paternal_parent,expected_population,cultivar_id,cultivar_name,crop,status,breeding_stage,notes,f1_seed_bank_location
+CR-2025-001,2025-01-10,A-CUL-TOM-BASE-02,A-CUL-TOM-BASE-08,200,A-CUL-TOM-014,Solara-14,tomato,active,field_ready,Drought + PMR package,SB-TOM-014-01
+CR-2025-002,2025-01-15,A-CUL-TOM-BASE-03,unknown,150,A-CUL-TOM-015,EarlyGlade-15,tomato,active,field_ready,Early flowering cross
+CR-2025-003,2025-02-01,A-CUL-TOM-BASE-05,,100,A-CUL-TOM-031,Arida-31,tomato,active,field_ready,Salt tolerance only
+CR-2025-004,2025-02-10,A-CUL-TOM-BASE-07,A-CUL-TOM-BASE-12,180,A-CUL-TOM-016,HeatKing-16,tomato,active,greenhouse_validated,Heat tolerance trial
+CR-2025-005,2025-03-01,A-CUL-TOM-BASE-04,A-CUL-TOM-BASE-09,120,A-CUL-TOM-017,ShieldLeaf-17,tomato,active,field_ready,Blight + fruit worm
+CR-2025-006,2025-03-15,A-CUL-TOM-BASE-06,,200,A-CUL-TOM-019,LycoMax-19,tomato,active,field_ready,High lycopene - paternal unk
+CR-2025-007,2025-04-01,A-CUL-TOM-BASE-10,A-CUL-TOM-BASE-11,90,A-CUL-TOM-020,NemaFree-20,tomato,active,field_ready,Nematode resist
+CR-2025-008,2025-04-10,A-CUL-TOM-BASE-11,A-CUL-TOM-BASE-10,85,A-CUL-TOM-021,FusariumBloc-21,tomato,active,greenhouse_validated,Fusarium resist
+CR-2025-009,2025-05-01,A-CUL-TOM-BASE-02,A-CUL-TOM-BASE-03,160,A-CUL-TOM-023,DoubleDrought-23,tomato,active,field_ready,Dual drought markers
+CR-2025-010,2025-05-15,A-CUL-TOM-BASE-13,,140,A-CUL-TOM-024,MilResist-24,tomato,active,greenhouse_validated,PMR markers only
+CR-2025-011,2025-06-01,A-CUL-PEP-BASE-01,A-CUL-PEP-BASE-02,75,A-CUL-PEP-008,SaltKing-08,pepper,active,field_ready,Salt tolerance
+CR-2025-012,2025-06-10,A-CUL-TOM-BASE-14,A-CUL-TOM-BASE-15,110,A-CUL-TOM-025,DoubleShield-25,tomato,active,greenhouse_validated,Blight + Fusarium
+CR-2025-013,2025-07-01,A-CUL-TOM-BASE-15,A-CUL-TOM-BASE-14,95,A-CUL-TOM-026,VerseFree-26,tomato,active,field_ready,Verticillium resist
+CR-2025-014,2025-07-15,A-CUL-TOM-BASE-16,,180,A-CUL-TOM-027,TripleDrought-27,tomato,active,greenhouse_validated,Triple drought - paternal unk
+CR-2025-015,2025-08-01,A-CUL-TOM-BASE-17,A-CUL-TOM-BASE-06,140,A-CUL-TOM-028,ColorMax-28,tomato,active,field_ready,Color + lycopene
+CR-2025-016,2025-08-10,A-CUL-PEP-BASE-02,,60,A-CUL-PEP-009,HeatPepper-09,pepper,active,greenhouse_validated,Heat tolerance
+CR-2025-017,2025-09-01,A-CUL-TOM-BASE-02,A-CUL-TOM-BASE-04,200,A-CUL-TOM-029,,tomato,pending,seedling,NEW: Drought+Blight combo
+CR-2025-018,2025-09-15,A-CUL-TOM-BASE-08,A-CUL-TOM-BASE-02,150,,,tomato,pending,seedling,Backup of A-CUL-TOM-022
+CR-2025-019,2025-10-01,A-CUL-TOM-BASE-05,A-CUL-TOM-BASE-03,120,,,tomato,pending,germinating,Drought+Early flowering
+CR-2025-020,2025-10-15,A-CUL-TOM-BASE-09,A-CUL-TOM-BASE-04,90,,,tomato,pending,seedling,Fruit worm + Blight
+CR-2025-021,2025-11-01,A-CUL-TOM-BASE-07,,100,,,tomato,pending,germinating,HeatKing variant - paternal?
+CR-2025-022,2025-11-15,A-CUL-PEP-BASE-01,A-CUL-PEP-BASE-02,80,,,pepper,pending,seedling,SaltKing-08 sibling
+CR-2025-023,2026-01-10,A-CUL-TOM-BASE-10,A-CUL-TOM-BASE-12,140,,,tomato,in progress,seedling,NemaFree + Drought
+CR-2025-024,2026-01-20,A-CUL-TOM-BASE-11,A-CUL-TOM-BASE-09,95,,,tomato,in progress,seedling,FusariumBloc + WormGuard
+CR-2025-025,2026-02-05,A-CUL-TOM-BASE-02,A-CUL-TOM-BASE-16,180,,,tomato,in progress,germinating,Drought triple combo

@@ -1,0 +1,45 @@
+run_id,date,strain_id,media_id,temperature_c,ph_start,ph_end,duration_hr,vessel_scale_l,run_status,peak_od600,final_titer_gl,notes
+B-RUN-FERM-159,2024-07-02,B-STR-YE-017,B-MEDIA-009,14,5.2,4.4,96,50,completed,9.7,5.9,EsterMax 17 Q3 opening production batch
+B-RUN-FERM-160,2024-07-04,B-STR-YE-031,B-MEDIA-009,16,5.2,4.4,96,50,completed,9.5,5.6,TropicBlast 31 Q3 production batch 1
+B-RUN-FERM-161,2024-07-06,B-STR-YE-043,B-MEDIA-009,30,5.2,4.3,72,50,completed,9.8,6.1,HeatEster 43 Q3 first run; peak titer for strain
+B-RUN-FERM-162,2024-07-08,B-STR-YE-036,B-MEDIA-004,18,5.2,4.5,96,50,completed,9.6,5.8,FloralMax 36 Q3 production batch; geraniol on spec
+B-RUN-FERM-163,2024-07-10,B-STR-LA-009,B-MEDIA-008,30,5.8,4.6,48,20,completed,6.6,19.3,LactoCream 09 Q3 run; highest Q3 lactic titer
+B-RUN-FERM-164,2024-07-12,B-STR-YE-052,B-MEDIA-001,14,5.2,4.4,96,20,completed,9.4,5.5,EthylStar 52 20L Q3 run; ethyl ester panel confirmed
+B-RUN-FERM-165,2024-07-14,B-STR-YE-055,B-MEDIA-009,17,5.2,4.5,96,50,completed,9.7,5.8,TerpBoost 55 Q3 production run; terpene spec met
+B-RUN-FERM-166,2024-07-16,B-STR-YE-058,B-MEDIA-004,16,5.2,4.5,96,50,completed,9.5,5.6,WineFloral 58 Q3 production pilot 50L
+B-RUN-FERM-167,2024-07-18,B-STR-YE-059,B-MEDIA-005,28,5.1,4.3,72,50,completed,9.7,6.0,TropiHeat 59 Q3 production run; heat tropical at spec
+B-RUN-FERM-168,2024-07-20,B-STR-AA-001,B-MEDIA-010,28,5.5,4.0,48,20,completed,5.2,13.9,AcetoBase 01 Q3 run; acetic acid titer stable
+B-RUN-FERM-169,2024-07-22,B-STR-YE-034,B-MEDIA-022,15,5.0,4.4,96,20,completed,8.7,4.7,CitroHex 34 20L scale; dual ester profile confirmed at 20L
+B-RUN-FERM-170,2024-07-24,B-STR-YE-047,B-MEDIA-001,17,5.1,4.4,72,20,completed,9.0,5.1,CherryBright 47 20L scale; benzaldehyde stable
+B-RUN-FERM-171,2024-07-26,B-STR-YE-040,B-MEDIA-005,17,5.1,4.4,72,20,completed,8.5,4.5,RaspRed 40 20L scale; raspberry profile confirmed
+B-RUN-FERM-172,2024-07-28,B-STR-YE-048,B-MEDIA-004,16,5.2,4.5,96,20,completed,9.0,5.2,PlumDrop 48 20L scale; plum-floral profile stable
+B-RUN-FERM-173,2024-07-30,B-STR-LA-014,B-MEDIA-008,28,5.8,4.6,48,20,completed,6.1,18.1,LactoFresh 14 20L scale; ethyl lactate dominant
+B-RUN-FERM-174,2024-08-01,B-STR-YE-051,B-MEDIA-025,16,5.0,4.3,96,20,completed,9.2,5.4,HighOct 51 20L scale; ethyl octanoate at spec
+B-RUN-FERM-175,2024-08-03,B-STR-YE-044,B-MEDIA-003,16,5.0,4.3,72,20,completed,8.6,4.6,PineApple 44 20L scale; allyl hexanoate sustained
+B-RUN-FERM-176,2024-08-05,B-STR-YE-056,B-MEDIA-001,15,5.1,4.4,96,20,completed,8.8,4.8,IsoHex 56 20L scale; isobutyl acetate consistent
+B-RUN-FERM-177,2024-08-07,B-STR-YE-017,B-MEDIA-009,14,5.2,4.3,96,50,completed,9.8,6.0,EsterMax 17 Q3 batch 2; highest titer to date
+B-RUN-FERM-178,2024-08-09,B-STR-YE-031,B-MEDIA-009,16,5.2,4.4,96,50,completed,9.6,5.7,TropicBlast 31 Q3 batch 2; profile consistent
+B-RUN-FERM-179,2024-08-11,B-STR-LA-021,B-MEDIA-008,30,5.8,4.6,48,20,completed,6.4,19.0,LactoScaleUp 21 20L run; best lactic titer for strain
+B-RUN-FERM-180,2024-08-13,B-STR-YE-039,B-MEDIA-005,16,5.1,4.3,72,20,completed,8.3,4.3,BerryFusion 39 20L scale; berry compound profile stable
+B-RUN-FERM-181,2024-08-15,B-STR-YE-041,B-MEDIA-025,19,5.1,4.3,96,20,completed,8.7,4.7,CoconutEst 41 20L scale; delta-decalactone spec met
+B-RUN-FERM-182,2024-08-17,B-STR-YE-042,B-MEDIA-001,20,5.2,4.5,96,5,aborted,6.0,1.8,AniseFerm 42 scale aborted at 24hr; dissolved oxygen crash
+B-RUN-FERM-183,2024-08-19,B-STR-YE-057,B-MEDIA-001,22,5.2,4.4,96,50,completed,8.6,4.6,GingerEst 57 pilot 50L; Q3 production batch
+B-RUN-FERM-184,2024-08-21,B-STR-AA-002,B-MEDIA-010,30,5.5,4.0,48,20,completed,5.1,13.4,AcetoClassic 02 Q3 run; acetate titer within range
+B-RUN-FERM-185,2024-08-23,B-STR-YE-035,B-MEDIA-003,17,5.1,4.4,72,20,completed,8.2,4.2,PeachBloom 35 20L scale; peach ester profile confirmed
+B-RUN-FERM-186,2024-08-25,B-STR-LA-016,B-MEDIA-008,29,5.8,4.6,48,10,completed,6.0,17.6,LactoCitroAcid 16 10L run; citric lactic confirmed
+B-RUN-FERM-187,2024-08-27,B-STR-YE-043,B-MEDIA-009,30,5.2,4.3,72,50,completed,9.8,6.0,HeatEster 43 Q3 batch 2; heat-tolerant ester peak
+B-RUN-FERM-188,2024-08-29,B-STR-YE-058,B-MEDIA-004,16,5.2,4.5,96,50,completed,9.6,5.8,WineFloral 58 Q3 batch 2; within floral spec
+B-RUN-FERM-189,2024-09-02,B-STR-YE-046,B-MEDIA-001,15,5.0,4.4,72,5,completed,8.3,4.1,MelonMist 46 5L run; melon profile confirmed clean
+B-RUN-FERM-190,2024-09-04,B-STR-LA-015,B-MEDIA-012,37,6.0,4.8,48,10,completed,5.8,20.1,LactoHelv 15 10L run; highest lactic titer for strain
+B-RUN-FERM-191,2024-09-06,B-STR-YE-037,B-MEDIA-022,15,5.0,4.3,96,20,completed,8.6,4.6,LemonZest 37 20L scale; citronellol at spec
+B-RUN-FERM-192,2024-09-08,B-STR-YE-045,B-MEDIA-005,18,5.1,4.4,72,20,completed,8.1,4.0,GrapeEth 45 20L scale; methyl anthranilate confirmed
+B-RUN-FERM-193,2024-09-10,B-STR-YE-059,B-MEDIA-005,28,5.1,4.3,72,50,completed,9.8,6.1,TropiHeat 59 Q3 batch 2; peak tropical ester titer
+B-RUN-FERM-194,2024-09-12,B-STR-YE-052,B-MEDIA-001,14,5.2,4.4,96,50,completed,9.5,5.7,EthylStar 52 Q3 pilot 50L; production batch approved
+B-RUN-FERM-195,2024-09-14,B-STR-YE-036,B-MEDIA-009,18,5.2,4.5,96,50,completed,9.7,5.9,FloralMax 36 Q3 batch 2; Q3 highest titer
+B-RUN-FERM-196,2024-09-16,B-STR-YE-042,B-MEDIA-001,20,5.2,4.5,96,5,completed,7.8,3.6,AniseFerm 42 bench retry after DO crash; aeration adjusted
+B-RUN-FERM-197,2024-09-18,B-STR-AA-005,B-MEDIA-013,30,5.5,4.1,48,5,completed,4.5,11.2,AcetoLowOff 05 first run; reduced acetaldehyde confirmed vs parent
+B-RUN-FERM-198,2024-09-20,B-STR-YE-055,B-MEDIA-009,17,5.2,4.5,96,50,completed,9.7,5.9,TerpBoost 55 Q3 batch 2; terpene production record for strain
+B-RUN-FERM-199,2024-09-22,B-STR-YE-017,B-MEDIA-009,14,5.2,4.3,96,50,completed,9.8,6.1,EsterMax 17 Q3 closing batch; highest Q3 titer
+B-RUN-FERM-200,2024-09-25,B-STR-LA-018,B-MEDIA-015,28,5.8,4.7,48,5,completed,5.5,15.9,LactoBerry 18 retry on MRS-equivalent media; growth improved
+B-RUN-FERM-201,2024-09-27,B-STR-YE-049,B-MEDIA-005,16,5.1,4.3,72,20,completed,7.9,3.8,BlueberryEst 49 20L scale; profile stable
+B-RUN-FERM-202,2024-09-29,B-STR-YE-031,B-MEDIA-009,16,5.2,4.4,96,50,in_progress,8.1,,TropicBlast 31 Q3 closing batch; harvest pending 2024-10-02

@@ -1,0 +1,44 @@
+strain_id,species,strain_name,source,acquisition_date,ester_profile,phenol_tolerance,max_ethanol_pct,optimal_temp_c,notes,status
+B-STR-YE-031,Saccharomyces cerevisiae,Yeast TropicBlast 31,Internal mutagenesis,2023-01-15,"isoamyl acetate, ethyl hexanoate, ethyl butyrate",low,12.5,16,Derived from B-STR-YE-017 by UV mutagenesis; enhanced ethyl hexanoate output,active
+B-STR-YE-032,Saccharomyces cerevisiae,Yeast MangoDrift 32,Commercial library,2023-02-03,"isoamyl acetate, ethyl octanoate",low,11.8,18,Tropical ester profile; bench validated only,active
+B-STR-YE-033,Saccharomyces cerevisiae,Yeast StrawApricot 33,Internal cross,2023-02-20,"ethyl butyrate, isoamyl acetate, hexyl acetate",low,12.0,17,Cross between B-STR-YE-018 and B-STR-YE-022; apricot-forward,active
+B-STR-YE-034,Saccharomyces cerevisiae,Yeast CitroHex 34,External partner,2023-03-05,"ethyl hexanoate, isoamyl acetate",moderate,13.0,15,Citrus-hex hybrid profile; scale-up pending,active
+B-STR-YE-035,Saccharomyces cerevisiae,Yeast PeachBloom 35,Internal mutagenesis,2023-03-18,"ethyl butyrate, hexyl acetate, isoamyl acetate",low,11.5,17,Peach-dominant; derived from B-STR-YE-026 by EMS mutagenesis,active
+B-STR-YE-036,Saccharomyces cerevisiae,Yeast FloralMax 36,Commercial library,2023-04-02,"geraniol, linalool, isoamyl acetate",moderate,12.2,18,Floral ester blend; geraniol overproducer,active
+B-STR-YE-037,Saccharomyces cerevisiae,Yeast LemonZest 37,Internal cross,2023-04-14,"ethyl hexanoate, citronellol, isoamyl acetate",low,12.8,15,Citrus-forward; parent B-STR-YE-020,active
+B-STR-YE-038,Saccharomyces cerevisiae,Yeast VanillaPlus 38,Internal mutagenesis,2023-05-07,"ethyl vanillin, isoamyl acetate",low,10.5,20,Enhanced vanillin from B-STR-YE-025; early stage,candidate
+B-STR-YE-039,Saccharomyces cerevisiae,Yeast BerryFusion 39,External partner,2023-05-22,"ethyl butyrate, methyl anthranilate, isoamyl acetate",low,11.9,16,Berry compound producer; limited scale data,active
+B-STR-YE-040,Saccharomyces cerevisiae,Yeast RaspRed 40,Commercial library,2023-06-10,"methyl anthranilate, ethyl butyrate",moderate,12.1,17,Raspberry/grape ester profile,active
+B-STR-YE-041,Saccharomyces cerevisiae,Yeast CoconutEst 41,Internal mutagenesis,2023-06-28,"delta-decalactone, isoamyl acetate",low,11.0,19,Coconut lactone producer; derived from B-STR-YE-031 by NTG mutagenesis,active
+B-STR-YE-042,Saccharomyces cerevisiae,Yeast AniseFerm 42,External partner,2023-07-11,"trans-anethole, isoamyl acetate",moderate,11.5,20,Anise phenylpropanoid ester blend; specialty use,active
+B-STR-YE-043,Saccharomyces cerevisiae,Yeast HeatEster 43,Internal cross,2023-07-25,"isoamyl acetate, ethyl hexanoate",high,14.0,30,Heat-tolerant ester producer; derived from B-STR-YE-030 parent line,active
+B-STR-YE-044,Saccharomyces cerevisiae,Yeast PineApple 44,Commercial library,2023-08-08,"ethyl butyrate, allyl hexanoate, isoamyl acetate",low,12.3,16,Pineapple profile; allyl hexanoate confirmed at bench,active
+B-STR-YE-045,Saccharomyces cerevisiae,Yeast GrapeEth 45,Internal mutagenesis,2023-08-20,"methyl anthranilate, ethyl acetate",low,11.7,18,Grape ester; derived from B-STR-YE-040 by UV mutagenesis,active
+B-STR-YE-046,Saccharomyces cerevisiae,Yeast MelonMist 46,External partner,2023-09-03,"(Z)-6-nonenal, isoamyl acetate, ethyl acetate",low,10.8,15,Melon-forward aldehydic ester blend,candidate
+B-STR-YE-047,Saccharomyces cerevisiae,Yeast CherryBright 47,Commercial library,2023-09-17,"benzaldehyde, ethyl butyrate, isoamyl acetate",moderate,12.5,17,Cherry ester; benzaldehyde confirmed,active
+B-STR-YE-048,Saccharomyces cerevisiae,Yeast PlumDrop 48,Internal cross,2023-10-02,"ethyl butyrate, linalool, isoamyl acetate",low,12.0,16,Plum-floral hybrid; parents B-STR-YE-036 and B-STR-YE-039,active
+B-STR-YE-049,Saccharomyces cerevisiae,Yeast BlueberryEst 49,Internal mutagenesis,2023-10-15,"ethyl butyrate, methyl anthranilate, linalool",low,11.4,16,Blueberry floral ester; derived from B-STR-YE-048,candidate
+B-STR-YE-050,Saccharomyces cerevisiae,Yeast SourCitrus 50,External partner,2023-11-01,"citronellol, ethyl hexanoate, lactic acid esters",moderate,11.8,15,Sour citrus profile; lactic-ester co-production,active
+B-STR-YE-051,Saccharomyces cerevisiae,Yeast HighOct 51,Commercial library,2023-11-14,"ethyl octanoate, ethyl decanoate",low,13.5,16,Long-chain ester producer; high ethanol tolerance,active
+B-STR-YE-052,Saccharomyces cerevisiae,Yeast EthylStar 52,Internal mutagenesis,2023-12-05,"ethyl acetate, ethyl butyrate, ethyl hexanoate",low,12.9,14,Pan-ethyl ester profile; ATF1 overexpressor; derived from B-STR-YE-017,active
+B-STR-YE-053,Saccharomyces cerevisiae,Yeast FermentOld 53,Internal archive,2022-06-01,"isoamyl acetate, ethyl hexanoate",low,11.0,16,Legacy strain from 2022 archive; partially characterized,retired
+B-STR-YE-054,Saccharomyces cerevisiae,Yeast ContamRisk 54,External partner,2023-04-30,"isoamyl acetate",low,10.0,18,Placed in quarantine 2023-Q3 due to suspected cross-contamination event,quarantine
+B-STR-YE-055,Saccharomyces cerevisiae,Yeast TerpBoost 55,Internal mutagenesis,2023-12-19,"linalool, geraniol, citronellol",moderate,12.0,17,Terpene-boosted strain; derived from B-STR-YE-036 by adaptive evolution,active
+B-STR-YE-056,Saccharomyces cerevisiae,Yeast IsoHex 56,Commercial library,2024-01-08,"isoamyl acetate, isobutyl acetate, ethyl hexanoate",low,12.7,15,Short-chain ester panel; strong isobutyl acetate signal,active
+B-STR-YE-057,Saccharomyces cerevisiae,Yeast GingerEst 57,External partner,2024-01-22,"gingerol-derived esters, isoamyl acetate",moderate,11.3,22,Ginger-forward specialty strain; warm ferment tolerant,active
+B-STR-YE-058,Saccharomyces cerevisiae,Yeast WineFloral 58,Commercial library,2024-02-06,"linalool, geraniol, ethyl hexanoate, rose oxide",moderate,14.5,16,Wine-style floral ester; high ethanol ceiling,active
+B-STR-YE-059,Saccharomyces cerevisiae,Yeast TropiHeat 59,Internal cross,2024-02-20,"isoamyl acetate, ethyl butyrate, ethyl hexanoate",high,14.0,28,Heat-tolerant tropical ester; parents B-STR-YE-043 and B-STR-YE-044,active
+B-STR-LA-013,Lactobacillus plantarum,LactoRose 13,External partner,2023-01-10,"lactic acid esters, rose oxide minor",low,3.0,30,Floral-lactic hybrid; minor ester production alongside lactic acid,active
+B-STR-LA-014,Lactobacillus plantarum,LactoFresh 14,Commercial library,2023-02-28,"ethyl lactate, isoamyl lactate",low,2.8,28,Clean lactic ester producer; ethyl lactate dominant,active
+B-STR-LA-015,Lactobacillus helveticus,LactoHelv 15,External partner,2023-03-15,"ethyl lactate",low,2.5,37,High-acid helveticus strain; used for dairy-adjacent fermentations,active
+B-STR-LA-016,Lactobacillus plantarum,LactoCitroAcid 16,Internal mutagenesis,2023-05-05,"lactic acid esters, citronellol trace",low,3.1,29,Derived from B-STR-LA-011 by UV mutagenesis; citrus acid notes,active
+B-STR-LA-017,Lactobacillus brevis,LactoBrevis 17,Commercial library,2023-07-19,"ethyl lactate, acetic acid esters",moderate,3.5,25,Heterofermentative; CO2 producing; niche applications,active
+B-STR-LA-018,Lactobacillus plantarum,LactoBerry 18,Internal cross,2023-09-12,"isoamyl lactate, methyl anthranilate trace",low,3.0,28,Berry-lactic profile; parents B-STR-LA-013 and B-STR-LA-014,candidate
+B-STR-LA-019,Lactobacillus plantarum,LactoRetired 19,Internal archive,2022-03-01,"lactic acid esters",low,2.2,30,Legacy lactobacillus from 2022; profile not competitive; retired 2023-Q4,retired
+B-STR-LA-020,Lactobacillus acidophilus,LactoAcidoph 20,Commercial library,2023-11-20,"ethyl lactate",low,2.0,37,Probiotic-grade acidophilus; food-grade applications only,active
+B-STR-LA-021,Lactobacillus plantarum,LactoScaleUp 21,Internal mutagenesis,2024-01-30,"ethyl lactate, isoamyl acetate trace",low,3.2,30,Derived from B-STR-LA-014 by adaptive evolution; improved scale-up performance,active
+B-STR-AA-001,Acetobacter pasteurianus,AcetoBase 01,Commercial library,2023-04-18,"acetic acid, ethyl acetate",moderate,2.5,28,Primary acetic acid strain; acetate ester production for vinegar-forward applications,active
+B-STR-AA-002,Acetobacter aceti,AcetoClassic 02,External partner,2023-05-30,"acetic acid, ethyl acetate",moderate,2.8,30,Classic aceti strain; highly active acetate production,active
+B-STR-AA-003,Gluconobacter oxydans,GlucoOxid 03,Commercial library,2023-07-07,"acetic acid esters, gluconic acid",low,1.5,25,Gluconate co-producer; specialty oxidation applications,active
+B-STR-AA-004,Acetobacter pasteurianus,AcetoQuarantine 04,External partner,2023-10-14,"acetic acid, ethyl acetate",moderate,2.6,28,Quarantined Q4-2023; phage contamination suspected; under investigation,quarantine
+B-STR-AA-005,Acetobacter aceti,AcetoLowOff 05,Internal mutagenesis,2024-02-15,"ethyl acetate, isoamyl acetate trace",low,2.3,30,Derived from B-STR-AA-002 by NTG mutagenesis; reduced off-note acetaldehyde,candidate

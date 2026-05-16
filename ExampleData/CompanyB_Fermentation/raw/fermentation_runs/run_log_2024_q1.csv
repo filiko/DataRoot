@@ -1,0 +1,40 @@
+run_id,date,strain_id,media_id,temperature_c,ph_start,ph_end,duration_hr,vessel_scale_l,run_status,peak_od600,final_titer_gl,notes
+B-RUN-FERM-039,2024-01-04,B-STR-YE-017,B-MEDIA-001,14,5.2,4.5,96,2,completed,8.4,4.2,Initial 2024 ester screening run; baseline established
+B-RUN-FERM-040,2024-01-06,B-STR-YE-018,B-MEDIA-003,18,5.0,4.3,72,2,completed,7.9,3.8,Banana ester bench run; isoamyl acetate confirmed
+B-RUN-FERM-041,2024-01-09,B-STR-YE-021,B-MEDIA-001,14,5.2,4.5,96,2,completed,8.1,4.0,Citriflow 21 repeat screen; consistent with prior results
+B-RUN-FERM-042,2024-01-11,B-STR-LA-009,B-MEDIA-008,30,5.8,4.7,48,10,completed,6.2,18.5,Lactic scale run; lactic acid titer confirmed
+B-RUN-FERM-043,2024-01-15,B-STR-YE-031,B-MEDIA-001,16,5.2,4.4,96,2,completed,8.6,4.5,TropicBlast 31 first run; ethyl hexanoate elevated vs parent
+B-RUN-FERM-044,2024-01-17,B-STR-YE-032,B-MEDIA-005,18,5.0,4.3,72,2,completed,7.8,3.6,MangoDrift 32 bench screen; tropical profile confirmed
+B-RUN-FERM-045,2024-01-20,B-STR-YE-033,B-MEDIA-003,17,5.1,4.4,72,2,completed,8.0,3.9,StrawApricot 33 first bench run; hexyl acetate detected
+B-RUN-FERM-046,2024-01-23,B-STR-YE-034,B-MEDIA-022,15,5.0,4.4,96,2,completed,8.3,4.1,CitroHex 34 low-temp screen; citrus-hex dual peak observed
+B-RUN-FERM-047,2024-01-25,B-STR-YE-035,B-MEDIA-003,17,5.1,4.4,72,2,completed,7.7,3.7,PeachBloom 35 bench run; ethyl butyrate dominant
+B-RUN-FERM-048,2024-01-28,B-STR-YE-036,B-MEDIA-004,18,5.2,4.5,96,2,completed,8.5,4.3,FloralMax 36 bench screen; geraniol confirmed high
+B-RUN-FERM-049,2024-01-30,B-STR-YE-017,B-MEDIA-009,14,5.2,4.4,96,20,completed,9.1,5.1,EsterMax 17 scale-up 20L; profile consistent with bench
+B-RUN-FERM-050,2024-02-02,B-STR-LA-010,B-MEDIA-008,30,5.6,4.5,72,10,completed,5.9,17.2,LactoAcid 10 lactic scale run; high organic acid output
+B-RUN-FERM-051,2024-02-05,B-STR-YE-037,B-MEDIA-022,15,5.0,4.3,96,2,completed,8.2,4.0,LemonZest 37 bench run; citronellol at target level
+B-RUN-FERM-052,2024-02-07,B-STR-YE-038,B-MEDIA-023,20,5.0,4.4,96,2,completed,7.5,3.2,VanillaPlus 38 early bench run; ethyl vanillin borderline
+B-RUN-FERM-053,2024-02-09,B-STR-AA-001,B-MEDIA-010,28,5.5,4.0,48,10,completed,4.8,12.4,AcetoBase 01 first scale run; acetic acid confirmed
+B-RUN-FERM-054,2024-02-12,B-STR-YE-039,B-MEDIA-005,16,5.1,4.4,72,2,completed,7.9,3.8,BerryFusion 39 bench screen; methyl anthranilate detected
+B-RUN-FERM-055,2024-02-14,B-STR-YE-040,B-MEDIA-005,17,5.1,4.3,72,2,completed,8.0,3.9,RaspRed 40 bench screen; strong methyl anthranilate peak
+B-RUN-FERM-056,2024-02-16,B-STR-YE-031,B-MEDIA-009,16,5.2,4.4,96,20,completed,9.3,5.4,TropicBlast 31 scale-up 20L; ester profile maintained
+B-RUN-FERM-057,2024-02-19,B-STR-YE-041,B-MEDIA-025,19,5.1,4.4,96,2,completed,8.1,3.7,CoconutEst 41 first bench run; delta-decalactone detected
+B-RUN-FERM-058,2024-02-21,B-STR-YE-042,B-MEDIA-001,20,5.2,4.5,96,2,completed,7.6,3.5,AniseFerm 42 bench screen; trans-anethole confirmed
+B-RUN-FERM-059,2024-02-23,B-STR-LA-013,B-MEDIA-012,30,5.8,4.8,48,5,completed,5.8,16.8,LactoRose 13 first run; lactic acid dominant; minor rose oxide
+B-RUN-FERM-060,2024-02-26,B-STR-YE-043,B-MEDIA-001,30,5.2,4.4,72,2,completed,9.2,4.8,HeatEster 43 heat-tolerant screen; ester profile intact at 30C
+B-RUN-FERM-061,2024-02-28,B-STR-YE-044,B-MEDIA-003,16,5.0,4.3,72,2,completed,8.0,3.9,PineApple 44 bench run; allyl hexanoate confirmed
+B-RUN-FERM-062,2024-03-02,B-STR-YE-017,B-MEDIA-009,14,5.2,4.3,96,50,completed,9.5,5.6,EsterMax 17 pilot 50L; profile validated for release
+B-RUN-FERM-063,2024-03-05,B-STR-YE-045,B-MEDIA-005,18,5.1,4.4,72,2,completed,7.8,3.7,GrapeEth 45 bench screen; methyl anthranilate confirmed
+B-RUN-FERM-064,2024-03-07,B-STR-YE-046,B-MEDIA-001,15,5.0,4.4,72,2,failed,3.1,0.4,MelonMist 46 bench run; contamination detected mid-run; data voided
+B-RUN-FERM-065,2024-03-09,B-STR-YE-047,B-MEDIA-001,17,5.1,4.4,72,2,completed,8.3,4.1,CherryBright 47 bench run; benzaldehyde at spec
+B-RUN-FERM-066,2024-03-12,B-STR-YE-048,B-MEDIA-004,16,5.2,4.5,96,2,completed,8.4,4.2,PlumDrop 48 bench run; linalool and ethyl butyrate co-peak
+B-RUN-FERM-067,2024-03-14,B-STR-LA-014,B-MEDIA-012,28,5.8,4.7,48,5,completed,5.9,17.5,LactoFresh 14 first run; ethyl lactate confirmed dominant
+B-RUN-FERM-068,2024-03-16,B-STR-YE-049,B-MEDIA-005,16,5.1,4.4,72,2,completed,7.5,3.3,BlueberryEst 49 early screen; linalool co-peak with ethyl butyrate
+B-RUN-FERM-069,2024-03-18,B-STR-AA-002,B-MEDIA-010,30,5.5,4.0,48,10,completed,4.7,13.1,AcetoClassic 02 scale run; acetate titer on target
+B-RUN-FERM-070,2024-03-20,B-STR-YE-036,B-MEDIA-009,18,5.2,4.5,96,20,completed,9.4,5.5,FloralMax 36 scale-up 20L; geraniol sustained
+B-RUN-FERM-071,2024-03-22,B-STR-YE-050,B-MEDIA-022,15,5.0,4.3,96,2,completed,8.0,3.8,SourCitrus 50 bench run; citronellol and ethyl hexanoate co-peak
+B-RUN-FERM-072,2024-03-24,B-STR-YE-051,B-MEDIA-025,16,5.0,4.4,96,2,completed,8.7,4.6,HighOct 51 bench run; ethyl octanoate and decanoate confirmed
+B-RUN-FERM-073,2024-03-26,B-STR-YE-052,B-MEDIA-001,14,5.2,4.4,96,2,completed,9.0,5.0,EthylStar 52 bench run; pan-ethyl ester profile strong
+B-RUN-FERM-074,2024-03-28,B-STR-LA-015,B-MEDIA-012,37,6.0,4.9,48,5,completed,5.5,19.2,LactoHelv 15 first run; high lactic acid titer at 37C
+B-RUN-FERM-075,2024-03-29,B-STR-YE-055,B-MEDIA-004,17,5.2,4.5,96,2,completed,8.6,4.4,TerpBoost 55 first bench run; geraniol and linalool both elevated
+B-RUN-FERM-076,2024-03-30,B-STR-YE-043,B-MEDIA-009,30,5.2,4.3,72,20,aborted,5.2,1.1,HeatEster 43 scale-up aborted; vessel pressure excursion at 36hr
+B-RUN-FERM-077,2024-03-31,B-STR-YE-056,B-MEDIA-001,15,5.1,4.4,96,2,completed,8.3,4.2,IsoHex 56 first bench run; isobutyl acetate dominant as expected

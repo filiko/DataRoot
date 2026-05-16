@@ -1,0 +1,61 @@
+gene_id,gene_name,gene_symbol,organism,chromosome_location,protein_length_aa,uniprot_id,produces_compound_id,produces_compound_common_name,biosynthetic_pathway,pfam_domain,active_site_residues,ref_pubmed,ref_doi,notes
+A-GEN-TPS-LIM1,limonene synthase,LIM1,Melaleuca alternifolia,Chr1,545,XP_008347489,A-CMP-001,limonene,mevalonate pathway,TPS-CO,His-323,A-GEN-TPS-LIM2,PMID:10924511,10.1021/np9905146,tea tree limonene synthase - note: mislabeled in vendor catalog as "Pinus"
+A-GEN-TPS-LIM2,limonene synthase variant,LIM2,Melaleuca alternifolia,Chr1,548,XP_008347490,A-CMP-001,limonene,mevalonate pathway,TPS-CO,His-323,A-GEN-TPS-LIM1,PMID:10924511,,alternate splice form
+A-GEN-TPS-LIN1,linalool synthase 1,LIN1,Lavandula angustifolia,Chr3,551,XP_030634211,A-CMP-002,linalool,mevalonate pathway,TPS-CO,His-325,A-GEN-TPS-LIN2,PMID:12165183,10.1021/np9905146,lavender linalool synthase
+A-GEN-TPS-LIN2,linalool synthase 2,LIN2,Lavandula angustifolia,Chr3,549,XP_030634212,A-CMP-002,linalool,mevalonate pathway,TPS-CO,His-325,A-GEN-TPS-LIN1,PMID:12165183,,lavender variant
+A-GEN-TPS-GER1,geranial synthase,GER1,Cymbopogon winterianus,Chr5,562,ADO97256,A-CMP-003,citral (geranial+neral),mevalonate pathway,TPS-CO,His-328,A-GEN-TPS-NER1,PMID:15660358,10.1021/jf062073x,geranial-predominant lemongrass synthase
+A-GEN-TPS-NER1,neral synthase,NER1,Cymbopogon winterianus,Chr5,558,ADO97257,A-CMP-003,citral (geranial+neral),mevalonate pathway,TPS-CO,His-328,A-GEN-TPS-GER1,PMID:15660358,,neral-predominant lemongrass synthase
+A-GEN-TPS-PIN1,pinene synthase 1,PIN1,Pinus spp.,Chr2,534,Q9FEF7,A-CMP-004,alpha-pinene,mevalonate pathway,TPS-CO,His-320,A-GEN-TPS-PIN2,PMID:10782301,,conifer pinene synthase
+A-GEN-TPS-PIN2,pinene synthase 2,PIN2,Pinus spp.,Chr2,536,Q9FEF8,A-CMP-004,alpha-pinene,mevalonate pathway,TPS-CO,His-320,A-GEN-TPS-PIN1,PMID:10782301,,alternate pinene synthase
+A-GEN-TPS-MYR1,myrcene synthase 1,MYR1,Humulus lupulus,Chr1,521,Q9M7H8,A-CMP-005,beta-myrcene,mevalonate pathway,TPS-CO,His-315,A-GEN-TPS-MYR2,PMID:11145135,,hop myrcene synthase
+A-GEN-TPS-MYR2,myrcene synthase 2,MYR2,Humulus lupulus,Chr1,519,Q9M7H9,A-CMP-005,beta-myrcene,mevalonate pathway,TPS-CO,His-315,A-GEN-TPS-MYR1,PMID:11145135,,hop myrcene variant
+A-GEN-TPS-GER2,geraniol synthase 2,GER2,Rosa spp.,Chr4,548,XP_030634213,A-CMP-006,geraniol,mevalonate pathway,TPS-CO,His-322,A-GEN-TPS-GER3,PMID:12855420,,rose geraniol synthase
+A-GEN-TPS-GER3,geraniol synthase 3,GER3,Rosa spp.,Chr4,551,XP_030634214,A-CMP-006,geraniol,mevalonate pathway,TPS-CO,His-322,A-GEN-TPS-GER2,PMID:12855420,,rose geraniol variant
+A-GEN-TPS-EUG1,eugenol synthase 1,EUG1,Syzygium aromaticum,Chr7,492,Q9M8E5,A-CMP-007,eugenol,phenylpropanoid pathway,TPS-CO,His-298,A-GEN-TPS-EUG2,PMID:12781682,,clove eugenol synthase
+A-GEN-TPS-EUG2,eugenol synthase 2,EUG2,Syzygium aromaticum,Chr7,495,Q9M8E6,A-CMP-007,eugenol,phenylpropanoid pathway,TPS-CO,His-298,A-GEN-TPS-EUG1,PMID:12781682,,clove eugenol variant
+A-GEN-TPS-CIN1,1,8-cineole synthase 1,CIN1,Eucalyptus globulus,Chr2,538,XP_030634215,A-CMP-008,1,8-cineole (eucalyptol),mevalonate pathway,TPS-CO,His-318,A-GEN-TPS-CIN2,PMID:10924511,,eucalyptus cineole synthase
+A-GEN-TPS-CIN2,1,8-cineole synthase 2,CIN2,Eucalyptus globulus,Chr2,540,XP_030634216,A-CMP-008,1,8-cineole (eucalyptol),mevalonate pathway,TPS-CO,His-318,A-GEN-TPS-CIN1,PMID:10924511,,alternate cineole synthase
+A-GEN-TPS-CARY1,caryophyllene synthase 1,CARY1,clove,Chr6,565,XP_030634217,A-CMP-009,beta-caryophyllene,mevalonate pathway,TPS-CARY,His-335,A-GEN-TPS-CARY2,PMID:15834877,,clove sesquiterpene synthase
+A-GEN-TPS-CARY2,caryophyllene synthase 2,CARY2,clove,Chr6,563,XP_030634218,A-CMP-009,beta-caryophyllene,mevalonate pathway,TPS-CARY,His-335,A-GEN-TPS-CARY1,PMID:15834877,,Piper nigrum variant
+A-GEN-TPS-BIS1,bisabolol synthase 1,BIS1,Matricaria chamomilla,Chr3,572,XP_030634219,A-CMP-010,alpha-bisabolol,mevalonate pathway,TPS-CARY,His-340,A-GEN-TPS-BIS2,PMID:12552384,,chamomile bisabolol synthase
+A-GEN-TPS-BIS2,bisabolol synthase 2,BIS2,Vanilla,Chr3,575,XP_030634220,A-CMP-010,alpha-bisabolol,mevalonate pathway,TPS-CARY,His-340,A-GEN-TPS-BIS1,PMID:12552384,,vanilla variant - incomplete annotation
+A-GEN-TPS-HUM1,humulene synthase 1,HUM1,Humulus lupulus,Chr8,558,Q9M8E7,A-CMP-011,alpha-humulene,mevalonate pathway,TPS-CARY,His-332,A-GEN-TPS-HUM2,PMID:15196518,,hop humulene synthase
+A-GEN-TPS-HUM2,humulene synthase 2,HUM2,Cannabis,Chr8,560,Q9M8E8,A-CMP-011,alpha-humulene,mevalonate pathway,TPS-CARY,His-332,A-GEN-TPS-HUM1,PMID:15196518,,cannabis humulene synthase
+A-GEN-TPS-GERA1,geranyl acetate synthase 1,GERA1,Rosa spp.,Chr5,445,Q9M8E9,A-CMP-012,geranyl acetate,mevalonate pathway,ACT,Ser-189,A-GEN-TPS-GERA2,PMID:12855420,,acetyltransferase activity
+A-GEN-TPS-GERA2,geranyl acetate synthase 2,GERA2,Rosa spp.,Chr5,448,Q9M8F0,A-CMP-012,geranyl acetate,mevalonate pathway,ACT,Ser-189,A-GEN-TPS-GERA1,PMID:12855420,,Citrus variant
+A-GEN-TPS-CAM1,camphor synthase 1,CAM1,Cinnamomum camphora,Chr2,532,Q9M8F1,A-CMP-013,camphor,mevalonate pathway,TPS-CO,His-315,A-GEN-TPS-CAM2,PMID:10924511,,camphor tree synthase
+A-GEN-TPS-CAM2,camphor synthase 2,CAM2,Rosmarinus,Chr2,535,Q9M8F2,A-CMP-013,camphor,mevalonate pathway,TPS-CO,His-315,A-GEN-TPS-CAM1,PMID:10924511,,rosemary camphor synthase
+A-GEN-TPS-BOR1,borneol synthase 1,BOR1,Salvia officinalis,Chr4,542,Q9M8F3,A-CMP-014,borneol,mevalonate pathway,TPS-CO,His-320,A-GEN-TPS-BOR2,PMID:10924511,,sage borneol synthase
+A-GEN-TPS-BOR2,borneol synthase 2,BOR2,Rosmarinus,Chr4,545,Q9M8F4,A-CMP-014,borneol,mevalonate pathway,TPS-CO,His-320,A-GEN-TPS-BOR1,PMID:10924511,,rosemary borneol synthase
+A-GEN-TPS-THY1,thymol synthase 1,THY1,Thymus vulgaris,Chr3,498,Q9M8F5,A-CMP-015,thymol,phenylpropanoid pathway,TPS-CO,His-295,A-GEN-TPS-THY2,PMID:12781682,,thyme thymol synthase
+A-GEN-TPS-THY2,thymol synthase 2,THY2,Thymus vulgaris,Chr3,501,Q9M8F6,A-CMP-015,thymol,phenylpropanoid pathway,TPS-CO,His-295,A-GEN-TPS-THY1,PMID:12781682,,Origanum variant
+A-GEN-TPS-CAR1,carvacrol synthase 1,CAR1,Origanum compactum,Chr3,495,Q9M8F7,A-CMP-016,carvacrol,phenylpropanoid pathway,TPS-CO,His-295,A-GEN-TPS-CAR2,PMID:12781682,,origanum carvacrol synthase
+A-GEN-TPS-CAR2,carvacrol synthase 2,CAR2,Thymus,Chr3,498,Q9M8F8,A-CMP-016,carvacrol,phenylpropanoid pathway,TPS-CO,His-295,A-GEN-TPS-CAR1,PMID:12781682,,thyme variant
+A-GEN-TPS-MEN1,menthol synthase 1,MEN1,Mentha piperita,Chr5,552,Q9M8F9,A-CMP-017,menthol,mevalonate pathway,TPS-CO,His-328,A-GEN-TPS-MEN2,PMID:10709672,,peppermint menthol synthase
+A-GEN-TPS-MEN2,menthol synthase 2,MEN2,Mentha,Chr5,555,Q9M8G0,A-CMP-017,menthol,mevalonate pathway,TPS-CO,His-328,A-GEN-TPS-MEN1,PMID:10709672,,mentha variant
+A-GEN-TPS-TER1,terpinene synthase 1,TER1,Melaleuca alternifolia,Chr1,538,Q9M8G1,A-CMP-018,alpha-terpinene,mevalonate pathway,TPS-CO,His-318,A-GEN-TPS-TER2,PMID:10924511,,tea tree terpinene synthase
+A-GEN-TPS-TER2,terpinene synthase 2,TER2,Melaleuca alternifolia,Chr1,540,Q9M8G2,A-CMP-018,alpha-terpinene,mevalonate pathway,TPS-CO,His-318,A-GEN-TPS-TER1,PMID:10924511,,alternate terpinene synthase
+A-GEN-TPS-TER3,terpinene synthase 3,TER3,Melaleuca alternifolia,Chr1,536,Q9M8G3,A-CMP-019,gamma-terpinene,mevalonate pathway,TPS-CO,His-318,A-GEN-TPS-TER4,PMID:10924511,,tea tree gamma-terpinene
+A-GEN-TPS-TER4,terpinene synthase 4,TER4,Melaleuca alternifolia,Chr1,539,Q9M8G4,A-CMP-019,gamma-terpinene,mevalonate pathway,TPS-CO,His-318,A-GEN-TPS-TER3,PMID:10924511,,Citrus variant
+A-GEN-TPS-T4OL1,terpinen-4-ol synthase 1,T4OL1,Melaleuca alternifolia,Chr2,544,Q9M8G5,A-CMP-020,terpinen-4-ol,mevalonate pathway,TPS-CO,His-325,A-GEN-TPS-T4OL2,PMID:10924511,,tea tree T4OL synthase
+A-GEN-TPS-T4OL2,terpinen-4-ol synthase 2,T4OL2,Origanum,Chr2,547,Q9M8G6,A-CMP-020,terpinen-4-ol,mevalonate pathway,TPS-CO,His-325,A-GEN-TPS-T4OL1,PMID:10924511,,origanum variant
+A-GEN-TPS-SAB1,sabinene synthase 1,SAB1,Pinus spp.,Chr4,532,Q9M8G7,A-CMP-021,sabinene,mevalonate pathway,TPS-CO,His-315,A-GEN-TPS-SAB2,PMID:10782301,,conifer sabinene synthase
+A-GEN-TPS-SAB2,sabinene synthase 2,SAB2, Citrus,Chr4,535,Q9M8G8,A-CMP-021,sabinene,mevalonate pathway,TPS-CO,His-315,A-GEN-TPS-SAB1,PMID:10782301,,citrus sabinene synthase - NOTE: species mislabeled
+A-GEN-TPS-TPEL1,terpineol synthase 1,TPEL1,Pinus spp.,Chr3,548,Q9M8G9,A-CMP-022,alpha-terpineol,mevalonate pathway,TPS-CO,His-320,A-GEN-TPS-TPEL2,PMID:10924511,,pine terpineol synthase
+A-GEN-TPS-TPEL2,terpineol synthase 2,TPEL2, Citrus,Chr3,551,Q9M8H0,A-CMP-022,alpha-terpineol,mevalonate pathway,TPS-CO,His-320,A-GEN-TPS-TPEL1,PMID:10924511,,citrus terpineol synthase - mislabeled in vendor
+A-GEN-DAM1,damascenone synthase 1,DAM1,Rosa spp.,Chr7,488,Q9M8H1,A-CMP-023,beta-damascenone,carotenoid cleavage,TPS-CCD,His-285,A-GEN-DAM2,PMID:12855420,,rose carotenoid cleavage enzyme
+A-GEN-DAM2,damascenone synthase 2,DAM2,Vitis,Chr7,491,Q9M8H2,A-CMP-023,beta-damascenone,carotenoid cleavage,TPS-CCD,His-285,A-GEN-DAM1,PMID:12855420,,grape damascenone synthase
+A-GEN-ION1,ionone synthase 1,ION1,Vitis,Chr5,495,Q9M8H3,A-CMP-024,beta-ionone,carotenoid cleavage,TPS-CCD,His-288,A-GEN-ION2,PMID:12855420,,grape ionone synthase
+A-GEN-ION2,ionone synthase 2,ION2,Rosa,Chr5,498,Q9M8H4,A-CMP-024,beta-ionone,carotenoid cleavage,TPS-CCD,His-288,A-GEN-ION1,PMID:12855420,,rose ionone synthase
+A-GEN-NOO1,nootkatone synthase 1,NOO1,Citrus paradisi,Chr6,512,Q9M8H5,A-CMP-025,nootkatone,carotenoid cleavage,TPS-CCD,His-295,A-GEN-NOO2,PMID:10924511,,grapefruit nootkatone synthase
+A-GEN-NOO2,nootkatone synthase 2,NOO2,Valeriana,Chr6,515,Q9M8H6,A-CMP-025,nootkatone,carotenoid cleavage,TPS-CCD,His-295,A-GEN-NOO1,PMID:10924511,,valerian variant - partial sequence
+A-GEN-VAL1,valencene synthase 1,VAL1,Citrus sinensis,Chr6,565,Q9M8H7,A-CMP-026,valencene,mevalonate pathway,TPS-CARY,His-335,A-GEN-VAL2,PMID:10924511,,orange valencene synthase
+A-GEN-VAL2,valencene synthase 2,VAL2,Pinus,Chr6,568,Q9M8H8,A-CMP-026,valencene,mevalonate pathway,TPS-CARY,His-335,A-GEN-VAL1,PMID:10924511,,conifer variant
+A-GEN-TPS-FAR1,farnesol synthase 1,FAR1,Achillea millefolium,Chr4,545,Q9M8H9,A-CMP-027,farnesol (E,E),mevalonate pathway,TPS-CO,His-320,A-GEN-TPS-FAR2,PMID:12855420,,yarrow farnesol synthase
+A-GEN-TPS-FAR2,farnesol synthase 2,FAR2,Rosa,Chr4,548,Q9M8I0,A-CMP-027,farnesol (E,E),mevalonate pathway,TPS-CO,His-320,A-GEN-TPS-FAR1,PMID:12855420,,rose farnesol synthase
+A-GEN-TPS-COST1,costunolide synthase 1,COST1,Costus speciosus,Chr8,598,Q9M8I1,A-CMP-028,sesquiterpene lactone (costunolide),mevalonate pathway,TPS-CARY,His-355,A-GEN-TPS-COST2,PMID:12781682,,costus germacrene A synthase
+A-GEN-TPS-COST2,costunolide synthase 2,COST2,Saussurea,Chr8,601,Q9M8I2,A-CMP-028,sesquiterpene lactone (costunolide),mevalonate pathway,TPS-CARY,His-355,A-GEN-TPS-COST1,PMID:12781682,,saussurea costunolide synthase
+A-GEN-TPS-PUL1,pulegone synthase 1,PUL1,Mentha piperita,Chr2,535,Q9M8I3,A-CMP-029,pulegone,mevalonate pathway,TPS-CO,His-318,A-GEN-TPS-PUL2,PMID:10709672,,peppermint pulegone synthase
+A-GEN-TPS-PUL2,pulegone synthase 2,PUL2,Rosmarinus,Chr2,538,Q9M8I4,A-CMP-029,pulegone,mevalonate pathway,TPS-CO,His-318,A-GEN-TPS-PUL1,PMID:10709672,,rosemary pulegone synthase
+A-GEN-TPS-CARYOX1,caryophyllene oxide synthase 1,CARYOX1,clove,Chr6,542,Q9M8I5,A-CMP-030,caryophyllene oxide,oxidation of beta-caryophyllene,Cytochrome_P450,His-285,A-GEN-TPS-CARYOX2,PMID:15834877,,clove oxidation enzyme
+A-GEN-TPS-CARYOX2,caryophyllene oxide synthase 2,CARYOX2,Piper nigrum,Chr6,545,Q9M8I6,A-CMP-030,caryophyllene oxide,oxidation of beta-caryophyllene,Cytochrome_P450,His-285,A-GEN-TPS-CARYOX1,PMID:15834877,,black pepper oxidation enzyme

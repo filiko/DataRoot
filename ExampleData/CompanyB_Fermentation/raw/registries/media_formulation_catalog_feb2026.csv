@@ -1,0 +1,12 @@
+media_id,media_name,components,preparation_notes,storage_conditions,shelf_life_days,version,status
+B-MEDIA-EST-04,Ester Production Base 04,"glucose 20g/L, yeast extract 10g/L, malt extract 5g/L, peptone 5g/L",Standard protocol - autoclave 121C 20min,2-8C sealed,30,4,active
+B-MEDIA-BAN-01,Banana Ester Medium,"glucose 25g/L, yeast extract 8g/L, peptone 4g/L, K2HPO4 2g/L",pH to 5.0 before autoclave,2-8C,21,1,active
+B-MEDIA-FLOR-01,Floral Ester Medium,"glucose 22g/L, yeast extract 12g/L, malt extract 3g/L, MgSO4 0.5g/L",Add CaCl2 after autoclave,2-8C wrapped,14,v1,active
+B-MEDIA-FLOR-02,Floral Ester Medium v2,"glucose 22g/L, yeast extract 12g/L, malt extract 3g/L, MgSO4 0.5g/L, MnSO4 0.001g/L",New variant for better geraniol yield,-20C frozen,60,,experimental
+B-MEDIA-LACT-02,Lactic Acid Medium 02,"glucose 30g/L, yeast extract 6g/L, peptone 4g/L, KH2PO4 2g/L, MgSO4 0.4g/L",Maintain pH during growth,2-8C,45,2,active
+B-MEDIA-ORGANIC-01,Organic Acid Medium,"glucose 35g/L, corn steep liquor 5g/L, (NH4)2SO4 2g/L, K2HPO4 3g/L",For organic acid production,2-8C,30,v1-old,active
+B-MEDIA-CIT-01,Citrus Terpene Medium,"glucose 20g/L, yeast extract 10g/L, Tween 80 1mL/L, geraniol 0.5mL/L spike",Sterile filter geraniol after autoclave,2-8C,21,1,active
+B-MEDIA-VANILLA,Vanilla Flavor Medium,"glucose 25g/L, yeast extract 8g/L, peptone 3g/L, ferulic acid 0.2g/L",For vanillin precursor production,4C,14,prototype,active
+B-MEDIA-EST-03,Ester Base 03,"glucose 20g/L, yeast extract 10g/L, malt extract 5g/L, peptone 5g/L",Deprecated - use EST-04 instead,2-8C,30,3,discontinued
+B-MEDIA-PILOT-01,Pilot Scale Ester,"glucose 200g/L autoclave, yeast extract 100g/L, malt extract 50g/L, peptone 50g/L - scale up",Prepare 10x stock for pilot,same day,1 day,1,phased out
+B-MEDIA-LACT-01,Lactic Medium OLD,"glucose 25g/L, yeast extract 5g/L, peptone 3g/L",Use LAC-02 instead,2-8C,30,1,discontinued

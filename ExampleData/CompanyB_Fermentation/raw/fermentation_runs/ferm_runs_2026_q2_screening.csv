@@ -1,0 +1,19 @@
+run_id,date,strain_id,media_id,temperature_c,ph_start,ph_end,duration_hr,vessel_scale_l,run_status,notes,batch_code,technician
+B-RUN-FERM-046,2026-04-28,B-STR-YE-017,B-MEDIA-EST-04,14,5.2,4.3,96,50,completed,Pilot ester run for citrus profile,FERM-046-B01,JMartinez
+B-RUN-FERM-047,04/29/2026,B-STR-YE-018,B-MEDIA-BAN-01,18,5.0,4.2,72,2,completed,Banana ester validation - note inconsistent with run 032,FERM-047,,kim.lee
+B-RUN-FERM-048,2026-04-30,B-STR-YE-017,B-MEDIA-EST-04,14,5.2,4.4,96,20,completed,Duplicate run - confirmation of B-RUN-FERM-033,FERM-048-B01,JMartinez
+B-RUN-FERM-049,May 1 2026,,B-MEDIA-FLOR-01,18,5.1,4.5,96,2,ongoing,Waiting on strain ID confirmation from bank,,RThompson
+B-RUN-FERM-050,2026-05-02,B-STR-LA-009,B-MEDIA-LACT-02,30,5.8,4.7,48,10,completed,Lactic acid production - second run this week,FERM-050-B02,JMartinez
+B-RUN-FERM-051,2026-05-03,B-STR-YE-025,B-MEDIA-VANILLA,22,5.5,4.8,120,2,failed,Culture contamination detected day 3,FERM-051-B01,Unknown - check LIMS
+B-RUN-FERM-052,2026-05-03,B-STR-YE-019,B-MEDIA-FLOR-01,18,5.1,4.5,96,5,completed,Geraniol production batch,FERM-052-B01,JMartinez
+B-RUN-FERM-053,05-04-2026,B-STR-YE-020,B-MEDIA-CIT-01,16,5.0,4.3,72,2,completed,Limoncitrus trial run - NOTE: name changed from CitrusDrop to CitriFlow in registry,,sanchez_m
+B-RUN-FERM-054,2026-05-05,B-STR-LA-010,B-MEDIA-ORGANIC-01,30,5.6,4.5,72,10,completed,Citric acid run - partial harvest due to foamover,FERM-054-B03,
+B-RUN-FERM-055,2026-05-06,,,14,5.2,4.3,96,2,pending,Wait - this is a duplicate of FERM-044 schedule,,
+B-RUN-FERM-056,2026-05-07,B-STR-YE-022,B-MEDIA-BAN-01,18,5.0,4.3,72,5,completed,Scale-up from bench - isoamyl acetate focus,FERM-056-B01,JMartinez
+B-RUN-FERM-057,2026-05-08,B-STR-YE-017,B-MEDIA-EST-04,14,5.2,4.3,96,20,completed,Final pilot harvest for B-INQ-001,FERM-057-B01,JMartinez
+B-RUN-FERM-058,May 9 2026,B-STR-LA-011,B-MEDIA-CIT-01,16,5.5,4.8,72,10,completed,Citrus-lactic cross profile check,,d_lee
+B-RUN-FERM-059,2026-05-10,B-STR-YE-017,B-MEDIA-EST-04,14,5.2,4.3,96,50,completed,Second pilot batch - customer requested additional material,FERM-059-B01,JMartinez
+B-RUN-FERM-060,2026-05-11,,B-MEDIA-LACT-02,30,5.8,4.6,48,20,failed,PH crash at hour 36 - investigating,FERM-060-B02,
+B-RUN-FERM-061,2026-05-12,B-STR-YE-021,B-MEDIA-EST-04,14,5.2,4.5,96,2,completed,Repeat bench run for CFR review,FERM-061-B01,kim.lee
+B-RUN-FERM-062,05/13/2026,B-STR-YE-024,B-MEDIA-FLOR-02,20,5.3,4.6,96,2,completed,Trying new floral media variant - not in registry,FERM-062,
+B-RUN-FERM-063,2026-05-14,B-STR-YE-017,B-MEDIA-EST-04,14,5.2,4.3,96,100,ongoing,Large scale for storage demo - harvest due 5/18,FERM-063-B01,JMartinez

@@ -1,0 +1,29 @@
+sample_id,station_id,sample_date,nitrate_mg_l,lead_ppb,turbidity_ntu,temperature_c,collector,notes,ph,do_mg_l,conductivity_us_cm
+SAMP-2024-001,STATION_001,2024-02-14,8.2,2.1,1.4,16.2,AReed,below nitrate limit,7.2,8.5,450
+SAMP-2024-002,STATION_001,2024-05-18,12.7,2.5,1.8,19.6,AReed,nitrate exceedance after storm,7.1,8.2,468
+SAMP-2024-003,STATION_002,2024-04-09,3.4,1.7,2.9,18.1,LChen,normal spring reading,7.4,9.1,520
+SAMP-2024-004,STATION_002,2024-09-22,11.3,1.9,3.1,24.4,LChen,nitrate above threshold,7.0,7.8,545
+SAMP-2024-005,STATION_003,2024-06-11,6.8,16.2,2.1,22.9,MPatel,lead exceedance only,6.8,7.2,380
+SAMP-2024-006,STATION_004,2024-07-03,2.2,1.1,0.8,21.0,MPatel,inactive audit,7.5,8.9,410
+SAMP-2024-007,STATION_001,2024-08-15,9.4,3.2,2.5,23.1,,normal,6.9,8.0,455,missing collector
+SAMP-2024-008,STATION_002,2024-10-03,7.1,2.0,1.9,20.5,LChen,post-rain sample,7.3,8.6,510
+SAMP-2024-009,STATION_003,2024-11-12,5.9,8.4,1.5,17.8,MPatel,below lead limit this time,7.0,8.1,365
+SAMP-2024-010,STATION_001,2024-12-05,4.2,1.8,0.9,14.2,AReed,winter low readings,7.6,9.4,440
+SAMP-2024-011,STATION_002,2024-12-18,3.8,1.5,1.2,13.5,LChen,winter baseline,7.7,9.6,498
+SAMP-2024-012,STATION_003,2025-01-08,6.1,11.2,1.8,15.2,MPatel,lead borderline,7.1,8.4,372
+SAMP-2024-013,STATION_001,2025-02-14,7.5,2.3,1.6,16.8,AReed,valentines day sample,7.2,8.7,452
+SAMP-2024-014,STATION_002,2025-03-20,4.9,1.9,2.1,18.9,LChen,spring transition,7.4,9.0,515
+SAMP-2024-015,STATION_003,2025-04-10,7.2,14.5,2.3,20.4,MPatel,Easter week - slight lead rise,6.9,8.0,378
+SAMP-2024-016,STATION_001,2025-05-05,10.2,3.1,2.8,21.5,AReed,may nitrate climbing,7.0,7.9,462
+SAMP-2024-017,STATION_002,2025-06-12,5.8,2.2,2.4,23.2,LChen,summer reading,7.2,8.3,528
+SAMP-2024-018,STATION_003,2025-07-08,6.4,9.8,1.7,24.1,MPatel,within limits,7.0,8.1,370
+SAMP-2024-019,STATION_001,2025-08-15,11.5,3.8,3.2,25.3,AReed,summer storm spike,6.8,7.5,478
+SAMP-2024-020,STATION_002,2025-09-22,6.2,2.1,2.6,22.8,LChen,post-hurricane,7.1,8.2,522
+SAMP-2024-021,STATION_003,2025-10-14,5.5,7.2,1.4,19.5,MPatel,fall baseline,7.3,8.5,368
+SAMP-2024-022,STATION_001,2025-11-05,8.7,2.6,2.0,17.2,AReed,pre-winter,7.2,8.6,458
+SAMP-2024-023,STATION_002,2025-12-10,4.1,1.7,1.1,14.8,LChen,year end low,7.6,9.3,502
+SAMP-2024-024,STATION_003,2026-01-12,5.8,6.9,1.3,16.1,MPatel,new year baseline,7.4,8.7,364
+SAMP-2024-025,STATION_001,2026-02-20,9.1,2.9,2.3,16.9,AReed,valentines week,7.1,8.4,465
+SAMP-2024-026,STATION_002,2026-03-15,5.2,2.0,2.2,18.2,LChen,spring,7.3,8.9,518
+SAMP-2024-027,STATION_003,2026-04-08,6.9,8.5,1.6,20.8,MPatel,lead creeping up,7.0,8.2,374
+SAMP-2024-028,STATION_001,2026-05-01,10.8,3.4,2.9,22.1,AReed,may high,6.9,7.8,472

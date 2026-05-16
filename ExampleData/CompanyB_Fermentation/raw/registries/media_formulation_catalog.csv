@@ -1,0 +1,26 @@
+media_id,media_name,carbon_source,nitrogen_source,glucose_gl,peptone_gl,yeast_extract_gl,mineral_supplement,ph_target,notes,application
+B-MEDIA-001,Standard Ester Base,glucose,yeast_extract,20.0,5.0,3.0,KH2PO4 2g/L; MgSO4 0.5g/L,5.2,General-purpose ester screening medium; low-temp compatible,ester_production
+B-MEDIA-002,High-Sugar Ester,glucose,yeast_extract,50.0,5.0,5.0,KH2PO4 2g/L; MgSO4 0.5g/L; ZnSO4 0.01g/L,5.0,High osmotic stress medium for ethyl ester overproduction,ester_production
+B-MEDIA-003,Banana Ester Optimized,glucose,yeast_extract,25.0,5.0,4.0,KH2PO4 2g/L; MnSO4 0.05g/L,5.1,Isoamyl acetate maximization; low nitrogen design,ester_production
+B-MEDIA-004,Floral Terpene Base,glucose,yeast_extract,20.0,5.0,3.5,KH2PO4 2g/L; MgSO4 0.5g/L; FeSO4 0.01g/L,5.3,Geraniol and linalool supporting medium,ester_production
+B-MEDIA-005,Tropical Blend Medium,glucose,yeast_extract,30.0,5.0,4.0,KH2PO4 2g/L; MgSO4 0.5g/L,5.1,Broad tropical ester panel screening,ester_production
+B-MEDIA-006,Phenol Screen Base,glucose,yeast_extract+peptone,20.0,10.0,2.0,KH2PO4 2g/L; MgSO4 0.5g/L; CaCO3 0.1g/L,5.5,Used for phenol tolerance screening assays,phenol_screening
+B-MEDIA-007,High-Phenol Challenge,glucose,peptone,20.0,15.0,0.0,KH2PO4 2g/L; MgSO4 0.5g/L; ferulic acid 1g/L,5.5,Ferulic acid included as phenol tolerance challenge,phenol_screening
+B-MEDIA-008,Lactic Scale Base,glucose,yeast_extract,40.0,5.0,5.0,KH2PO4 2g/L; MgSO4 0.5g/L; MnSO4 0.1g/L,5.8,Lactobacillus-compatible lactic acid scale-up medium,scale_up
+B-MEDIA-009,Pilot Ester Scale,glucose,yeast_extract,25.0,5.0,3.0,KH2PO4 3g/L; MgSO4 0.5g/L; ZnSO4 0.01g/L,5.2,Ester production scale-up medium for 20L–200L vessels,scale_up
+B-MEDIA-010,Acetic Acid Scale,glucose,yeast_extract,30.0,5.0,5.0,KH2PO4 2g/L; MgSO4 1.0g/L,5.8,Acetobacter scale-up medium; high aeration required,scale_up
+B-MEDIA-011,Seed Culture Yeast,glucose,yeast_extract+peptone,10.0,5.0,5.0,KH2PO4 1g/L; MgSO4 0.2g/L,5.5,Standard yeast seed culture; used for all pre-inoculation steps,seed_culture
+B-MEDIA-012,Seed Culture Lactic,glucose,yeast_extract+peptone,10.0,5.0,5.0,KH2PO4 1g/L; MgSO4 0.2g/L; Tween80 0.1g/L,6.0,MRS-like seed medium for Lactobacillus inoculum prep,seed_culture
+B-MEDIA-013,Seed Culture Acetic,glucose,yeast_extract+peptone,10.0,5.0,5.0,KH2PO4 1g/L; MgSO4 0.2g/L,5.8,Acetobacter seed medium; moderate aeration during prep,seed_culture
+B-MEDIA-014,Maintenance Agar Base,glucose,yeast_extract,20.0,5.0,3.0,KH2PO4 2g/L; MgSO4 0.5g/L; agar 15g/L,5.5,Solid maintenance medium for yeast strain storage plates,maintenance
+B-MEDIA-015,Maintenance Lactic Agar,glucose,yeast_extract+peptone,20.0,10.0,5.0,KH2PO4 2g/L; MgSO4 0.5g/L; agar 15g/L; Tween80 0.1g/L,6.0,MRS agar equivalent for Lactobacillus maintenance,maintenance
+B-MEDIA-016,Fructose Ester Base,fructose,yeast_extract,,5.0,3.0,KH2PO4 2g/L; MgSO4 0.5g/L,5.2,Fructose-driven ester production; glucose_gl blank by design,ester_production
+B-MEDIA-017,Galactose Screen,galactose,yeast_extract,,5.0,3.0,KH2PO4 2g/L; MgSO4 0.5g/L,5.3,Galactose carbon source for alternate pathway screening; no added glucose,phenol_screening
+B-MEDIA-018,Glycerol Ester Media,glycerol,yeast_extract,,5.0,3.0,KH2PO4 2g/L; MgSO4 0.5g/L; CaCl2 0.1g/L,5.4,Glycerol carbon source; used for oleaginous ester profiling; glucose_gl blank,ester_production
+B-MEDIA-019,Sucrose Scale Up,sucrose,yeast_extract,,5.0,4.0,KH2PO4 3g/L; MgSO4 0.5g/L,5.2,Sucrose carbon source for industrial cost reduction trials; no glucose added,scale_up
+B-MEDIA-020,Molasses Pilot,molasses,yeast_extract,,5.0,5.0,KH2PO4 2g/L; MgSO4 0.5g/L; antifoam 0.05g/L,5.4,Crude carbon source pilot; molasses substitutes glucose; no glucose_gl specified,scale_up
+B-MEDIA-021,Xylose Screen,xylose,peptone,,10.0,0.0,KH2PO4 2g/L; MgSO4 0.5g/L,5.6,C5 sugar ester screening; lignocellulose fermentation context; glucose_gl blank,phenol_screening
+B-MEDIA-022,Citric Acid Supplement,glucose,yeast_extract,20.0,5.0,3.0,KH2PO4 2g/L; MgSO4 0.5g/L; citric acid 2g/L,4.8,Low pH ester medium with citrate buffer for citrus profile enhancement,ester_production
+B-MEDIA-023,Vanilla Pilot Scale,glucose,yeast_extract,25.0,5.0,3.0,KH2PO4 2g/L; MgSO4 0.5g/L; vanillin precursor 0.5g/L,5.0,Vanillin precursor-supplemented scale-up for B-STR-YE-025 and B-STR-YE-038,scale_up
+B-MEDIA-024,Terpene Seed,glucose,yeast_extract+peptone,10.0,5.0,5.0,KH2PO4 1g/L; MgSO4 0.2g/L; geranyl pyrophosphate precursor 0.1g/L,5.5,Seed culture medium with terpene precursor supplement,seed_culture
+B-MEDIA-025,Long-Chain Ester Base,glucose,yeast_extract,20.0,5.0,4.0,KH2PO4 2g/L; MgSO4 0.5g/L; palmitate 0.2g/L,5.2,Fatty acid supplement for long-chain ethyl ester (C8-C12) production,ester_production

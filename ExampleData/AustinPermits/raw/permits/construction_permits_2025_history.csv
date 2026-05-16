@@ -1,0 +1,26 @@
+permit_id,applied_date,issued_date,permit_type,description,address,owner_name,owner_phone,contractor_name,contractor_phone,building_valuation,total_existing_sqft,total_new_sqft,status,days_to_issue,inspector_id,notes
+BP-2025-100101,2025-01-15,2025-02-20,Building Permit,New SFR 3bed/2bath,4502 ELM AVE,AUSTIN,TX 78758,MJones,512-555-0101,Acme Const,512-555-0202,$245,000,0,1800,1800,issued,36,INS-042,Standard residential
+BP-2025-100102,2025-01-18,2025-02-22,Building Permit,New SFR with attached garage,8802 PINEY CREEK,aSmith,,BuilderPro,512-555-0303,$312,000,0,2200,400,issued,35,INS-042,
+BP-2025-100103,2025-01-20,01/15/2025,Plumbing Permit,Water heater replacement,2104 WINDERMERE DR,Garcia Family,512-555-0404,,,issued,26,,Homeowner permit
+BP-2025-100104,2025-01-22,,Mechanical Permit,HVAC changeout,11612 VIA GRANDE DR,Thomas Lee,512-555-0505,HVAC Solutions,512-555-0606,issued,-22,INS-018,Permit issued before application date
+2025-100105,2025-01-25,2025-02-28,Electrical Permit,Service upgrade 100->200amp,1817 MADISON AVE,Williams,512-555-0707,Power Electric,,$8,500,,0,,issued,34,,Partial data entry
+BP-2025-100106,2025-02-01,2025-03-15,Building Permit,Second story addition,5602 SUNDANCE DR,Patel,512-555-0808,Custom Homes Inc,512-555-0909,$425,000,1400,0,,issued,42,INS-042,
+BP-2025-100107,2025-02-05,2025-03-10,Plumbing Permit,Full repipe,2903 SUNRISE RD,Chen,,Texas Plumbers,512-555-1001,issued,33,,Owner phone missing
+BP-2025-100108,2025-02-10,,Building Permit,Pool installation,6403 ARNOLD DR,,PMT SAI REALTY LLC,512-555-1111,,issued,,,Pending inspector assignment
+BP-2025-100109,2025-02-12,2025-03-20,Building Permit,Detached garage 24x24,8904 MEADOWBROOK,Rodriguez Family,512-555-1202,,$65,000,,0,576,,issued,36,INS-042,
+BP-2025-100110,2025-02-15,2025-03-18,Mechanical Permit,Furnace replacement,7100 BLUESTEM DR,Baker,512-555-1303,Goettl Air,512-555-1404,issued,31,,Same day issue?
+BP-2025-100111,2025-02-20,2025-04-01,Building Permit,Roof replacement and repair,3204 S 5TH ST,Martinez,512-555-1505,RoofMasters,512-555-1606,$38,000,0,,issued,40,INS-042,
+BP-2025-100112,2025-02-25,2025-04-05,Plumbing Permit,Irrigation system,1405 CIRCLE C RANCH,Wilson,512-555-1707,Sprinkler Pro,512-555-1808,issued,39,INS-042,
+BP-2025-100113,2025-03-01,2025-04-10,Building Permit,ADU - Detached guest house,1802 CANYON RIDGE DR,Kim Family,512-555-1909,Austin Homes,512-555-2001,$285,000,0,800,800,issued,40,INS-042,
+2025-100114,2025-03-05,2025-04-08,Electrical Permit,220v dryer line,4402 CONE MARKET,mJohnson,512-555-2102,Light Electric,512-555-2203,,issued,34,,
+BP-2025-100115,2025-03-10,2025-04-20,Building Permit,Window replacement (15 windows),6204 HANCOCK DR,Thompson,512-555-2304,Renewal by Andersen,512-555-2405,$18,500,0,,issued,41,INS-042,
+BP-2025-100116,2025-03-15,2025-04-22,Plumbing Permit,Tankless water heater,7702 CESAR CHAVEZ,mNguyen,,PlumbPro,512-555-2606,,issued,38,INS-042,
+BP-2025-100117,2025-03-20,2025-04-25,Building Permit,Room addition 14x20,3305 GREATERA VILLAGE,Lopez,512-555-2707,Addison Const,512-555-2808,$95,000,280,0,issued,36,INS-042,
+BP-2025-100118,2025-04-01,2025-05-15,Building Permit,New SFR 4bed/3bath 2story,9100 BRUSH COUNTRY,Richter,512-555-2909,DR Horton,512-555-3001,$385,000,0,3100,3100,issued,44,INS-042,
+BP-2025-100119,2025-04-05,2025-05-10,Mechanical Permit,AC replacement 3ton,5506 GARY POINT,sDavis,512-555-3102,Air Control,512-555-3203,,issued,35,INS-042,
+BP-2025-100120,2025-04-10,2025-05-18,Plumbing Permit,Sewer line repair,1003 ALLANDALE RD,Cohen,512-555-3304,Roto-Rooter,512-555-3405,,issued,38,INS-042,
+BP-2025-100121,2025-04-15,,Building Permit,Foundation repair,2904 W BRAKER LN,Anderson,,Foundation Fix,512-555-3606,$42,000,,,,,Pending
+BP-2025-100122,2025-04-20,2025-05-25,Building Permit,Remodel kitchen and bath,4205 FAWN RUN,Park Family,512-555-3707,ReBath Austin,512-555-3808,$125,000,0,issued,35,INS-042,
+BP-2025-100123,2025-05-01,2025-06-10,Electrical Permit,Hot tub electrical,6608 MANCHACA RD,Felix,512-555-3909,Shock Tech,512-555-4001,,issued,40,,Expedited
+BP-2025-100124,2025-05-05,2025-06-08,Building Permit,Deck construction,1404 TIFFIN RIDGE,pWilliams,512-555-4102,Deck Builder,512-555-4203,$22,000,,0,issued,34,INS-042,
+BP-2025-100125,2025-05-10,2025-06-20,Building Permit,New pool and patio,8304 BRUSHWOOD DR,Kramer Family,512-555-4304,Cody Pools,512-555-4405,$95,000,,0,issued,41,INS-042,

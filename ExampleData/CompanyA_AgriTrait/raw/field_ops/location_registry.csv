@@ -1,0 +1,13 @@
+location_id,site_name,state,country,lat,lon,elevation_m,soil_type,irrigation_type,climate_zone,notes
+A-LOC-001,Davis Research Farm,CA,USA,38.5449,-121.7405,16,Yolo silty clay loam,surface furrow,Koppen Csa,"Primary tomato and pepper trial site; UC Davis collaboration"
+A-LOC-002,Yuma Desert Station,AZ,USA,32.6927,-114.6277,43,sandy loam,drip,Koppen BWh,"Extreme heat and salinity trial site; year-round growing"
+A-LOC-003,Homestead Subtropical Farm,FL,USA,25.4687,-80.4776,2,Rockdale marl,overhead sprinkler,Koppen Aw,"High humidity disease pressure; nematode-prone soils"
+A-LOC-004,Leamington Greenhouse Complex,ON,Canada,42.0998,-82.5988,176,hydroponic substrate,drip,Koppen Dfa,"Largest covered production partner; winter tomato program"
+A-LOC-005,Salinas Valley Trial Block,CA,USA,36.6777,-121.6555,21,Chualar loam,drip,Koppen Csb,"Cool coastal; early brassica trials; also basil and lettuce"
+A-LOC-006,Oxnard Coastal Station,CA,USA,34.1975,-119.1771,13,Camarillo loam,drip,Koppen Csb,"Fog belt site; lavender coastal tolerance trials"
+A-LOC-007,Immokalee Field Station,FL,USA,26.4198,-81.4173,10,Immokalee fine sand,seep irrigation,Koppen Aw,"Sandy soils; heavy nematode pressure; drainage-limited"
+A-LOC-008,Fresno Inland Trial Site,CA,USA,36.7468,-119.7726,88,Hanford sandy loam,surface furrow,Koppen Bsk,"Hot dry summer; processing tomato trials"
+A-LOC-009,Nogales Border Station,AZ,USA,31.3399,-110.9339,1165,gravelly loam,drip,Koppen BSk,"High elevation desert; day-night temperature swings"
+A-LOC-010,Lethbridge Alberta Plots,AB,Canada,49.6955,-112.8417,908,Lethbridge clay loam,pivot,Koppen BSk,"Short season; lavender cold hardiness evaluation"
+A-LOC-011,Apalachicola Delta Farm,FL,USA,29.7258,-84.9924,4,organic muck,flood/seep,Koppen Cfa,"Delta muck soils; fusarium and blight pressure high"
+A-LOC-012,Bakersfield Production Site,CA,USA,35.3733,-119.0187,119,Wasco sandy loam,drip,Koppen Bsk,"High heat; large-scale seed production contract site"

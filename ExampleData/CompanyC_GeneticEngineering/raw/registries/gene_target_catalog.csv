@@ -1,0 +1,31 @@
+gene_id,gene_symbol,ensembl_id,organism,tissue_expression,functional_pathway,edit_rationale,target_category,notes
+GENE-001,FT,AT1G65480,Arabidopsis thaliana,"leaf,vasculature",photoperiod flowering,Delay flowering for biomass increase,trait_improvement,CONSTANS-regulated florigen
+GENE-002,AP1,AT1G69120,Arabidopsis thaliana,floral meristem,floral development,Study meristem identity switching,biosafety_validation,MADS-box transcription factor
+GENE-003,CESA1,AT4G32410,Arabidopsis thaliana,"stem,hypocotyl",cell wall biosynthesis,Reduce cellulose crystallinity for saccharification,trait_improvement,Primary wall cellulose synthase A1
+GENE-004,ABI3,AT3G24650,Arabidopsis thaliana,seed,ABA signaling,Enhance desiccation tolerance via ABA hypersensitivity,trait_improvement,B3 domain transcription factor
+GENE-005,JAZ1,AT1G19180,Arabidopsis thaliana,ubiquitous,jasmonate signaling,Constitutive defense pathway activation,trait_improvement,Jasmonate ZIM-domain repressor 1
+GENE-006,FLC,AT5G10140,Arabidopsis thaliana,"leaf,apex",vernalization,Accelerate flowering in winter annual backgrounds,trait_improvement,Major floral repressor; H3K27me3 target
+GENE-007,RPS5,AT1G12220,Arabidopsis thaliana,leaf,innate immunity,Broaden NBS-LRR resistance spectrum,trait_improvement,Resistance to Pseudomonas syringae
+GENE-008,GI,AT1G22770,Arabidopsis thaliana,leaf,circadian clock,Photoperiod-independent flowering study,trait_improvement,Gigantea protein; clock component
+GENE-009,NbSGT1,NbS00000001g0008,Nicotiana benthamiana,ubiquitous,innate immunity,Immune suppression for stable transient expression,production_enhancement,HSP90 co-chaperone; required for NLR function
+GENE-010,NbRAR1,NbS00000002g0004,Nicotiana benthamiana,ubiquitous,R protein stability,Modify R protein-mediated hypersensitive response,biosafety_validation,CHORD-domain zinc-finger protein
+GENE-011,NbPDS,NbS00000003g0012,Nicotiana benthamiana,"leaf,chloroplast",carotenoid biosynthesis,Photobleaching visual marker for editing efficiency,biosafety_validation,Phytoene desaturase; albino knockout marker
+GENE-012,NbRDR6,NbS00000004g0006,Nicotiana benthamiana,leaf,RNA silencing,Reduce PTGS to improve transgene expression stability,production_enhancement,RNA-dependent RNA polymerase 6
+GENE-013,NbACT,NbS00000005g0003,Nicotiana benthamiana,ubiquitous,cytoskeletal dynamics,Reference gene normalization validation,biosafety_validation,Actin; housekeeping reference control
+GENE-014,NbCLA1,NbS00000006g0009,Nicotiana benthamiana,leaf,plastid development,Albino marker for chloroplast-targeted editing,biosafety_validation,1-deoxy-D-xylulose 5-phosphate synthase
+GENE-015,PDCD1,ENSG00000188389,Homo sapiens,"T cells,B cells",immune checkpoint,Enhance T cell anti-tumor activity for CAR-T therapy,disease_model,PD-1; validated clinical CAR-T target
+GENE-016,CD274,ENSG00000120217,Homo sapiens,"tumor,immune cells",immune checkpoint,Model PD-L1 knockout tumor lines,disease_model,PD-L1; PD-1 ligand
+GENE-017,BRCA1,ENSG00000012048,Homo sapiens,"breast,ovary",DNA damage repair,Cancer predisposition cell line model,disease_model,BRCA1 frameshift allele generation
+GENE-018,KRAS,ENSG00000133703,Homo sapiens,"pancreas,lung,colon",RAS-MAPK signaling,G12D/G12V oncogenic allele knock-in,disease_model,Most frequently mutated oncogene
+GENE-019,TP53,ENSG00000141510,Homo sapiens,ubiquitous,apoptosis,Tumor suppressor loss-of-function model,disease_model,R175H hotspot mutation model
+GENE-020,PCSK9,ENSG00000169174,Homo sapiens,liver,lipid metabolism,LDL cholesterol lowering via KO,disease_model,Therapeutic target; base editing validated
+GENE-021,TRAC,ENSG00000277734,Homo sapiens,T cells,T cell receptor signaling,TCR disruption for allogeneic CAR-T manufacturing,production_enhancement,TCR alpha constant region locus
+GENE-022,B2M,ENSG00000166710,Homo sapiens,ubiquitous,MHC class I presentation,HLA class I reduction for universal cell line,production_enhancement,Beta-2 microglobulin
+GENE-023,DNMT3A,ENSG00000119772,Homo sapiens,hematopoietic,epigenetic regulation,AML clonal hematopoiesis disease model,disease_model,DNA methyltransferase 3A; R882H hotspot
+GENE-024,HBB,ENSG00000244734,Homo sapiens,erythroid,oxygen transport,Sickle cell and beta-thalassemia correction,disease_model,E6V sickle mutation; HDR repair template tested
+GENE-025,Trp53,ENSMUSG00000059552,Mus musculus,ubiquitous,apoptosis,Mouse tumor model generation,disease_model,Mouse p53 ortholog; R172H hotspot
+GENE-026,Pcsk9,ENSMUSG00000058335,Mus musculus,liver,lipid metabolism,In vivo liver base editing validation,disease_model,Mouse PCSK9 ortholog
+GENE-027,Trac,ENSMUSG00000076928,Mus musculus,T cells,T cell receptor signaling,Murine allogeneic immune cell engineering,disease_model,Mouse TCR alpha constant region
+GENE-028,Rosa26,ENSMUSG00000086503,Mus musculus,ubiquitous,safe harbor locus,Knock-in landing pad for reporter cassettes,production_enhancement,Mouse safe harbor; ubiquitous expression
+GENE-029,Hprt,ENSMUSG00000025630,Mus musculus,ubiquitous,purine salvage,Selection marker locus; HAT/6-TG counter-selection,biosafety_validation,X-linked; HAT selection compatible
+GENE-030,Pten,ENSMUSG00000013663,Mus musculus,"brain,prostate",PI3K-AKT signaling,Tumor suppressor conditional loss model,disease_model,PTEN phosphatase KO; Cre-inducible allele
