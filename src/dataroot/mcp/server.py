@@ -142,7 +142,7 @@ def _summarize(workspace: _WorkspaceHandle) -> dict[str, Any]:
         "raw_path": str(workspace.raw_path),
         "record_count": sum(counts.values()),
         "by_type": counts,
-        "attribution": "City of Austin Open Data Terms — https://data.austintexas.gov/stories/s/ranj-cccq",
+        "attribution": "City of Austin Open Data Terms - https://data.austintexas.gov/stories/s/ranj-cccq",
     }
 
 
@@ -168,6 +168,7 @@ def _ask_and_render(workspace: _WorkspaceHandle, question: str, *, board_id: str
         trace,
         store=workspace.store,
         inquiry_slug=artifacts["inquiry"],
+        answer_text=answer,
         board_id=board_id,
         provenance_slug=artifacts["provenance_trace"],
         context_label=workspace.label,

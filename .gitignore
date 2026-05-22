@@ -1,5 +1,6 @@
 # --- secrets ---
 .env
+.codex/
 
 # --- Python build / test artifacts ---
 __pycache__/
@@ -33,6 +34,7 @@ node_modules/
 .kb/store/
 .kb/workspace/
 .kb/workspaces/
+.kb.legacy*/
 .dataroot/
 artifacts/
 
@@ -50,3 +52,11 @@ tests/fixtures/
 
 # --- path-mistake artifact (contains U+F03A, not a real colon) ---
 C*Usersajfil/
+
+# --- demo-site (copied DFDMaker app) runtime state ---
+demo-site/**/*.db
+demo-site/backend/.dfdmaker/
+demo-site/frontend/.vite/
+demo-site/**/*.log
+
+# GitKB

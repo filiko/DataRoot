@@ -120,6 +120,7 @@ class AskAndRenderTests(unittest.TestCase):
         renderer.assert_called_once()
         self.assertEqual(renderer.call_args.args[0], trace)
         self.assertEqual(renderer.call_args.kwargs["section_title"], "CropProtectorAI - Live Ask")
+        self.assertEqual(renderer.call_args.kwargs["answer_text"], answer)
         self.assertTrue(renderer.call_args.kwargs["update_existing_section"])
         self.assertEqual(result["answer"], "PMR3 and PMR4 support the PMR trait.")
         self.assertEqual(result["answer_source"], "agent")

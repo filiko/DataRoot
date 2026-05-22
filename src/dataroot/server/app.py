@@ -280,6 +280,7 @@ def _run_live_ask(
             trace,
             store=workspace.store,
             inquiry_slug=artifacts["inquiry"],
+            answer_text=answer,
             board_id=board_id,
             provenance_slug=artifacts["provenance_trace"],
             context_label=company.label,

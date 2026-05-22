@@ -226,6 +226,7 @@ TOOLS: dict[RoleName, list[dict]] = {
                     "properties": {
                         "trace": {"type": "object", "description": "Provenance trace object"},
                         "mode": {"type": "string", "enum": ["miro", "html"], "description": "Render mode"},
+                        "answer": {"type": "string", "description": "Optional answer text to show in the final answer card"},
                     },
                     "required": ["trace", "mode"],
                 },

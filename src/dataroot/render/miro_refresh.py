@@ -79,6 +79,7 @@ class BoardRefreshPlan:
 class BoardRefreshResult:
     plan: BoardRefreshPlan
     dry_run: bool
+    replace_existing: bool = False
     deleted_count: int = 0
     rendered: tuple[RenderedDemo, ...] = ()
 
@@ -128,7 +129,7 @@ DEFAULT_ASK_BOARD_DEMOS = (
         label="Austin Permits Explorer",
         section_kind="Live Ask",
         raw_path=Path("ExampleData") / "AustinPermits" / "raw",
-        question="Which open code tasks are tied to recent complaint locations?",
+        question="Are there any construction permits at the same addresses as recent code complaints?",
     ),
 )
 
@@ -139,6 +140,7 @@ def refresh_ask_board(
     board_id: str,
     preserve_title: str = "DataRoot Provenance",
     dry_run: bool = False,
+    replace_existing: bool = False,
     client: MiroClient | None = None,
 ) -> BoardRefreshResult:
     token = miro_access_token_from_env()
@@ -146,17 +148,25 @@ def refresh_ask_board(
         raise RuntimeError("MIRO_ACCESS_TOKEN is required to refresh a Miro board.")
 
     client = client or MiroClient(token=token or "")
-    plan = plan_miro_board_refresh(client, board_id=board_id, preserve_title=preserve_title)
+    replacement_plan = plan_miro_board_refresh(client, board_id=board_id, preserve_title=preserve_title)
+    plan = replacement_plan if replace_existing else _append_only_plan(replacement_plan)
     if dry_run:
-        return BoardRefreshResult(plan=plan, dry_run=True)
+        return BoardRefreshResult(plan=plan, dry_run=True, replace_existing=replace_existing)
 
     deleted_count = 0
-    for item in plan.deletion_order():
-        client.delete_board_object(board_id, item)
-        deleted_count += 1
+    if replace_existing:
+        for item in plan.deletion_order():
+            try:
+                client.delete_board_object(board_id, item)
+            except MiroAPIError as exc:
+                if exc.status_code != 404:
+                    raise
+            deleted_count += 1
 
     rendered = []
-    section_top = _item_bottom(plan.preserved_frame) + GROUP_GAP
+    section_top = _append_section_top(replacement_plan)
+    if replace_existing:
+        section_top = _item_bottom(plan.preserved_frame) + GROUP_GAP
     for demo in DEFAULT_ASK_BOARD_DEMOS:
         store = _workspace_store(root, demo)
         answer, trace = _answer_and_trace_for_demo(root, store, demo)
@@ -165,6 +175,7 @@ def refresh_ask_board(
             trace,
             store=store,
             inquiry_slug=artifacts["inquiry"],
+            answer_text=answer,
             board_id=board_id,
             provenance_slug=artifacts["provenance_trace"],
             context_label=demo.label,
@@ -186,9 +197,25 @@ def refresh_ask_board(
     return BoardRefreshResult(
         plan=plan,
         dry_run=False,
+        replace_existing=replace_existing,
         deleted_count=deleted_count,
         rendered=tuple(rendered),
     )
+
+
+def _append_only_plan(plan: BoardRefreshPlan) -> BoardRefreshPlan:
+    return BoardRefreshPlan(
+        board_id=plan.board_id,
+        preserve_title=plan.preserve_title,
+        preserved_frame=plan.preserved_frame,
+        items_to_delete=(),
+    )
+
+
+def _append_section_top(plan: BoardRefreshPlan) -> float:
+    objects = (plan.preserved_frame, *plan.items_to_delete)
+    bottom = max((_item_bottom(item) for item in objects), default=_item_bottom(plan.preserved_frame))
+    return bottom + GROUP_GAP
 
 
 def _answer_and_trace_for_demo(root: Path, store: LocalMarkdownStore, demo: AskBoardDemo) -> tuple[str, dict]:
@@ -211,7 +238,7 @@ def _canonical_answer_text(root: Path, demo: AskBoardDemo, trace: dict) -> str:
             answer_body = answer_file.read_text(encoding="utf-8").strip()
     if not answer_body:
         summary = trace.get("provenance_summary") if isinstance(trace.get("provenance_summary"), dict) else {}
-        answer_body = str(summary.get("reasoning") or "DataRoot found a cited evidence path for this standard demo.")
+        answer_body = str(summary.get("reasoning") or "No direct answer was generated for this standard demo.")
     answer_body = _sanitize_final_answer_text(answer_body) or answer_body
     return "\n".join(
         [

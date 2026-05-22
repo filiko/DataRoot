@@ -80,6 +80,7 @@ class ServerAppTests(unittest.TestCase):
         self.assertEqual(renderer.call_args.kwargs["board_id"], "board")
         self.assertEqual(renderer.call_args.kwargs["context_label"], "CropProtectorAI")
         self.assertEqual(renderer.call_args.kwargs["section_title"], "CropProtectorAI - Live Ask")
+        self.assertIn("A-GEN-PMR3", renderer.call_args.kwargs["answer_text"])
         self.assertTrue(renderer.call_args.kwargs["update_existing_section"])
         self.assertTrue(renderer.call_args.kwargs["include_proof"])
         self.assertIsInstance(renderer.call_args.kwargs["render_metadata"], dict)

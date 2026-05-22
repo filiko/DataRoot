@@ -5,10 +5,11 @@ This document is the non-negotiable behavior contract for the DataRoot Miro demo
 ## Demo Sections
 
 - The board has one protected top area named `DataRoot Provenance`.
-- Content below that area is recreated by `dataroot miro-refresh-board`.
+- `dataroot miro-refresh-board` is append-only by default and must not delete existing board content unless `--replace-existing` is explicitly passed.
 - Each mock company has a `Standard Demo` section and a `Live Ask` section.
 - Each section keeps the same top skeleton: `Question`, `DataRoot Parsing & Retrieval`, `Evidence Path`, and `Final Answer`.
 - `Final Answer` is positioned under `Question`.
+- Dynamic evidence below the top skeleton is grouped into source/type columns, using dataset or table source first and provenance stage only when no source label is available.
 
 ## Required Arrows
 
@@ -33,6 +34,7 @@ This document is the non-negotiable behavior contract for the DataRoot Miro demo
 - A live ask updates only the selected company's `Live Ask` section.
 - Existing top skeleton shapes are patched in place.
 - Existing fixed top arrows are patched or created in place; they must not be deleted by evidence refresh cleanup.
+- The `Final Answer` shape must use the actual live answer text, shortened to one or two sentences, not retrieval/status copy.
 - Dynamic reference/data-type sections are replaced for the new answer.
 - Old evidence support arrows are deleted with their old evidence cards.
 - New support arrows are created after the new reference/data-type cards are rendered.
@@ -43,7 +45,5 @@ This document is the non-negotiable behavior contract for the DataRoot Miro demo
 - Fixed top arrows use explicit endpoint sides and must not share the same route into `Final Answer`.
 - `Question -> Final Answer` enters `Final Answer` at the top.
 - `Evidence Path -> Final Answer` enters `Final Answer` from the right.
-- Evidence support arrows connect from evidence card left sides to separate `Final Answer` sides:
-  - first support arrow enters at the bottom
-  - second support arrow enters at the left
+- Evidence support arrows connect from evidence card left sides to the bottom of `Final Answer`.
 - Evidence support arrows carry no label.

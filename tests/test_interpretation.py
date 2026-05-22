@@ -122,25 +122,70 @@ class InterpretationTests(unittest.TestCase):
 
 
 class FinalAnswerSanitizerTests(unittest.TestCase):
-    def test_strips_live_ask_prefix_and_citations(self) -> None:
-        raw = "Answer: foo bar baz [citation: rows/x] qux [citation: rows/y]"
-        self.assertEqual(_sanitize_final_answer_text(raw), "foo bar baz qux")
-
-    def test_strips_expected_answer_header_and_question_line(self) -> None:
+    def test_extracts_only_the_answer_line_and_drops_supporting_evidence(self) -> None:
         raw = (
-            "# Expected Answer — Inquiry B-INQ-001\n"
-            "**Question:** \"Which microbial strain produces ester?\"\n"
-            "---\n"
-            "## Best Candidate: B-STR-YE-017\n"
-            "Body text follows."
+            "Question: foo?\n"
+            "\n"
+            "Best candidate: A-CUL-TOM-014 / Solara-14\n"
+            "\n"
+            "Answer: yes. DataRoot found a tomato line ready for spring planting.\n"
+            "\n"
+            "Evidence:\n"
+            "- A-CUL-TOM-014 has trait A [citation: rows/a]\n"
+            "- Greenhouse passed [citation: rows/b]\n"
+            "\n"
+            "Recommendation: proceed with A-CUL-TOM-014.\n"
         )
         sanitized = _sanitize_final_answer_text(raw)
-        self.assertNotIn("Expected Answer", sanitized)
-        self.assertNotIn("Question:", sanitized)
-        self.assertNotIn("---", sanitized)
-        self.assertIn("Body text follows.", sanitized)
+        self.assertEqual(
+            sanitized,
+            "yes. DataRoot found a tomato line ready for spring planting.",
+        )
 
-    def test_passes_plain_answer_through(self) -> None:
+    def test_extracts_best_candidate_heading_when_no_answer_line(self) -> None:
+        raw = (
+            "# Expected Answer - Inquiry B-INQ-001\n"
+            "**Question:** \"Which microbial strain produces ester?\"\n"
+            "---\n"
+            "## Best Candidate: B-STR-YE-017 / Yeast EsterMax 17\n"
+            "### Genetic Basis\n"
+            "- Has pathway genes B-GEN-AAT1 and B-GEN-EHT1\n"
+        )
+        sanitized = _sanitize_final_answer_text(raw)
+        self.assertEqual(sanitized, "Best candidate: B-STR-YE-017 / Yeast EsterMax 17")
+
+    def test_extracts_recommendation_line_when_no_answer_or_candidate(self) -> None:
+        raw = "Recommendation: proceed with permit P-9001 because reviews are passing."
+        sanitized = _sanitize_final_answer_text(raw)
+        self.assertEqual(
+            sanitized,
+            "proceed with permit P-9001 because reviews are passing.",
+        )
+
+    def test_falls_back_to_first_paragraph_skipping_evidence_bullets(self) -> None:
+        raw = (
+            "Question: which open code tasks?\n"
+            "\n"
+            "Top matching evidence:\n"
+            "- task T-1 [citation: rows/a]\n"
+            "- task T-2 [citation: rows/b]\n"
+        )
+        sanitized = _sanitize_final_answer_text(raw)
+        self.assertEqual(sanitized, "")
+
+    def test_caps_long_text_at_first_sentence(self) -> None:
+        long_first = "this is a long headline sentence " + ("describing the cited match in detail " * 10) + "for the demo viewer."
+        raw = f"Answer: {long_first} A second sentence we should drop because the headline is already over budget."
+        sanitized = _sanitize_final_answer_text(raw)
+        self.assertTrue(sanitized.endswith("...") or sanitized.endswith(long_first))
+        self.assertNotIn("second sentence we should drop", sanitized)
+
+    def test_caps_answer_at_two_sentences(self) -> None:
+        raw = "Answer: first sentence. second sentence. third sentence should not be shown."
+        sanitized = _sanitize_final_answer_text(raw)
+        self.assertEqual(sanitized, "first sentence. second sentence.")
+
+    def test_passes_plain_short_answer_through(self) -> None:
         raw = "DataRoot identified strain B-STR-YE-017 as the strongest match."
         self.assertEqual(_sanitize_final_answer_text(raw), raw)
 

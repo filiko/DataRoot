@@ -56,6 +56,9 @@ DEMO_EVIDENCE_CARD_W = 640
 DEMO_EVIDENCE_CARD_H = 220
 DEMO_EVIDENCE_CARD_GAP_X = 70
 DEMO_EVIDENCE_CARD_GAP_Y = 52
+SOURCE_COLUMN_HEADER_H = 88
+SOURCE_COLUMN_HEADER_Y = 70
+SOURCE_COLUMN_HEADER_GAP = 46
 DEMO_EVIDENCE_TOP = 500
 DEMO_EVIDENCE_LEFT = 1020
 DEMO_EVIDENCE_COLUMNS = 3
@@ -160,6 +163,19 @@ STAGE_PALETTE_FALLBACK = (
     "#cfead6",
     "#fde2cf",
 )
+GENERIC_EVIDENCE_STAGES = {"", "evidence", "evidence_path", "row_group", "row_groups", "search", "result"}
+SOURCE_TITLE_OVERRIDES = {
+    "permits/issued_construction_permits.csv": "Issued Construction Permits",
+    "reviews/plan_review_cases.csv": "Plan Review Cases",
+    "code_complaints/code_complaint_cases.csv": "Code Complaint Cases",
+    "code_tasks/code_task_list.csv": "Code Task List",
+}
+NOTE_COLORS_BY_STAGE = {
+    "permits": "light_blue",
+    "reviews": "light_yellow",
+    "code_complaints": "light_pink",
+    "code_tasks": "light_green",
+}
 
 ICONIFY_BASE = "https://api.iconify.design"
 FLOW_ICON_URLS = {
@@ -200,6 +216,14 @@ class MiroAPIError(RuntimeError):
 
     def __str__(self) -> str:
         return f"Miro API request failed with status {self.status_code}: {self.body}"
+
+
+@dataclass
+class EvidenceGroup:
+    key: str
+    title: str
+    color_key: str
+    cards: list[BoardCard]
 
 
 class MiroClient:
@@ -556,6 +580,7 @@ def render_provenance_to_miro(
     *,
     store=None,
     inquiry_slug: str | None = None,
+    answer_text: str | None = None,
     board_id: str | None = None,
     provenance_slug: str | None = None,
     context_label: str | None = None,
@@ -581,7 +606,13 @@ def render_provenance_to_miro(
         raise RuntimeError("MIRO_BOARD_ID is required unless --board-id is provided.")
 
     client = client or MiroClient(token=token or "")
-    plan = plan or plan_miro_board(trace, store=store, inquiry_slug=inquiry_slug, context_label=context_label)
+    plan = plan or plan_miro_board(
+        trace,
+        store=store,
+        inquiry_slug=inquiry_slug,
+        answer_text=answer_text,
+        context_label=context_label,
+    )
     if render_metadata is not None:
         render_metadata["interpreter_source"] = plan.interpreter_source
         render_metadata["planner_source"] = plan.planner_source
@@ -1420,38 +1451,44 @@ def _render_demo_segments(
     group_top: float,
     total_width: float,
 ) -> dict[str, str]:
-    stages = _story_stages(plan)
-    cards_by_stage: dict[str, list[BoardCard]] = defaultdict(list)
-    for card in plan.evidence_cards:
-        cards_by_stage[card.stage].append(card)
+    groups = _evidence_groups(plan)
     source_badges = _source_badges(plan)
 
     shape_ids = {}
     lanes_top = group_top + DEMO_TOP_FRAME_H + HEADER_TO_LANES_GAP
-    for stage_index, stage in enumerate(stages):
-        cards = cards_by_stage.get(stage, [])
+    for group_index, group in enumerate(groups):
+        cards = group.cards
         lane_h = _demo_lane_height(cards)
         frame_id = client.create_frame(
             board_id,
-            title=_humanize(stage),
-            x=stage_index * (STORY_LANE_W + STORY_FRAME_GAP) + STORY_LANE_W / 2,
+            title=group.title,
+            x=group_index * (STORY_LANE_W + STORY_FRAME_GAP) + STORY_LANE_W / 2,
             y=lanes_top + lane_h / 2,
             w=STORY_LANE_W,
             h=lane_h,
+        )
+        _render_evidence_group_header(
+            client,
+            board_id,
+            group,
+            parent_id=frame_id,
+            x=STORY_LANE_W / 2,
+            y=SOURCE_COLUMN_HEADER_Y,
+            w=DEMO_EVIDENCE_CARD_W,
         )
         if not cards:
             client.create_text(
                 board_id,
                 content="<p>No cited evidence cards returned.</p>",
                 x=STORY_LANE_W / 2,
-                y=150,
+                y=_first_evidence_card_y(DEMO_EVIDENCE_CARD_H),
                 w=STORY_LANE_W - 120,
                 parent_id=frame_id,
                 font_size=DEMO_TEXT_FONT_SIZE,
             )
             continue
         for index, card in enumerate(cards):
-            y = 96 + index * (DEMO_EVIDENCE_CARD_H + DEMO_EVIDENCE_CARD_GAP_Y) + DEMO_EVIDENCE_CARD_H / 2
+            y = _first_evidence_card_y(DEMO_EVIDENCE_CARD_H) + index * (DEMO_EVIDENCE_CARD_H + DEMO_EVIDENCE_CARD_GAP_Y)
             shape_ids[card.id] = client.create_shape(
                 board_id,
                 content=_card_html(card, source_badge=source_badges.get(card.id)),
@@ -1493,8 +1530,8 @@ def _render_answer_support_connectors(
         )
 
 
-def _answer_support_snap_pair(index: int) -> tuple[str, str]:
-    return ("left", "bottom") if index == 0 else ("left", "left")
+def _answer_support_snap_pair(_index: int) -> tuple[str, str]:
+    return ("left", "bottom")
 
 
 def _render_precise_proof_frame(
@@ -1689,7 +1726,7 @@ def _list_connectors_or_empty(client: MiroClient, board_id: str) -> list[dict]:
 
 
 def _demo_section_width(plan: BoardPlan) -> float:
-    lane_count = max(1, len(_story_stages(plan)))
+    lane_count = max(1, len(_evidence_groups(plan)))
     evidence_width = lane_count * STORY_LANE_W + max(0, lane_count - 1) * STORY_FRAME_GAP
     return max(DEMO_SECTION_W, evidence_width)
 
@@ -1705,16 +1742,18 @@ def _demo_section_height(plan: BoardPlan | None) -> float:
 def _demo_max_lane_height(plan: BoardPlan | None) -> float:
     if plan is None:
         return STORY_LANE_H
-    cards_by_stage: dict[str, list[BoardCard]] = defaultdict(list)
-    for card in plan.evidence_cards:
-        cards_by_stage[card.stage].append(card)
-    return max((_demo_lane_height(cards_by_stage.get(stage, [])) for stage in _story_stages(plan)), default=STORY_LANE_H)
+    return max((_demo_lane_height(group.cards) for group in _evidence_groups(plan)), default=STORY_LANE_H)
 
 
 def _demo_lane_height(cards: list[BoardCard]) -> float:
     if not cards:
         return STORY_LANE_H
-    content_bottom = 96 + len(cards) * DEMO_EVIDENCE_CARD_H + max(0, len(cards) - 1) * DEMO_EVIDENCE_CARD_GAP_Y + 96
+    content_bottom = (
+        _first_evidence_card_y(DEMO_EVIDENCE_CARD_H)
+        + DEMO_EVIDENCE_CARD_H / 2
+        + max(0, len(cards) - 1) * (DEMO_EVIDENCE_CARD_H + DEMO_EVIDENCE_CARD_GAP_Y)
+        + 96
+    )
     return max(STORY_LANE_H, content_bottom)
 
 
@@ -1734,8 +1773,11 @@ def _demo_evidence_html(plan: BoardPlan) -> str:
     else:
         evidence_plural = "" if evidence_count == 1 else "s"
         support_plural = "" if support_count == 1 else "s"
+        column_count = len(_evidence_groups(plan))
+        column_plural = "" if column_count == 1 else "s"
         detail = (
-            f"{evidence_count} interpreted evidence claim{evidence_plural}; "
+            f"{evidence_count} interpreted evidence claim{evidence_plural} across "
+            f"{column_count} source column{column_plural}; "
             f"{support_count} connected support arrow{support_plural}."
         )
     return _flow_html(FIXED_FLOW_TITLES["evidence"], detail)
@@ -1911,8 +1953,8 @@ def _render_story_plan(
     group_top: float,
     provenance_slug: str | None,
 ) -> None:
-    stages = _story_stages(plan)
-    lane_count = max(1, len(stages))
+    groups = _evidence_groups(plan)
+    lane_count = max(1, len(groups))
     evidence_width = lane_count * STORY_LANE_W + max(0, lane_count - 1) * STORY_FRAME_GAP
     total_width = max(STORY_FRAME_W, evidence_width)
 
@@ -1946,18 +1988,17 @@ def _render_story_plan(
 
     lanes_top = flow_top + STORY_FLOW_H + HEADER_TO_LANES_GAP
     frame_ids: dict[str, str] = {}
-    for stage in stages:
-        stage_index = stages.index(stage)
-        frame_ids[stage] = client.create_frame(
+    for group_index, group in enumerate(groups):
+        frame_ids[group.key] = client.create_frame(
             board_id,
-            title=_humanize(stage),
-            x=stage_index * (STORY_LANE_W + STORY_FRAME_GAP) + STORY_LANE_W / 2,
+            title=group.title,
+            x=group_index * (STORY_LANE_W + STORY_FRAME_GAP) + STORY_LANE_W / 2,
             y=lanes_top + STORY_LANE_H / 2,
             w=STORY_LANE_W,
             h=STORY_LANE_H,
         )
 
-    shape_ids, node_positions = _render_evidence_cards(client, board_id, plan, stages, frame_ids)
+    shape_ids, node_positions = _render_evidence_cards(client, board_id, groups, frame_ids)
     _render_story_connections(client, board_id, plan, shape_ids, node_positions)
 
     bottom_top = lanes_top + STORY_LANE_H + HEADER_TO_LANES_GAP
@@ -1973,11 +2014,81 @@ def _render_story_plan(
 
 
 def _story_stages(plan: BoardPlan) -> list[str]:
-    stages = []
+    return [group.key for group in _evidence_groups(plan)]
+
+
+def _evidence_groups(plan: BoardPlan) -> list[EvidenceGroup]:
+    groups: dict[str, EvidenceGroup] = {}
     for card in plan.evidence_cards:
-        if card.stage not in stages:
-            stages.append(card.stage)
-    return stages or ["evidence"]
+        key = _evidence_group_key(card)
+        if key not in groups:
+            groups[key] = EvidenceGroup(
+                key=key,
+                title=_evidence_group_title(key, card),
+                color_key=_evidence_group_color_key(key, card),
+                cards=[],
+            )
+        groups[key].cards.append(card)
+    if not groups:
+        return [EvidenceGroup(key="evidence", title="Evidence", color_key="evidence", cards=[])]
+    return list(groups.values())
+
+
+def _evidence_group_key(card: BoardCard) -> str:
+    source = _normalized_source(card.source)
+    if _is_meaningful_source(source):
+        return source
+    stage = _normalize_group_key(card.stage)
+    return stage or "evidence"
+
+
+def _evidence_group_title(key: str, card: BoardCard) -> str:
+    if key in SOURCE_TITLE_OVERRIDES:
+        return SOURCE_TITLE_OVERRIDES[key]
+    if _is_meaningful_source(key):
+        tail = key.rsplit("/", 1)[-1]
+        tail = re.sub(r"\.(?:csv|json|xlsx?)$", "", tail, flags=re.IGNORECASE)
+        return _humanize(tail) or _humanize(card.stage) or "Evidence"
+    return _humanize(key) or "Evidence"
+
+
+def _evidence_group_color_key(key: str, card: BoardCard) -> str:
+    if _is_meaningful_source(key):
+        prefix = key.split("/", 1)[0]
+        return _normalize_group_key(prefix) or _card_palette_key(card)
+    return _card_palette_key(card) or key
+
+
+def _render_evidence_group_header(
+    client: MiroClient,
+    board_id: str,
+    group: EvidenceGroup,
+    *,
+    parent_id: str,
+    x: float,
+    y: float,
+    w: float,
+) -> None:
+    count = len(group.cards)
+    record_plural = "" if count == 1 else "s"
+    client.create_shape(
+        board_id,
+        content=(
+            f"<p><strong>{html.escape(_truncate(group.title, 68))}</strong></p>"
+            f"<p><small>{count} cited record{record_plural}</small></p>"
+        ),
+        x=x,
+        y=y,
+        w=w,
+        h=SOURCE_COLUMN_HEADER_H,
+        fill_color=_palette_color_for_stage(group.color_key),
+        parent_id=parent_id,
+        border_color=_group_border(group.color_key),
+        border_width=3,
+        font_size=18,
+        shape="round_rectangle",
+        text_align="left",
+    )
 
 
 def _decision_html(plan: BoardPlan, *, provenance_slug: str | None) -> str:
@@ -2005,10 +2116,12 @@ def _render_flow(
     gap = max(100, (total_width - 240 - step_w * 4) / 3)
     x_positions = [120 + step_w / 2 + index * (step_w + gap) for index in range(4)]
     y = STORY_FLOW_H / 2
+    group_count = len(_evidence_groups(plan))
+    group_plural = "" if group_count == 1 else "s"
     steps = [
         ("question", FIXED_FLOW_TITLES["question"], _truncate(plan.question, FLOW_DETAIL_LIMITS["question"]), "#d0e8ff", x_positions[0], y),
         ("retrieval", FIXED_FLOW_TITLES["retrieval"], _truncate(plan.retrieval_summary, FLOW_DETAIL_LIMITS["retrieval"]), "#e8d4f5", x_positions[1], y),
-        ("evidence", FIXED_FLOW_TITLES["evidence"], f"{len(plan.evidence_cards)} cited records grouped by source.", "#fffac8", x_positions[2], y),
+        ("evidence", FIXED_FLOW_TITLES["evidence"], f"{len(plan.evidence_cards)} cited records grouped into {group_count} source column{group_plural}.", "#fffac8", x_positions[2], y),
         ("answer", FIXED_FLOW_TITLES["answer"], _truncate(plan.answer, FLOW_DETAIL_LIMITS["answer"]), "#d4f5d4", x_positions[3], y),
     ]
     ids = {}
@@ -2043,19 +2156,26 @@ def _render_flow(
 def _render_evidence_cards(
     client: MiroClient,
     board_id: str,
-    plan: BoardPlan,
-    stages: list[str],
+    groups: list[EvidenceGroup],
     frame_ids: dict[str, str],
 ) -> tuple[dict[str, str], dict[str, tuple[float, float, str]]]:
     shape_ids = {}
     node_positions = {}
-    cards_by_stage: dict[str, list[BoardCard]] = defaultdict(list)
-    for card in plan.evidence_cards:
-        cards_by_stage[card.stage].append(card)
 
-    for stage in stages:
-        for index, card in enumerate(cards_by_stage.get(stage, [])):
-            y = 96 + index * (STORY_CARD_H + STORY_CARD_GAP) + STORY_CARD_H / 2
+    for group in groups:
+        parent_id = frame_ids[group.key]
+        x = STORY_LANE_W / 2 - 70
+        _render_evidence_group_header(
+            client,
+            board_id,
+            group,
+            parent_id=parent_id,
+            x=x,
+            y=SOURCE_COLUMN_HEADER_Y,
+            w=STORY_CARD_W,
+        )
+        for index, card in enumerate(group.cards):
+            y = _first_evidence_card_y(STORY_CARD_H) + index * (STORY_CARD_H + STORY_CARD_GAP)
             x = STORY_LANE_W / 2 - 70
             shape_ids[card.id] = client.create_shape(
                 board_id,
@@ -2065,14 +2185,14 @@ def _render_evidence_cards(
                 w=STORY_CARD_W,
                 h=STORY_CARD_H,
                 fill_color=_card_color(card),
-                parent_id=frame_ids[stage],
+                parent_id=parent_id,
                 border_color=_card_border(card),
                 border_width=3 if card.emphasis in {"primary", "rejected"} else 2,
                 font_size=18,
                 shape="round_rectangle",
                 text_align="left",
             )
-            node_positions[card.id] = (x, y, frame_ids[stage])
+            node_positions[card.id] = (x, y, parent_id)
             note = _card_note(card)
             if note:
                 client.create_sticky(
@@ -2081,7 +2201,7 @@ def _render_evidence_cards(
                     x=x + STORY_CARD_W / 2 + 82,
                     y=y,
                     width=250,
-                    parent_id=frame_ids[stage],
+                    parent_id=parent_id,
                     fill_color=_note_color(card),
                 )
     return shape_ids, node_positions
@@ -2238,6 +2358,10 @@ def _audit_html(notes: list[str]) -> str:
     return "".join(lines)
 
 
+def _first_evidence_card_y(card_h: float) -> float:
+    return SOURCE_COLUMN_HEADER_Y + SOURCE_COLUMN_HEADER_H / 2 + SOURCE_COLUMN_HEADER_GAP + card_h / 2
+
+
 def _card_color(card: BoardCard) -> str:
     if card.emphasis == "primary":
         return "#d4f5d4"
@@ -2247,7 +2371,40 @@ def _card_color(card: BoardCard) -> str:
         return "#ffd6d6"
     if card.emphasis == "gap":
         return "#ffe5b4"
-    return _palette_color_for_stage(card.stage)
+    return _palette_color_for_stage(_card_palette_key(card))
+
+
+def _card_palette_key(card: BoardCard) -> str:
+    stage = _normalize_group_key(card.stage)
+    if stage and stage not in GENERIC_EVIDENCE_STAGES:
+        return stage
+    source = _normalized_source(card.source)
+    if _is_meaningful_source(source):
+        return _normalize_group_key(source.split("/", 1)[0]) or stage or "evidence"
+    return stage or "evidence"
+
+
+def _normalized_source(value: str) -> str:
+    return str(value or "").replace("\\", "/").strip("/").lower()
+
+
+def _normalize_group_key(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", str(value or "").lower()).strip("_")
+
+
+def _is_meaningful_source(source: str) -> bool:
+    if not source:
+        return False
+    if source in GENERIC_EVIDENCE_STAGES:
+        return False
+    if source.startswith("rows/"):
+        return False
+    if source.startswith("row_groups/") and source.count("/") == 1:
+        return False
+    if "/" in source:
+        tail = source.rsplit("/", 1)[-1]
+        return bool(tail) and (("." in tail) or source.split("/", 1)[0] not in {"rows", "row"})
+    return "." in source
 
 
 def _palette_color_for_stage(stage: str) -> str:
@@ -2266,7 +2423,25 @@ def _card_border(card: BoardCard) -> str:
         return "#b42318"
     if card.emphasis == "secondary":
         return "#996f00"
-    return "#33415f"
+    return _group_border(_card_palette_key(card))
+
+
+def _group_border(color_key: str) -> str:
+    stage = _normalize_group_key(color_key)
+    return {
+        "permits": "#175cd3",
+        "reviews": "#996f00",
+        "code_complaints": "#b42318",
+        "code_tasks": "#1f7a3a",
+        "cultivar": "#1f7a3a",
+        "cultivars": "#1f7a3a",
+        "strain": "#1f7a3a",
+        "field_trials": "#996f00",
+        "greenhouse_trials": "#b54708",
+        "fermentation_runs": "#b54708",
+        "inventory": "#6941c6",
+        "qc": "#6941c6",
+    }.get(stage, "#33415f")
 
 
 def _note_color(card: BoardCard) -> str:
@@ -2276,7 +2451,7 @@ def _note_color(card: BoardCard) -> str:
         return "light_pink"
     if card.emphasis == "secondary":
         return "light_yellow"
-    return "gray"
+    return NOTE_COLORS_BY_STAGE.get(_card_palette_key(card), "light_blue")
 
 
 def _stage_order(trace: dict) -> list[str]:

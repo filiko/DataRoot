@@ -109,7 +109,8 @@ class ToolExecutor:
 
         from dataroot.render.miro import render_provenance_to_miro
 
-        url = render_provenance_to_miro(trace, store=self.store)
+        answer_text = str(tool_args.get("answer") or "").strip() or None
+        url = render_provenance_to_miro(trace, store=self.store, answer_text=answer_text)
         return {"mode": "miro", "status": "rendered", "url": url}
 
 

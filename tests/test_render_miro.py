@@ -48,10 +48,12 @@ class FakeMiroHTTP:
         existing_items: list[dict] | None = None,
         existing_frames: list[dict] | None = None,
         existing_connectors: list[dict] | None = None,
+        delete_404_ids: set[str] | None = None,
     ):
         self.existing_items = existing_items or []
         self.existing_frames = existing_frames or []
         self.existing_connectors = existing_connectors or []
+        self.delete_404_ids = delete_404_ids or set()
         self.calls: list[dict] = []
         self.counts: dict[str, int] = {}
 
@@ -64,6 +66,8 @@ class FakeMiroHTTP:
         if method == "GET" and url.endswith("/connectors"):
             return FakeResponse({"data": self.existing_connectors})
         if method == "DELETE":
+            if url.rsplit("/", 1)[-1] in self.delete_404_ids:
+                return FakeResponse({"message": "Item not found"}, status_code=404)
             return FakeResponse(None)
         if method == "PATCH":
             return FakeResponse({"id": url.rsplit("/", 1)[-1]})
@@ -180,7 +184,7 @@ class MiroRendererTests(unittest.TestCase):
         )
         self.assertEqual(
             [(call["json"]["startItem"]["snapTo"], call["json"]["endItem"]["snapTo"]) for call in connectors[4:]],
-            [("left", "bottom"), ("left", "left")],
+            [("left", "bottom"), ("left", "bottom")],
         )
 
     def test_shape_content_prioritizes_human_label_over_slug(self) -> None:
@@ -235,6 +239,52 @@ class MiroRendererTests(unittest.TestCase):
         self.assertEqual(evidence_positions[1]["x"], 430.0)
         self.assertGreater(evidence_positions[0]["y"], 0)
         self.assertLess(evidence_positions[0]["y"], 980)
+
+    def test_austin_evidence_renders_source_type_columns(self) -> None:
+        fake = FakeMiroHTTP()
+        trace = _trace(
+            nodes=[
+                {
+                    "id": "permit",
+                    "slug": "row_groups/permits/issued_construction_permits.csv/rows_1_500",
+                    "label": "Permit match",
+                    "stage": "evidence",
+                },
+                {
+                    "id": "complaint",
+                    "slug": "row_groups/code_complaints/code_complaint_cases.csv/rows_1_500",
+                    "label": "Recent complaint",
+                    "stage": "row_group",
+                },
+                {
+                    "id": "task",
+                    "slug": "row_groups/code_tasks/code_task_list.csv/rows_1_500",
+                    "label": "Open code task",
+                    "stage": "evidence_path",
+                },
+            ],
+            stages=["evidence"],
+        )
+
+        with _miro_env(), patch("requests.Session.request", new=fake):
+            render_provenance_to_miro(trace, board_id="board", context_label="Austin Permits Explorer")
+
+        frame_titles = [call["json"]["data"]["title"] for call in fake.posts("frames")]
+        self.assertIn("Issued Construction Permits", frame_titles)
+        self.assertIn("Code Complaint Cases", frame_titles)
+        self.assertIn("Code Task List", frame_titles)
+
+        header_content = "\n".join(
+            call["json"]["data"]["content"]
+            for call in fake.posts("shapes")
+            if "cited record" in call["json"]["data"]["content"]
+        )
+        self.assertIn("Issued Construction Permits", header_content)
+        self.assertIn("Code Complaint Cases", header_content)
+        self.assertIn("Code Task List", header_content)
+
+        evidence_flow = next(call for call in fake.posts("shapes") if "<strong>Evidence Path</strong>" in call["json"]["data"]["content"])
+        self.assertIn("3 source columns", evidence_flow["json"]["data"]["content"])
 
     def test_node_description_and_edge_evidence_create_readable_notes(self) -> None:
         fake = FakeMiroHTTP()
@@ -322,6 +372,21 @@ class MiroRendererTests(unittest.TestCase):
         self.assertIn("Answer: yes.", shape_content)
         self.assertNotIn("&lt;provenance&gt;", shape_content)
 
+    def test_final_answer_uses_explicit_answer_text(self) -> None:
+        fake = FakeMiroHTTP()
+        trace = _trace(summary={})
+        answer_text = "Answer: Solara-14 uses PMR3 for powdery mildew resistance. PMR4 is alternate sequence evidence. This third sentence should not be rendered."
+
+        with _miro_env(), patch("requests.Session.request", new=fake):
+            render_provenance_to_miro(trace, board_id="board", answer_text=answer_text)
+
+        answer_card = next(call for call in fake.posts("shapes") if "<strong>Final Answer</strong>" in call["json"]["data"]["content"])
+        answer_content = answer_card["json"]["data"]["content"]
+        self.assertIn("Solara-14 uses PMR3 for powdery mildew resistance.", answer_content)
+        self.assertIn("PMR4 is alternate sequence evidence.", answer_content)
+        self.assertNotIn("This third sentence", answer_content)
+        self.assertNotIn("No direct answer was generated", answer_content)
+
     def test_at_most_two_evidence_cards_connect_to_final_answer(self) -> None:
         fake = FakeMiroHTTP()
         trace = _trace(
@@ -357,7 +422,7 @@ class MiroRendererTests(unittest.TestCase):
         ]
         self.assertEqual(
             [(call["json"]["startItem"]["snapTo"], call["json"]["endItem"]["snapTo"]) for call in support_connectors],
-            [("left", "bottom"), ("left", "left")],
+            [("left", "bottom"), ("left", "bottom")],
         )
 
     def test_no_evidence_cards_draws_no_answer_arrows_and_notes_audit(self) -> None:
@@ -587,7 +652,7 @@ class MiroRendererTests(unittest.TestCase):
         ]
         self.assertEqual(
             [(call["json"]["startItem"]["snapTo"], call["json"]["endItem"]["snapTo"]) for call in support_connectors],
-            [("left", "bottom"), ("left", "left")],
+            [("left", "bottom"), ("left", "bottom")],
         )
 
         deleted_urls = [call["url"] for call in fake.deletes()]
@@ -864,9 +929,119 @@ class MiroRendererTests(unittest.TestCase):
                 )
 
         self.assertTrue(result.dry_run)
-        self.assertEqual(len(result.plan.items_to_delete), 1)
+        self.assertFalse(result.replace_existing)
+        self.assertEqual(len(result.plan.items_to_delete), 0)
         self.assertEqual(fake.deletes(), [])
         self.assertEqual(fake.posts("frames"), [])
+
+    def test_refresh_live_run_is_append_only_by_default(self) -> None:
+        fake = FakeMiroHTTP(
+            existing_frames=[
+                {
+                    "id": "header-frame",
+                    "type": "frame",
+                    "data": {"title": "DataRoot Provenance"},
+                    "position": {"y": 100},
+                    "geometry": {"height": 200},
+                },
+                {
+                    "id": "existing-section",
+                    "type": "frame",
+                    "data": {"title": "Existing Work"},
+                    "position": {"y": 700},
+                    "geometry": {"height": 300},
+                },
+            ],
+        )
+
+        def answer_for_question(_store, question: str) -> str:
+            trace = {
+                "question": question,
+                "nodes": [{"id": "n1", "slug": "rows/a", "label": "Evidence", "stage": "evidence"}],
+                "edges": [],
+                "stages": ["evidence"],
+                "provenance_summary": {"reasoning": "Answer."},
+            }
+            return "\n".join(["Answer.", "<provenance>", json.dumps(trace), "</provenance>"])
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            with patch.dict(os.environ, {"DATAROOT_USE_TIDBIT_INTERPRETER": "0", "DATAROOT_USE_MIRO_PLANNER": "0"}, clear=False):
+                with patch("requests.Session.request", new=fake):
+                    with patch("dataroot.render.miro_refresh._workspace_store", return_value=None):
+                        with patch("dataroot.render.miro_refresh.answer_question", side_effect=answer_for_question):
+                            with patch(
+                                "dataroot.render.miro_refresh.persist_answer_artifacts",
+                                return_value={"inquiry": "inquiries/demo", "provenance_trace": "provenance_traces/demo"},
+                            ):
+                                result = refresh_ask_board(
+                                    root=Path(temp_dir),
+                                    board_id="board",
+                                    preserve_title="DataRoot Provenance",
+                                    dry_run=False,
+                                    client=MiroClient("token"),
+                                )
+
+        self.assertFalse(result.replace_existing)
+        self.assertEqual(result.deleted_count, 0)
+        self.assertEqual(fake.deletes(), [])
+        self.assertEqual(len(result.rendered), 6)
+        frame_titles = [call["json"]["data"]["title"] for call in fake.posts("frames")]
+        self.assertIn("CropProtectorAI - Standard Demo", frame_titles)
+        self.assertIn("Austin Permits Explorer - Live Ask", frame_titles)
+
+    def test_refresh_live_run_ignores_stale_miro_delete_404s(self) -> None:
+        fake = FakeMiroHTTP(
+            existing_frames=[
+                {
+                    "id": "header-frame",
+                    "type": "frame",
+                    "data": {"title": "DataRoot Provenance"},
+                    "position": {"y": 100},
+                    "geometry": {"height": 200},
+                },
+                {
+                    "id": "stale-frame",
+                    "type": "frame",
+                    "data": {"title": "Old Evidence"},
+                    "position": {"y": 600},
+                    "geometry": {"height": 250},
+                },
+            ],
+            delete_404_ids={"stale-frame"},
+        )
+
+        def answer_for_question(_store, question: str) -> str:
+            trace = {
+                "question": question,
+                "nodes": [{"id": "n1", "slug": "rows/a", "label": "Evidence", "stage": "evidence"}],
+                "edges": [],
+                "stages": ["evidence"],
+                "provenance_summary": {"reasoning": "Answer."},
+            }
+            return "\n".join(["Answer.", "<provenance>", json.dumps(trace), "</provenance>"])
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            with patch.dict(os.environ, {"DATAROOT_USE_TIDBIT_INTERPRETER": "0", "DATAROOT_USE_MIRO_PLANNER": "0"}, clear=False):
+                with patch("requests.Session.request", new=fake):
+                    with patch("dataroot.render.miro_refresh._workspace_store", return_value=None):
+                        with patch("dataroot.render.miro_refresh.answer_question", side_effect=answer_for_question):
+                            with patch(
+                                "dataroot.render.miro_refresh.persist_answer_artifacts",
+                                return_value={"inquiry": "inquiries/demo", "provenance_trace": "provenance_traces/demo"},
+                            ):
+                                result = refresh_ask_board(
+                                    root=Path(temp_dir),
+                                    board_id="board",
+                                    preserve_title="DataRoot Provenance",
+                                    dry_run=False,
+                                    replace_existing=True,
+                                    client=MiroClient("token"),
+                                )
+
+        self.assertTrue(result.replace_existing)
+        self.assertEqual(result.deleted_count, 1)
+        self.assertTrue(any(call["url"].endswith("/frames/stale-frame") for call in fake.deletes()))
+        self.assertTrue(fake.posts("frames"))
 
     def test_refresh_live_run_creates_four_demo_sections_with_expected_questions(self) -> None:
         fake = FakeMiroHTTP(
@@ -931,7 +1106,7 @@ class MiroRendererTests(unittest.TestCase):
                 "Which microbial strain can produce a fruit-forward citrus-like ester profile under low-temperature fermentation, and can we scale it soon?",
                 "What are the next batches or runs coming out soon?",
                 "Which recent Austin permits have matching plan review evidence?",
-                "Which open code tasks are tied to recent complaint locations?",
+                "Are there any construction permits at the same addresses as recent code complaints?",
             ],
         )
 

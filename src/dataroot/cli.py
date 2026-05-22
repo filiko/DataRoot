@@ -60,6 +60,11 @@ def main(argv: list[str] | None = None) -> int:
     refresh_parser.add_argument("--board-id", required=True)
     refresh_parser.add_argument("--preserve-title", default="DataRoot Provenance")
     refresh_parser.add_argument("--dry-run", action="store_true")
+    refresh_parser.add_argument(
+        "--replace-existing",
+        action="store_true",
+        help="delete generated board content below the preserved frame before rendering",
+    )
 
     serve_parser = subparsers.add_parser("serve")
     serve_parser.add_argument("--host", default="127.0.0.1")
@@ -100,6 +105,7 @@ def main(argv: list[str] | None = None) -> int:
                 board_id=args.board_id,
                 preserve_title=args.preserve_title,
                 dry_run=args.dry_run,
+                replace_existing=args.replace_existing,
             )
         except (RuntimeError, FileNotFoundError, ValueError, json.JSONDecodeError) as exc:
             parser.exit(1, f"error: {exc}\n")
@@ -229,6 +235,8 @@ def _inquiry_slug_for_provenance(provenance_slug: str) -> str | None:
 
 def _print_miro_refresh_result(result) -> None:
     plan = result.plan
+    mode = "replace-existing" if result.replace_existing else "append-only"
+    print(f"Refresh mode: {mode}")
     print(f"Preserved frame: {plan.preserved_frame_title} ({plan.preserved_frame_id})")
     print(f"Items selected for deletion: {len(plan.items_to_delete)}")
     frame_titles = plan.frame_titles_to_delete

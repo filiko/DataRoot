@@ -214,23 +214,29 @@ def _json_object_from_model_text(value: str) -> dict:
 
 def _answer_from_inputs(trace: dict, *, store=None, inquiry_slug: str | None, answer_text: str | None) -> str:
     if answer_text:
-        return _sanitize_final_answer_text(answer_text)
+        sanitized = _sanitize_final_answer_text(answer_text)
+        if sanitized:
+            return sanitized
     if store and inquiry_slug:
         try:
             record = store.read(inquiry_slug)
-            answer = _extract_answer_summary(record.body)
-            if answer:
-                return _sanitize_final_answer_text(answer)
+            sanitized = _sanitize_final_answer_text(_extract_answer_summary(record.body))
+            if sanitized:
+                return sanitized
         except Exception:
             pass
     summary = trace.get("provenance_summary")
     if isinstance(summary, dict):
         reasoning = summary.get("reasoning") or summary.get("summary")
         if reasoning:
-            return _sanitize_final_answer_text(str(reasoning))
+            sanitized = _sanitize_final_answer_text(str(reasoning))
+            if sanitized:
+                return sanitized
     if isinstance(summary, str):
-        return _sanitize_final_answer_text(summary)
-    return "DataRoot found a cited evidence path for this question."
+        sanitized = _sanitize_final_answer_text(summary)
+        if sanitized:
+            return sanitized
+    return "No direct answer was generated for this question."
 
 
 def _node_context(node: dict, *, store=None) -> dict[str, str]:
@@ -329,6 +335,11 @@ def _source_from_slug(slug: str) -> str:
     if not slug:
         return ""
     parts = slug.split("/")
+    if len(parts) >= 3 and parts[0] in {"row_groups", "tables", "columns", "source_files"}:
+        if "." in parts[2]:
+            return _short_source("/".join(parts[1:3]))
+        if "." in parts[1]:
+            return ""
     if len(parts) >= 2:
         return _short_source("/".join(parts[:2]))
     return _short_source(slug)
@@ -387,17 +398,39 @@ _FINAL_ANSWER_HRULE_RE = re.compile(r"^(?:-{3,}|={3,}|\*{3,})$")
 _FINAL_ANSWER_QUESTION_LINE_RE = re.compile(r"^\*{0,2}question\s*:?\*{0,2}", re.IGNORECASE)
 _FINAL_ANSWER_PREFIX_RE = re.compile(r"^\*{0,2}answer\s*:\s*\*{0,2}", re.IGNORECASE)
 _FINAL_ANSWER_CITATION_RE = re.compile(r"\s*\[citation:[^\]]*\]")
+_FINAL_ANSWER_LINE_RE = re.compile(r"(?im)^\s*\*{0,2}answer\s*:\s*\*{0,2}\s*(.+?)\s*$")
+_BEST_CANDIDATE_HEADING_RE = re.compile(r"(?im)^#{1,6}\s*best\s+candidate\s*:\s*(.+?)\s*$")
+_RECOMMENDATION_LINE_RE = re.compile(r"(?im)^\s*\*{0,2}recommendation\s*:\s*\*{0,2}\s*(.+?)\s*$")
+_FINAL_ANSWER_SECTION_LABEL_RE = re.compile(
+    r"(?i)^(?:evidence|top matching evidence|matched entities|rows exceeding[^:]*|secondary candidate|best candidate|recommendation|provenance|notes?|sources?)\s*:?\s*$"
+)
+_FINAL_ANSWER_MAX_CHARS = 280
 
 
 def _sanitize_final_answer_text(text: str) -> str:
-    """Strip headers, repeated questions, "Answer:" prefix, and [citation: …] markers."""
+    """Return a concise headline answer, stripping prefixes, citations, and supporting detail."""
     if not text:
         return ""
-    cleaned = _strip_provenance(str(text))
-    kept_lines = []
+    cleaned = _FINAL_ANSWER_CITATION_RE.sub("", _strip_provenance(str(text)))
+
+    answer_line = _FINAL_ANSWER_LINE_RE.search(cleaned)
+    if answer_line:
+        return _shorten_to_concise(answer_line.group(1))
+
+    candidate_heading = _BEST_CANDIDATE_HEADING_RE.search(cleaned)
+    if candidate_heading:
+        return _shorten_to_concise(f"Best candidate: {candidate_heading.group(1)}")
+
+    recommendation = _RECOMMENDATION_LINE_RE.search(cleaned)
+    if recommendation:
+        return _shorten_to_concise(recommendation.group(1))
+
+    paragraphs: list[list[str]] = [[]]
     for line in cleaned.splitlines():
         stripped = line.strip()
         if not stripped:
+            if paragraphs[-1]:
+                paragraphs.append([])
             continue
         if _FINAL_ANSWER_HEADING_RE.match(stripped):
             continue
@@ -405,11 +438,38 @@ def _sanitize_final_answer_text(text: str) -> str:
             continue
         if _FINAL_ANSWER_QUESTION_LINE_RE.match(stripped):
             continue
-        kept_lines.append(stripped)
-    collapsed = _clean(" ".join(kept_lines))
-    collapsed = _FINAL_ANSWER_PREFIX_RE.sub("", collapsed, count=1).strip()
-    collapsed = _FINAL_ANSWER_CITATION_RE.sub("", collapsed)
-    return _clean(collapsed)
+        if _FINAL_ANSWER_SECTION_LABEL_RE.match(stripped):
+            continue
+        if stripped.startswith(("- ", "* ")):
+            continue
+        paragraphs[-1].append(stripped)
+    for paragraph in paragraphs:
+        if paragraph:
+            collapsed = _FINAL_ANSWER_PREFIX_RE.sub("", _clean(" ".join(paragraph)), count=1).strip()
+            if collapsed:
+                return _shorten_to_concise(collapsed)
+    return ""
+
+
+def _shorten_to_concise(value: str) -> str:
+    collapsed = _clean(_FINAL_ANSWER_PREFIX_RE.sub("", value, count=1).strip())
+    collapsed = _first_two_sentences(collapsed)
+    if len(collapsed) <= _FINAL_ANSWER_MAX_CHARS:
+        return collapsed
+    sentence = re.match(r"(.+?[.!?])(?:\s|$)", collapsed)
+    if sentence and len(sentence.group(1)) <= _FINAL_ANSWER_MAX_CHARS:
+        return sentence.group(1)
+    cutoff = collapsed.rfind(" ", 0, _FINAL_ANSWER_MAX_CHARS - 1)
+    if cutoff <= 0:
+        cutoff = _FINAL_ANSWER_MAX_CHARS - 1
+    return collapsed[:cutoff].rstrip(" ,;:-") + "..."
+
+
+def _first_two_sentences(value: str) -> str:
+    matches = list(re.finditer(r".+?[.!?](?=\s|$)", value))
+    if len(matches) >= 2:
+        return value[: matches[1].end()].strip()
+    return value
 
 
 _GENERIC_NODE_STAGES = {"", "evidence", "evidence_path", "row_group", "row_groups", "search", "result"}
@@ -417,7 +477,7 @@ _SLUG_STAGE_PREFIXES = ("row_groups/", "tables/", "columns/", "measurements/", "
 
 
 def _stage_from_slug(slug: str) -> str:
-    """Derive a per-dataset stage from a KB slug (e.g. row_groups/permits/... → permits)."""
+    """Derive a per-dataset stage from a KB slug (e.g. row_groups/permits/... to permits)."""
     if not slug:
         return ""
     cleaned = slug.replace("\\", "/").strip("/").lower()

@@ -96,15 +96,21 @@ dataroot miro-refresh-board --board-id uXjVHVqV-rs= \
     --preserve-title "DataRoot Provenance"
 ```
 
+The default live run is append-only: it preserves existing board content
+and adds a fresh set of demo sections below the current board content.
+Use `--replace-existing` only when you intentionally want to delete
+generated content below the preserved frame before recreating the demo
+sections.
+
 The dry run prints the preserved frame, deletion count, and frame titles
-that would be removed. The live run deletes only content below the
-preserved frame and recreates the demo sections:
+for the selected mode. The demo sections are:
 
 - `CropProtectorAI - Standard Demo`
 - `CropProtectorAI - Live Ask`
 - `BioReactorAI - Standard Demo`
 - `BioReactorAI - Live Ask`
-- `Austin Permits Explorer - Live Ask` (when the Austin workspace is configured)
+- `Austin Permits Explorer - Standard Demo`
+- `Austin Permits Explorer - Live Ask`
 
 Each `Live Ask` section includes an editable board-side text item labeled
 `Type your question here:`. Type the live question directly on the Miro

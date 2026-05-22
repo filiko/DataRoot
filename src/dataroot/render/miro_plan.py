@@ -377,23 +377,29 @@ def _plan_from_payload(data: dict, *, fallback: BoardPlan, allowed_citations: se
 
 def _answer_from_inputs(trace: dict, *, store=None, inquiry_slug: str | None, answer_text: str | None) -> str:
     if answer_text:
-        return _sanitize_final_answer_text(answer_text)
+        sanitized = _sanitize_final_answer_text(answer_text)
+        if sanitized:
+            return sanitized
     if store and inquiry_slug:
         try:
             record = store.read(inquiry_slug)
-            answer = _extract_answer_summary(record.body)
-            if answer:
-                return _sanitize_final_answer_text(answer)
+            sanitized = _sanitize_final_answer_text(_extract_answer_summary(record.body))
+            if sanitized:
+                return sanitized
         except Exception:
             pass
     summary = trace.get("provenance_summary")
     if isinstance(summary, dict):
         reasoning = summary.get("reasoning") or summary.get("summary")
         if reasoning:
-            return _sanitize_final_answer_text(str(reasoning))
+            sanitized = _sanitize_final_answer_text(str(reasoning))
+            if sanitized:
+                return sanitized
     if isinstance(summary, str):
-        return _sanitize_final_answer_text(summary)
-    return "DataRoot found a cited evidence path for this question."
+        sanitized = _sanitize_final_answer_text(summary)
+        if sanitized:
+            return sanitized
+    return "No direct answer was generated for this question."
 
 
 def _infer_context_label(trace: dict) -> str:
@@ -453,6 +459,11 @@ def _source_from_slug(slug: str) -> str:
     if not slug:
         return ""
     parts = slug.split("/")
+    if len(parts) >= 3 and parts[0] in {"row_groups", "tables", "columns", "source_files"}:
+        if "." in parts[2]:
+            return _short_source("/".join(parts[1:3]))
+        if "." in parts[1]:
+            return ""
     if len(parts) >= 2:
         return _short_source("/".join(parts[:2]))
     return _short_source(slug)
