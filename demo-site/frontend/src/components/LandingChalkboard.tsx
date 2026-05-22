@@ -36,11 +36,11 @@ const FEATURES = [
   { sym: "⊛", title: "Canopy view",                 body: "See the whole project as a live map of tables and connections — explore it, edit it, keep it in sync." },
   { sym: "◈", title: "One source of truth",         body: "When the FAQ falls short, the answer is already linked and waiting — no day-long hunt across departments." },
 ];
-const DEFAULT_DEMO_VIDEO = "/demo-media/dataroot-codebase-dfd.mp4";
+const DEFAULT_DEMO_VIDEO = "/demo-media/dataroot-codebase-dfd-compressed.mp4";
 const DEFAULT_DEMO_VIDEO_NAME = "Video Project 2.mp4";
 const DEMO_SCREENSHOTS = [
-  { src: "/demo-media/dataroot-dfd-created-2.png", label: "Repo parsing 01" },
-  { src: "/demo-media/dataroot-dfd-created-1.png", label: "Repo parsing 02" },
+  { src: "/demo-media/dataroot-dfd-created-2-small.png", label: "Repo parsing 01" },
+  { src: "/demo-media/dataroot-dfd-created-1-small.png", label: "Repo parsing 02" },
 ];
 interface Props {
   onIngested: (projectId: string, pen: PenFile) => void;
