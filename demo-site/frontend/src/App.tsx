@@ -376,84 +376,16 @@ export default function App() {
 
   if (!pen || !projectId) {
     return (
-      <div style={{ position: "relative" }}>
-        <div
-          style={{
-            position: "fixed",
-            top: 16,
-            right: 16,
-            zIndex: 50,
-            display: "flex",
-            gap: 8,
-          }}
-        >
-          {user ? (
-            <>
-              <button
-                onClick={() => setShowProjects(true)}
-                style={{
-                  background: "rgba(239,232,213,0.12)",
-                  color: "#efe8d5",
-                  border: "1px solid rgba(239,232,213,0.3)",
-                  borderRadius: 4,
-                  padding: "7px 18px",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
-              >
-                Projects
-              </button>
-              <button
-                onClick={async () => {
-                  await fetch(API.logout(), { method: "POST" }).catch(() => {});
-                  setUser(null);
-                  setShowProjects(false);
-                }}
-                style={{
-                  background: "rgba(239,232,213,0.08)",
-                  color: "rgba(239,232,213,0.72)",
-                  border: "1px solid rgba(239,232,213,0.22)",
-                  borderRadius: 4,
-                  padding: "7px 14px",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
-              >
-                Sign out
-              </button>
-            </>
-          ) : (
-            <button
-              onClick={() => setShowLogin(true)}
-              style={{
-                background: "rgba(239,232,213,0.12)",
-                color: "#efe8d5",
-                border: "1px solid rgba(239,232,213,0.3)",
-                borderRadius: 4,
-                padding: "7px 18px",
-                fontSize: 13,
-                fontWeight: 600,
-                cursor: "pointer",
-              }}
-            >
-              Sign in
-            </button>
-          )}
-        </div>
-        <LandingPage
-          onIngested={openProject}
-          onStartBlank={openProject}
-          onLoadExample={openProject}
-          onLoadNexusExercise={openProject}
-          onLoadClaudeEval={openProject}
-          onLoadRepoAnalysis={openProject}
-        />
-      </div>
+      <LandingPage
+        onIngested={openProject}
+        onStartBlank={openProject}
+        onLoadExample={openProject}
+        onLoadNexusExercise={openProject}
+        onLoadClaudeEval={openProject}
+        onLoadRepoAnalysis={openProject}
+      />
     );
   }
-
   return (
     <div className="dfdmaker-app flex flex-col h-screen bg-gray-50" data-app-theme={theme.id}>
       {inviteBanner && (

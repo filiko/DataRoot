@@ -144,10 +144,8 @@ export function LandingMinimal({
         <div className="border-b border-white/10 px-8 py-4 flex items-center justify-between">
           <span className="text-sm font-semibold tracking-tight">DataRoot</span>
           <div className="flex items-center gap-4">
+            <button onClick={() => apiCall(API_ROUTES.example(), (d) => onLoadExample(d.project_id, d.pen))} disabled={loading} className="text-sm text-white/50 hover:text-white transition-colors disabled:opacity-40">Demo</button>
             <a href="/docs" className="text-sm text-white/50 hover:text-white transition-colors">Docs</a>
-          <button onClick={() => startRef.current?.scrollIntoView({ behavior: "smooth" })} className="text-sm text-white/50 hover:text-white transition-colors">
-            Get started ↓
-          </button>
           </div>
         </div>
 
