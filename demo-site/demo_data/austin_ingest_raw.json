@@ -1,0 +1,1888 @@
+{
+  "project_id": "proj_e1ad39e9",
+  "source_tables": [
+    {
+      "source_id": "permits.csv",
+      "file_name": "permits.csv",
+      "sheet_name": null,
+      "detected_table_name": "permits",
+      "header_row": 1,
+      "data_start_row": 2,
+      "row_count": 12,
+      "columns": [
+        {
+          "source_name": "permit_id",
+          "canonical_name": "permit_id",
+          "inferred_type": "string",
+          "null_rate": 0.0,
+          "unique_rate": 1.0,
+          "cardinality": 12,
+          "unique_values": [
+            "2025-122556 BP",
+            "2026-098100 BP",
+            "2026-099781 PP",
+            "2026-101220 BP",
+            "2026-104882 BP",
+            "2026-105540 MP",
+            "2026-107644 EP",
+            "2026-110233 EP",
+            "2026-112874 BP",
+            "2026-113288 BP",
+            "2026-114002 BP",
+            "2026-115119 BP"
+          ],
+          "sample_values": [
+            "2026-104882 BP",
+            "2025-122556 BP",
+            "2026-098100 BP",
+            "2026-110233 EP",
+            "2026-105540 MP"
+          ],
+          "role_candidates": [
+            "primary_key_candidate"
+          ],
+          "possible_semantic_type": "identifier"
+        },
+        {
+          "source_name": "address",
+          "canonical_name": "address",
+          "inferred_type": "string",
+          "null_rate": 0.0,
+          "unique_rate": 1.0,
+          "cardinality": 12,
+          "unique_values": [
+            "1417 BERKSHIRE DR",
+            "1601 E CESAR CHAVEZ ST",
+            "2210 RIO GRANDE ST",
+            "2300 E 6TH ST",
+            "2810 SALADO ST",
+            "3402 GOVALLE AVE",
+            "4400 AVENUE G",
+            "5101 WAGON HITCH CV",
+            "5905 BULL CREEK RD",
+            "6403 ARNOLD DR",
+            "7008 MANCHACA RD",
+            "908 W 29TH ST"
+          ],
+          "sample_values": [
+            "1417 BERKSHIRE DR",
+            "6403 ARNOLD DR",
+            "2210 RIO GRANDE ST",
+            "5101 WAGON HITCH CV",
+            "908 W 29TH ST"
+          ],
+          "role_candidates": [
+            "business_identifier",
+            "entity_identifier"
+          ],
+          "possible_semantic_type": "email"
+        },
+        {
+          "source_name": "permit_type",
+          "canonical_name": "permit_type",
+          "inferred_type": "string",
+          "null_rate": 0.0,
+          "unique_rate": 0.3333,
+          "cardinality": 4,
+          "unique_values": [
+            "Building Permit",
+            "Electrical Permit",
+            "Mechanical Permit",
+            "Plumbing Permit"
+          ],
+          "sample_values": [
+            "Building Permit",
+            "Building Permit",
+            "Building Permit",
+            "Electrical Permit",
+            "Mechanical Permit"
+          ],
+          "role_candidates": [
+            "enum_candidate"
+          ],
+          "possible_semantic_type": null
+        },
+        {
+          "source_name": "work_description",
+          "canonical_name": "work_description",
+          "inferred_type": "string",
+          "null_rate": 0.0,
+          "unique_rate": 1.0,
+          "cardinality": 12,
+          "unique_values": [
+            "Commercial tenant finish-out",
+            "Detached carport addition",
+            "Duplex foundation repair",
+            "Garage conversion to ADU",
+            "HVAC replacement",
+            "New residential pool",
+            "Panel upgrade 200A",
+            "Residential kitchen remodel",
+            "Roof structural repair",
+            "Second-story addition",
+            "Sewer line replacement",
+            "Solar PV interconnection"
+          ],
+          "sample_values": [
+            "Residential kitchen remodel",
+            "New residential pool",
+            "Duplex foundation repair",
+            "Panel upgrade 200A",
+            "HVAC replacement"
+          ],
+          "role_candidates": [
+            "business_identifier"
+          ],
+          "possible_semantic_type": null
+        },
+        {
+          "source_name": "applied_date",
+          "canonical_name": "applied_date",
+          "inferred_type": "datetime",
+          "null_rate": 0.0,
+          "unique_rate": 1.0,
+          "cardinality": 12,
+          "unique_values": [
+            "2025-07-17 00:00:00",
+            "2026-03-11 00:00:00",
+            "2026-03-15 00:00:00",
+            "2026-03-22 00:00:00",
+            "2026-04-02 00:00:00",
+            "2026-04-05 00:00:00",
+            "2026-04-12 00:00:00",
+            "2026-04-20 00:00:00",
+            "2026-04-28 00:00:00",
+            "2026-04-30 00:00:00",
+            "2026-05-01 00:00:00",
+            "2026-05-04 00:00:00"
+          ],
+          "sample_values": [
+            "2026-04-02 00:00:00",
+            "2025-07-17 00:00:00",
+            "2026-03-11 00:00:00",
+            "2026-04-20 00:00:00",
+            "2026-04-05 00:00:00"
+          ],
+          "role_candidates": [
+            "business_identifier"
+          ],
+          "possible_semantic_type": "date"
+        },
+        {
+          "source_name": "status",
+          "canonical_name": "status",
+          "inferred_type": "string",
+          "null_rate": 0.0,
+          "unique_rate": 0.1667,
+          "cardinality": 2,
+          "unique_values": [
+            "In Review",
+            "Issued"
+          ],
+          "sample_values": [
+            "In Review",
+            "Issued",
+            "Issued",
+            "In Review",
+            "Issued"
+          ],
+          "role_candidates": [
+            "enum_candidate"
+          ],
+          "possible_semantic_type": "status"
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "source_id": "plan_reviews.csv",
+      "file_name": "plan_reviews.csv",
+      "sheet_name": null,
+      "detected_table_name": "plan_reviews",
+      "header_row": 1,
+      "data_start_row": 2,
+      "row_count": 12,
+      "columns": [
+        {
+          "source_name": "review_id",
+          "canonical_name": "review_id",
+          "inferred_type": "string",
+          "null_rate": 0.0,
+          "unique_rate": 1.0,
+          "cardinality": 12,
+          "unique_values": [
+            "2025-122556 PR",
+            "2026-098100 PR",
+            "2026-099781 PR",
+            "2026-101220 PR",
+            "2026-104882 PR",
+            "2026-105540 PR",
+            "2026-107644 PR",
+            "2026-110233 PR",
+            "2026-112874 PR",
+            "2026-113288 PR",
+            "2026-114002 PR",
+            "2026-115119 PR"
+          ],
+          "sample_values": [
+            "2026-104882 PR",
+            "2025-122556 PR",
+            "2026-098100 PR",
+            "2026-110233 PR",
+            "2026-105540 PR"
+          ],
+          "role_candidates": [
+            "primary_key_candidate"
+          ],
+          "possible_semantic_type": "identifier"
+        },
+        {
+          "source_name": "permit_id",
+          "canonical_name": "permit_id",
+          "inferred_type": "string",
+          "null_rate": 0.0,
+          "unique_rate": 1.0,
+          "cardinality": 12,
+          "unique_values": [
+            "2025-122556 BP",
+            "2026-098100 BP",
+            "2026-099781 PP",
+            "2026-101220 BP",
+            "2026-104882 BP",
+            "2026-105540 MP",
+            "2026-107644 EP",
+            "2026-110233 EP",
+            "2026-112874 BP",
+            "2026-113288 BP",
+            "2026-114002 BP",
+            "2026-115119 BP"
+          ],
+          "sample_values": [
+            "2026-104882 BP",
+            "2025-122556 BP",
+            "2026-098100 BP",
+            "2026-110233 EP",
+            "2026-105540 MP"
+          ],
+          "role_candidates": [
+            "primary_key_candidate"
+          ],
+          "possible_semantic_type": "identifier"
+        },
+        {
+          "source_name": "project_name",
+          "canonical_name": "project_name",
+          "inferred_type": "string",
+          "null_rate": 0.0,
+          "unique_rate": 1.0,
+          "cardinality": 12,
+          "unique_values": [
+            "1417 Berkshire Dr Kitchen Remodel",
+            "29th St HVAC Replacement",
+            "6403 Arnold Dr New Pool",
+            "Avenue G Roof Repair",
+            "Bull Creek Second-Story Addition",
+            "Cesar Chavez Sewer Line",
+            "E 6th St Carport Addition",
+            "Govalle ADU Conversion",
+            "Manchaca Rd Tenant Finish-Out",
+            "Rio Grande Duplex Foundation",
+            "Salado St Solar PV",
+            "Wagon Hitch Panel Upgrade"
+          ],
+          "sample_values": [
+            "1417 Berkshire Dr Kitchen Remodel",
+            "6403 Arnold Dr New Pool",
+            "Rio Grande Duplex Foundation",
+            "Wagon Hitch Panel Upgrade",
+            "29th St HVAC Replacement"
+          ],
+          "role_candidates": [
+            "business_identifier"
+          ],
+          "possible_semantic_type": null
+        },
+        {
+          "source_name": "status",
+          "canonical_name": "status",
+          "inferred_type": "string",
+          "null_rate": 0.0,
+          "unique_rate": 0.25,
+          "cardinality": 3,
+          "unique_values": [
+            "Approved",
+            "In Review",
+            "Pending - Holds"
+          ],
+          "sample_values": [
+            "Pending - Holds",
+            "Approved",
+            "Approved",
+            "In Review",
+            "Approved"
+          ],
+          "role_candidates": [
+            "enum_candidate"
+          ],
+          "possible_semantic_type": "status"
+        },
+        {
+          "source_name": "applied_date",
+          "canonical_name": "applied_date",
+          "inferred_type": "datetime",
+          "null_rate": 0.0,
+          "unique_rate": 1.0,
+          "cardinality": 12,
+          "unique_values": [
+            "2025-07-17 00:00:00",
+            "2026-03-11 00:00:00",
+            "2026-03-15 00:00:00",
+            "2026-03-22 00:00:00",
+            "2026-04-02 00:00:00",
+            "2026-04-05 00:00:00",
+            "2026-04-12 00:00:00",
+            "2026-04-20 00:00:00",
+            "2026-04-28 00:00:00",
+            "2026-04-30 00:00:00",
+            "2026-05-01 00:00:00",
+            "2026-05-04 00:00:00"
+          ],
+          "sample_values": [
+            "2026-04-02 00:00:00",
+            "2025-07-17 00:00:00",
+            "2026-03-11 00:00:00",
+            "2026-04-20 00:00:00",
+            "2026-04-05 00:00:00"
+          ],
+          "role_candidates": [
+            "business_identifier"
+          ],
+          "possible_semantic_type": "date"
+        },
+        {
+          "source_name": "approved_date",
+          "canonical_name": "approved_date",
+          "inferred_type": "datetime",
+          "null_rate": 0.5,
+          "unique_rate": 1.0,
+          "cardinality": 6,
+          "unique_values": [
+            "2025-09-02 00:00:00",
+            "2026-03-30 00:00:00",
+            "2026-04-01 00:00:00",
+            "2026-04-08 00:00:00",
+            "2026-04-19 00:00:00",
+            "2026-04-25 00:00:00"
+          ],
+          "sample_values": [
+            "2025-09-02 00:00:00",
+            "2026-04-01 00:00:00",
+            "2026-04-19 00:00:00",
+            "2026-03-30 00:00:00",
+            "2026-04-08 00:00:00"
+          ],
+          "role_candidates": [
+            "attribute"
+          ],
+          "possible_semantic_type": "date"
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "source_id": "code_complaints.csv",
+      "file_name": "code_complaints.csv",
+      "sheet_name": null,
+      "detected_table_name": "code_complaints",
+      "header_row": 1,
+      "data_start_row": 2,
+      "row_count": 12,
+      "columns": [
+        {
+          "source_name": "case_id",
+          "canonical_name": "case_id",
+          "inferred_type": "string",
+          "null_rate": 0.0,
+          "unique_rate": 1.0,
+          "cardinality": 12,
+          "unique_values": [
+            "2026-039981 CC",
+            "2026-044190 CC",
+            "2026-047733 CC",
+            "2026-051120 CC",
+            "2026-052077 CC",
+            "2026-055412 CC",
+            "2026-058299 CC",
+            "2026-058870 CC",
+            "2026-059333 CC",
+            "2026-060044 CC",
+            "2026-060788 CC",
+            "2026-061205 CC"
+          ],
+          "sample_values": [
+            "2026-058299 CC",
+            "2026-051120 CC",
+            "2026-047733 CC",
+            "2026-060044 CC",
+            "2026-039981 CC"
+          ],
+          "role_candidates": [
+            "primary_key_candidate"
+          ],
+          "possible_semantic_type": "identifier"
+        },
+        {
+          "source_name": "address",
+          "canonical_name": "address",
+          "inferred_type": "string",
+          "null_rate": 0.0,
+          "unique_rate": 0.9167,
+          "cardinality": 11,
+          "unique_values": [
+            "1417 BERKSHIRE DR",
+            "1601 E CESAR CHAVEZ ST",
+            "2210 RIO GRANDE ST",
+            "2300 E 6TH ST",
+            "2810 SALADO ST",
+            "3402 GOVALLE AVE",
+            "4400 AVENUE G",
+            "5905 BULL CREEK RD",
+            "6403 ARNOLD DR",
+            "7008 MANCHACA RD",
+            "908 W 29TH ST"
+          ],
+          "sample_values": [
+            "1417 BERKSHIRE DR",
+            "3402 GOVALLE AVE",
+            "908 W 29TH ST",
+            "7008 MANCHACA RD",
+            "2210 RIO GRANDE ST"
+          ],
+          "role_candidates": [
+            "enum_candidate",
+            "entity_identifier"
+          ],
+          "possible_semantic_type": "email"
+        },
+        {
+          "source_name": "case_type",
+          "canonical_name": "case_type",
+          "inferred_type": "string",
+          "null_rate": 0.0,
+          "unique_rate": 1.0,
+          "cardinality": 12,
+          "unique_values": [
+            "Drainage Violation",
+            "Illegal Dumping",
+            "Junked Vehicle",
+            "Overgrown Vegetation",
+            "Pool Barrier Violation",
+            "Short-Term Rental Violation",
+            "Sign Violation",
+            "Structure Condition Violation",
+            "Substandard Structure",
+            "Unpermitted Construction",
+            "Work Without Permit",
+            "Zoning Violation"
+          ],
+          "sample_values": [
+            "Structure Condition Violation",
+            "Zoning Violation",
+            "Overgrown Vegetation",
+            "Unpermitted Construction",
+            "Junked Vehicle"
+          ],
+          "role_candidates": [
+            "business_identifier"
+          ],
+          "possible_semantic_type": null
+        },
+        {
+          "source_name": "status",
+          "canonical_name": "status",
+          "inferred_type": "string",
+          "null_rate": 0.0,
+          "unique_rate": 0.1667,
+          "cardinality": 2,
+          "unique_values": [
+            "Closed",
+            "Open"
+          ],
+          "sample_values": [
+            "Open",
+            "Open",
+            "Closed",
+            "Open",
+            "Closed"
+          ],
+          "role_candidates": [
+            "enum_candidate"
+          ],
+          "possible_semantic_type": "status"
+        },
+        {
+          "source_name": "opened_date",
+          "canonical_name": "opened_date",
+          "inferred_type": "datetime",
+          "null_rate": 0.0,
+          "unique_rate": 0.9167,
+          "cardinality": 11,
+          "unique_values": [
+            "2026-03-08 00:00:00",
+            "2026-03-20 00:00:00",
+            "2026-04-02 00:00:00",
+            "2026-04-22 00:00:00",
+            "2026-04-25 00:00:00",
+            "2026-04-28 00:00:00",
+            "2026-05-09 00:00:00",
+            "2026-05-10 00:00:00",
+            "2026-05-12 00:00:00",
+            "2026-05-13 00:00:00",
+            "2026-05-14 00:00:00"
+          ],
+          "sample_values": [
+            "2026-05-09 00:00:00",
+            "2026-04-22 00:00:00",
+            "2026-04-02 00:00:00",
+            "2026-05-12 00:00:00",
+            "2026-03-08 00:00:00"
+          ],
+          "role_candidates": [
+            "attribute"
+          ],
+          "possible_semantic_type": "date"
+        },
+        {
+          "source_name": "department",
+          "canonical_name": "department",
+          "inferred_type": "string",
+          "null_rate": 0.0,
+          "unique_rate": 0.1667,
+          "cardinality": 2,
+          "unique_values": [
+            "Code Enforcement",
+            "Watershed Protection"
+          ],
+          "sample_values": [
+            "Code Enforcement",
+            "Code Enforcement",
+            "Code Enforcement",
+            "Code Enforcement",
+            "Code Enforcement"
+          ],
+          "role_candidates": [
+            "enum_candidate"
+          ],
+          "possible_semantic_type": null
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "source_id": "code_tasks.csv",
+      "file_name": "code_tasks.csv",
+      "sheet_name": null,
+      "detected_table_name": "code_tasks",
+      "header_row": 1,
+      "data_start_row": 2,
+      "row_count": 12,
+      "columns": [
+        {
+          "source_name": "case_task_id",
+          "canonical_name": "case_task_id",
+          "inferred_type": "string",
+          "null_rate": 0.0,
+          "unique_rate": 1.0,
+          "cardinality": 12,
+          "unique_values": [
+            "2026-015118 UR",
+            "2026-016442 UR",
+            "2026-017740 UR",
+            "2026-019003 UR",
+            "2026-019887 UR",
+            "2026-020551 UR",
+            "2026-021852 UR",
+            "2026-021990 UR",
+            "2026-022104 UR",
+            "2026-022660 UR",
+            "2026-023007 UR",
+            "2026-023319 UR"
+          ],
+          "sample_values": [
+            "2026-021852 UR",
+            "2026-019003 UR",
+            "2026-017740 UR",
+            "2026-022660 UR",
+            "2026-015118 UR"
+          ],
+          "role_candidates": [
+            "primary_key_candidate"
+          ],
+          "possible_semantic_type": "identifier"
+        },
+        {
+          "source_name": "case_id",
+          "canonical_name": "case_id",
+          "inferred_type": "string",
+          "null_rate": 0.0,
+          "unique_rate": 1.0,
+          "cardinality": 12,
+          "unique_values": [
+            "2026-039981 CC",
+            "2026-044190 CC",
+            "2026-047733 CC",
+            "2026-051120 CC",
+            "2026-052077 CC",
+            "2026-055412 CC",
+            "2026-058299 CC",
+            "2026-058870 CC",
+            "2026-059333 CC",
+            "2026-060044 CC",
+            "2026-060788 CC",
+            "2026-061205 CC"
+          ],
+          "sample_values": [
+            "2026-058299 CC",
+            "2026-051120 CC",
+            "2026-047733 CC",
+            "2026-060044 CC",
+            "2026-039981 CC"
+          ],
+          "role_candidates": [
+            "primary_key_candidate"
+          ],
+          "possible_semantic_type": "identifier"
+        },
+        {
+          "source_name": "address",
+          "canonical_name": "address",
+          "inferred_type": "string",
+          "null_rate": 0.0,
+          "unique_rate": 0.9167,
+          "cardinality": 11,
+          "unique_values": [
+            "1417 BERKSHIRE DR",
+            "1601 E CESAR CHAVEZ ST",
+            "2210 RIO GRANDE ST",
+            "2300 E 6TH ST",
+            "2810 SALADO ST",
+            "3402 GOVALLE AVE",
+            "4400 AVENUE G",
+            "5905 BULL CREEK RD",
+            "6403 ARNOLD DR",
+            "7008 MANCHACA RD",
+            "908 W 29TH ST"
+          ],
+          "sample_values": [
+            "1417 BERKSHIRE DR",
+            "3402 GOVALLE AVE",
+            "908 W 29TH ST",
+            "7008 MANCHACA RD",
+            "2210 RIO GRANDE ST"
+          ],
+          "role_candidates": [
+            "enum_candidate",
+            "entity_identifier"
+          ],
+          "possible_semantic_type": "email"
+        },
+        {
+          "source_name": "task_type",
+          "canonical_name": "task_type",
+          "inferred_type": "string",
+          "null_rate": 0.0,
+          "unique_rate": 0.9167,
+          "cardinality": 11,
+          "unique_values": [
+            "Barrier Compliance Check",
+            "Case Closure",
+            "Cleanup Verification",
+            "Drainage Survey",
+            "Field Inspection",
+            "Re-Inspection",
+            "STR Audit",
+            "Sign Removal Verification",
+            "Stop-Work Follow-Up",
+            "Structural Assessment",
+            "Zoning Review"
+          ],
+          "sample_values": [
+            "Field Inspection",
+            "Zoning Review",
+            "Re-Inspection",
+            "Field Inspection",
+            "Case Closure"
+          ],
+          "role_candidates": [
+            "enum_candidate"
+          ],
+          "possible_semantic_type": null
+        },
+        {
+          "source_name": "assignee",
+          "canonical_name": "assignee",
+          "inferred_type": "string",
+          "null_rate": 0.0,
+          "unique_rate": 0.3333,
+          "cardinality": 4,
+          "unique_values": [
+            "Charles Edwards",
+            "Derek Cole",
+            "Maria Lopez",
+            "Priya Nair"
+          ],
+          "sample_values": [
+            "Charles Edwards",
+            "Maria Lopez",
+            "Derek Cole",
+            "Charles Edwards",
+            "Derek Cole"
+          ],
+          "role_candidates": [
+            "enum_candidate"
+          ],
+          "possible_semantic_type": null
+        },
+        {
+          "source_name": "status",
+          "canonical_name": "status",
+          "inferred_type": "string",
+          "null_rate": 0.0,
+          "unique_rate": 0.1667,
+          "cardinality": 2,
+          "unique_values": [
+            "Closed",
+            "Open"
+          ],
+          "sample_values": [
+            "Open",
+            "Open",
+            "Closed",
+            "Open",
+            "Closed"
+          ],
+          "role_candidates": [
+            "enum_candidate"
+          ],
+          "possible_semantic_type": "status"
+        },
+        {
+          "source_name": "due_date",
+          "canonical_name": "due_date",
+          "inferred_type": "datetime",
+          "null_rate": 0.0,
+          "unique_rate": 1.0,
+          "cardinality": 12,
+          "unique_values": [
+            "2026-04-01 00:00:00",
+            "2026-04-15 00:00:00",
+            "2026-04-30 00:00:00",
+            "2026-05-05 00:00:00",
+            "2026-05-10 00:00:00",
+            "2026-06-08 00:00:00",
+            "2026-06-12 00:00:00",
+            "2026-06-15 00:00:00",
+            "2026-06-16 00:00:00",
+            "2026-06-18 00:00:00",
+            "2026-06-20 00:00:00",
+            "2026-06-25 00:00:00"
+          ],
+          "sample_values": [
+            "2026-06-15 00:00:00",
+            "2026-06-08 00:00:00",
+            "2026-04-30 00:00:00",
+            "2026-06-20 00:00:00",
+            "2026-04-01 00:00:00"
+          ],
+          "role_candidates": [
+            "business_identifier"
+          ],
+          "possible_semantic_type": "date"
+        }
+      ],
+      "warnings": []
+    }
+  ],
+  "pen": {
+    "documentType": "dashbot.dfdmaker",
+    "schemaVersion": "0.1",
+    "pen_version": "0.1",
+    "project": {
+      "id": "proj_e1ad39e9",
+      "name": "Austin Permits Knowledge Base",
+      "revision": 0
+    },
+    "sources": [
+      {
+        "id": "src_0",
+        "type": "csv",
+        "name": "permits.csv",
+        "raw_path": "C:\\Users\\ajfil\\AppData\\Local\\Temp\\tmptm8gb9mv.csv"
+      },
+      {
+        "id": "src_1",
+        "type": "csv",
+        "name": "plan_reviews.csv",
+        "raw_path": "C:\\Users\\ajfil\\AppData\\Local\\Temp\\tmpklhoubff.csv"
+      },
+      {
+        "id": "src_2",
+        "type": "csv",
+        "name": "code_complaints.csv",
+        "raw_path": "C:\\Users\\ajfil\\AppData\\Local\\Temp\\tmpfhfqti_e.csv"
+      },
+      {
+        "id": "src_3",
+        "type": "csv",
+        "name": "code_tasks.csv",
+        "raw_path": "C:\\Users\\ajfil\\AppData\\Local\\Temp\\tmpckfovzd4.csv"
+      }
+    ],
+    "erd": {
+      "notation": "crows_foot",
+      "model_level": "physical",
+      "entities": [
+        {
+          "id": "ent_permits",
+          "kind": "strong_entity",
+          "name": "permits",
+          "display_name": "Permits",
+          "attributes": [
+            {
+              "id": "attr_permits_id",
+              "name": "id",
+              "display_name": "id",
+              "pg_type": "uuid",
+              "key_role": "primary",
+              "nullable": false,
+              "default": "gen_random_uuid()",
+              "check_constraint": null,
+              "source_columns": [],
+              "evidence": [],
+              "confidence": 1.0,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_permits_permit_id",
+              "name": "permit_id",
+              "display_name": "permit_id",
+              "pg_type": "text",
+              "key_role": "business_key",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "permit_id"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_permits_address",
+              "name": "address",
+              "display_name": "address",
+              "pg_type": "text",
+              "key_role": "unique",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "address"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_permits_permit_type",
+              "name": "permit_type",
+              "display_name": "permit_type",
+              "pg_type": "text",
+              "key_role": "none",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "permit_type"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_permits_work_description",
+              "name": "work_description",
+              "display_name": "work_description",
+              "pg_type": "text",
+              "key_role": "none",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "work_description"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_permits_applied_date",
+              "name": "applied_date",
+              "display_name": "applied_date",
+              "pg_type": "timestamptz",
+              "key_role": "none",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "applied_date"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_permits_status",
+              "name": "status",
+              "display_name": "status",
+              "pg_type": "text",
+              "key_role": "none",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "status"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_permits_created_at",
+              "name": "created_at",
+              "display_name": "created_at",
+              "pg_type": "timestamptz",
+              "key_role": "audit",
+              "nullable": false,
+              "default": "now()",
+              "check_constraint": null,
+              "source_columns": [],
+              "evidence": [],
+              "confidence": 1.0,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_permits_updated_at",
+              "name": "updated_at",
+              "display_name": "updated_at",
+              "pg_type": "timestamptz",
+              "key_role": "audit",
+              "nullable": false,
+              "default": "now()",
+              "check_constraint": null,
+              "source_columns": [],
+              "evidence": [],
+              "confidence": 1.0,
+              "review_status": "accepted"
+            }
+          ],
+          "source_evidence": [
+            {
+              "source_id": "permits.csv",
+              "source_columns": []
+            }
+          ],
+          "proposal_reason": null,
+          "confidence": 0.95,
+          "review_status": "accepted"
+        },
+        {
+          "id": "ent_plan_reviews",
+          "kind": "strong_entity",
+          "name": "plan_reviews",
+          "display_name": "Plan Reviews",
+          "attributes": [
+            {
+              "id": "attr_plan_reviews_id",
+              "name": "id",
+              "display_name": "id",
+              "pg_type": "uuid",
+              "key_role": "primary",
+              "nullable": false,
+              "default": "gen_random_uuid()",
+              "check_constraint": null,
+              "source_columns": [],
+              "evidence": [],
+              "confidence": 1.0,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_plan_reviews_review_id",
+              "name": "review_id",
+              "display_name": "review_id",
+              "pg_type": "text",
+              "key_role": "business_key",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "review_id"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_plan_reviews_permit_id",
+              "name": "permit_id",
+              "display_name": "permit_id",
+              "pg_type": "text",
+              "key_role": "business_key",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "permit_id"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_plan_reviews_project_name",
+              "name": "project_name",
+              "display_name": "project_name",
+              "pg_type": "text",
+              "key_role": "none",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "project_name"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_plan_reviews_status",
+              "name": "status",
+              "display_name": "status",
+              "pg_type": "text",
+              "key_role": "none",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "status"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_plan_reviews_applied_date",
+              "name": "applied_date",
+              "display_name": "applied_date",
+              "pg_type": "timestamptz",
+              "key_role": "none",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "applied_date"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_plan_reviews_approved_date",
+              "name": "approved_date",
+              "display_name": "approved_date",
+              "pg_type": "timestamptz",
+              "key_role": "none",
+              "nullable": true,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "approved_date"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_plan_reviews_created_at",
+              "name": "created_at",
+              "display_name": "created_at",
+              "pg_type": "timestamptz",
+              "key_role": "audit",
+              "nullable": false,
+              "default": "now()",
+              "check_constraint": null,
+              "source_columns": [],
+              "evidence": [],
+              "confidence": 1.0,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_plan_reviews_updated_at",
+              "name": "updated_at",
+              "display_name": "updated_at",
+              "pg_type": "timestamptz",
+              "key_role": "audit",
+              "nullable": false,
+              "default": "now()",
+              "check_constraint": null,
+              "source_columns": [],
+              "evidence": [],
+              "confidence": 1.0,
+              "review_status": "accepted"
+            }
+          ],
+          "source_evidence": [
+            {
+              "source_id": "plan_reviews.csv",
+              "source_columns": []
+            }
+          ],
+          "proposal_reason": null,
+          "confidence": 0.95,
+          "review_status": "accepted"
+        },
+        {
+          "id": "ent_code_complaints",
+          "kind": "strong_entity",
+          "name": "code_complaints",
+          "display_name": "Code Complaints",
+          "attributes": [
+            {
+              "id": "attr_code_complaints_id",
+              "name": "id",
+              "display_name": "id",
+              "pg_type": "uuid",
+              "key_role": "primary",
+              "nullable": false,
+              "default": "gen_random_uuid()",
+              "check_constraint": null,
+              "source_columns": [],
+              "evidence": [],
+              "confidence": 1.0,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_code_complaints_case_id",
+              "name": "case_id",
+              "display_name": "case_id",
+              "pg_type": "text",
+              "key_role": "business_key",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "case_id"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_code_complaints_address",
+              "name": "address",
+              "display_name": "address",
+              "pg_type": "text",
+              "key_role": "unique",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "address"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_code_complaints_case_type",
+              "name": "case_type",
+              "display_name": "case_type",
+              "pg_type": "text",
+              "key_role": "none",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "case_type"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_code_complaints_status",
+              "name": "status",
+              "display_name": "status",
+              "pg_type": "text",
+              "key_role": "none",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "status"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_code_complaints_opened_date",
+              "name": "opened_date",
+              "display_name": "opened_date",
+              "pg_type": "timestamptz",
+              "key_role": "none",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "opened_date"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_code_complaints_department",
+              "name": "department",
+              "display_name": "department",
+              "pg_type": "text",
+              "key_role": "none",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "department"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_code_complaints_created_at",
+              "name": "created_at",
+              "display_name": "created_at",
+              "pg_type": "timestamptz",
+              "key_role": "audit",
+              "nullable": false,
+              "default": "now()",
+              "check_constraint": null,
+              "source_columns": [],
+              "evidence": [],
+              "confidence": 1.0,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_code_complaints_updated_at",
+              "name": "updated_at",
+              "display_name": "updated_at",
+              "pg_type": "timestamptz",
+              "key_role": "audit",
+              "nullable": false,
+              "default": "now()",
+              "check_constraint": null,
+              "source_columns": [],
+              "evidence": [],
+              "confidence": 1.0,
+              "review_status": "accepted"
+            }
+          ],
+          "source_evidence": [
+            {
+              "source_id": "code_complaints.csv",
+              "source_columns": []
+            }
+          ],
+          "proposal_reason": null,
+          "confidence": 0.95,
+          "review_status": "accepted"
+        },
+        {
+          "id": "ent_code_tasks",
+          "kind": "strong_entity",
+          "name": "code_tasks",
+          "display_name": "Code Tasks",
+          "attributes": [
+            {
+              "id": "attr_code_tasks_id",
+              "name": "id",
+              "display_name": "id",
+              "pg_type": "uuid",
+              "key_role": "primary",
+              "nullable": false,
+              "default": "gen_random_uuid()",
+              "check_constraint": null,
+              "source_columns": [],
+              "evidence": [],
+              "confidence": 1.0,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_code_tasks_case_task_id",
+              "name": "case_task_id",
+              "display_name": "case_task_id",
+              "pg_type": "text",
+              "key_role": "business_key",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "case_task_id"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_code_tasks_case_id",
+              "name": "case_id",
+              "display_name": "case_id",
+              "pg_type": "text",
+              "key_role": "business_key",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "case_id"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_code_tasks_address",
+              "name": "address",
+              "display_name": "address",
+              "pg_type": "text",
+              "key_role": "unique",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "address"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_code_tasks_task_type",
+              "name": "task_type",
+              "display_name": "task_type",
+              "pg_type": "text",
+              "key_role": "none",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "task_type"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_code_tasks_assignee",
+              "name": "assignee",
+              "display_name": "assignee",
+              "pg_type": "text",
+              "key_role": "none",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "assignee"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_code_tasks_status",
+              "name": "status",
+              "display_name": "status",
+              "pg_type": "text",
+              "key_role": "none",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "status"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_code_tasks_due_date",
+              "name": "due_date",
+              "display_name": "due_date",
+              "pg_type": "timestamptz",
+              "key_role": "none",
+              "nullable": false,
+              "default": null,
+              "check_constraint": null,
+              "source_columns": [
+                "due_date"
+              ],
+              "evidence": [],
+              "confidence": 0.9,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_code_tasks_created_at",
+              "name": "created_at",
+              "display_name": "created_at",
+              "pg_type": "timestamptz",
+              "key_role": "audit",
+              "nullable": false,
+              "default": "now()",
+              "check_constraint": null,
+              "source_columns": [],
+              "evidence": [],
+              "confidence": 1.0,
+              "review_status": "accepted"
+            },
+            {
+              "id": "attr_code_tasks_updated_at",
+              "name": "updated_at",
+              "display_name": "updated_at",
+              "pg_type": "timestamptz",
+              "key_role": "audit",
+              "nullable": false,
+              "default": "now()",
+              "check_constraint": null,
+              "source_columns": [],
+              "evidence": [],
+              "confidence": 1.0,
+              "review_status": "accepted"
+            }
+          ],
+          "source_evidence": [
+            {
+              "source_id": "code_tasks.csv",
+              "source_columns": []
+            }
+          ],
+          "proposal_reason": null,
+          "confidence": 0.95,
+          "review_status": "accepted"
+        }
+      ],
+      "relationships": []
+    },
+    "dfd": {
+      "level": 0,
+      "notation": "yourdon_coad",
+      "system_boundary": {
+        "id": "boundary_867d6a8d",
+        "name": "System"
+      },
+      "external_entities": [],
+      "processes": [],
+      "data_stores": [],
+      "data_flows": []
+    },
+    "layout": {
+      "erd": {
+        "nodes": [
+          {
+            "id": "ent_permits",
+            "x": 40.0,
+            "y": 40.0,
+            "width": 280.0,
+            "height": 296.0
+          },
+          {
+            "id": "ent_plan_reviews",
+            "x": 380.0,
+            "y": 40.0,
+            "width": 280.0,
+            "height": 296.0
+          },
+          {
+            "id": "ent_code_complaints",
+            "x": 720.0,
+            "y": 40.0,
+            "width": 280.0,
+            "height": 296.0
+          },
+          {
+            "id": "ent_code_tasks",
+            "x": 40.0,
+            "y": 420.0,
+            "width": 280.0,
+            "height": 320.0
+          }
+        ],
+        "edges": []
+      },
+      "dfd": {
+        "nodes": [
+          {
+            "id": "store_ent_permits",
+            "x": 40.0,
+            "y": 40.0,
+            "width": 200.0,
+            "height": 80.0
+          },
+          {
+            "id": "store_ent_plan_reviews",
+            "x": 40.0,
+            "y": 200.0,
+            "width": 200.0,
+            "height": 80.0
+          },
+          {
+            "id": "store_ent_code_complaints",
+            "x": 40.0,
+            "y": 360.0,
+            "width": 200.0,
+            "height": 80.0
+          },
+          {
+            "id": "store_ent_code_tasks",
+            "x": 40.0,
+            "y": 520.0,
+            "width": 200.0,
+            "height": 80.0
+          }
+        ],
+        "edges": []
+      },
+      "dfd_level_1": {}
+    },
+    "styles": {
+      "theme": "clean_default",
+      "erd": {
+        "entity": {
+          "shape": "rectangle",
+          "header_fill": "#f5f5f5",
+          "border_radius": 4,
+          "border_color": "#d1d5db",
+          "font_size": 13
+        },
+        "primary_key_attribute": {
+          "prefix": "PK",
+          "font_weight": "bold"
+        },
+        "foreign_key_attribute": {
+          "prefix": "FK"
+        },
+        "unique_attribute": {
+          "prefix": "UQ"
+        },
+        "audit_attribute": {
+          "prefix": ""
+        },
+        "relationship": {
+          "notation": "crows_foot",
+          "line_style": "solid",
+          "line_color": "#6b7280"
+        }
+      },
+      "dfd": {
+        "external_entity": {
+          "shape": "rectangle"
+        },
+        "process": {
+          "shape": "rounded_rectangle"
+        },
+        "data_store": {
+          "shape": "open_ended_rectangle"
+        },
+        "data_flow": {
+          "shape": "arrow",
+          "label_position": "middle"
+        }
+      }
+    },
+    "postgres": {
+      "dialect": "postgresql",
+      "extensions": [
+        "pgcrypto"
+      ],
+      "schema_name": "public",
+      "default_primary_key": {
+        "type": "uuid",
+        "default": "gen_random_uuid()"
+      },
+      "add_audit_timestamps": true
+    },
+    "review": {
+      "proposals": [
+        {
+          "id": "prop_c8b321b8",
+          "proposal_type": "enum_to_lookup",
+          "title": "'permit_type' \u2014 fixed list or open-ended?",
+          "question": "'permit_type' in 'permits' contains 4 distinct values: \"Building Permit\", \"Electrical Permit\", \"Mechanical Permit\", \"Plumbing Permit\". Is this list fixed, or can users add new values?",
+          "options": [
+            "Fixed list \u2014 store as reference/lookup table",
+            "Open-ended \u2014 keep as a plain text column",
+            "Not sure"
+          ],
+          "context": {
+            "source_table": "permits",
+            "column": "permit_type",
+            "values": [
+              "Building Permit",
+              "Electrical Permit",
+              "Mechanical Permit",
+              "Plumbing Permit"
+            ]
+          },
+          "source_evidence": [
+            "permits.csv"
+          ],
+          "source_facts": [],
+          "confidence": 0.82,
+          "status": "pending"
+        },
+        {
+          "id": "prop_9df6cd0c",
+          "proposal_type": "enum_to_lookup",
+          "title": "'status' \u2014 fixed list or open-ended?",
+          "question": "'status' in 'permits' contains 2 distinct values: \"In Review\", \"Issued\". Is this list fixed, or can users add new values?",
+          "options": [
+            "Fixed list \u2014 store as reference/lookup table",
+            "Open-ended \u2014 keep as a plain text column",
+            "Not sure"
+          ],
+          "context": {
+            "source_table": "permits",
+            "column": "status",
+            "values": [
+              "In Review",
+              "Issued"
+            ]
+          },
+          "source_evidence": [
+            "permits.csv"
+          ],
+          "source_facts": [],
+          "confidence": 0.82,
+          "status": "pending"
+        },
+        {
+          "id": "prop_f5cef4ca",
+          "proposal_type": "enum_to_lookup",
+          "title": "'status' \u2014 fixed list or open-ended?",
+          "question": "'status' in 'plan_reviews' contains 3 distinct values: \"Approved\", \"In Review\", \"Pending - Holds\". Is this list fixed, or can users add new values?",
+          "options": [
+            "Fixed list \u2014 store as reference/lookup table",
+            "Open-ended \u2014 keep as a plain text column",
+            "Not sure"
+          ],
+          "context": {
+            "source_table": "plan_reviews",
+            "column": "status",
+            "values": [
+              "Approved",
+              "In Review",
+              "Pending - Holds"
+            ]
+          },
+          "source_evidence": [
+            "plan_reviews.csv"
+          ],
+          "source_facts": [],
+          "confidence": 0.82,
+          "status": "pending"
+        },
+        {
+          "id": "prop_8dccc46d",
+          "proposal_type": "enum_to_lookup",
+          "title": "'status' \u2014 fixed list or open-ended?",
+          "question": "'status' in 'code_complaints' contains 2 distinct values: \"Closed\", \"Open\". Is this list fixed, or can users add new values?",
+          "options": [
+            "Fixed list \u2014 store as reference/lookup table",
+            "Open-ended \u2014 keep as a plain text column",
+            "Not sure"
+          ],
+          "context": {
+            "source_table": "code_complaints",
+            "column": "status",
+            "values": [
+              "Closed",
+              "Open"
+            ]
+          },
+          "source_evidence": [
+            "code_complaints.csv"
+          ],
+          "source_facts": [],
+          "confidence": 0.82,
+          "status": "pending"
+        },
+        {
+          "id": "prop_2b970d1a",
+          "proposal_type": "enum_to_lookup",
+          "title": "'department' \u2014 fixed list or open-ended?",
+          "question": "'department' in 'code_complaints' contains 2 distinct values: \"Code Enforcement\", \"Watershed Protection\". Is this list fixed, or can users add new values?",
+          "options": [
+            "Fixed list \u2014 store as reference/lookup table",
+            "Open-ended \u2014 keep as a plain text column",
+            "Not sure"
+          ],
+          "context": {
+            "source_table": "code_complaints",
+            "column": "department",
+            "values": [
+              "Code Enforcement",
+              "Watershed Protection"
+            ]
+          },
+          "source_evidence": [
+            "code_complaints.csv"
+          ],
+          "source_facts": [],
+          "confidence": 0.82,
+          "status": "pending"
+        },
+        {
+          "id": "prop_fc8fac68",
+          "proposal_type": "enum_to_lookup",
+          "title": "'task_type' \u2014 fixed list or open-ended?",
+          "question": "'task_type' in 'code_tasks' contains 11 distinct values: \"Barrier Compliance Check\", \"Case Closure\", \"Cleanup Verification\", \"Drainage Survey\", \"Field Inspection\", \"Re-Inspection\", \u2026 (11 total). Is this list fixed, or can users add new values?",
+          "options": [
+            "Fixed list \u2014 store as reference/lookup table",
+            "Open-ended \u2014 keep as a plain text column",
+            "Not sure"
+          ],
+          "context": {
+            "source_table": "code_tasks",
+            "column": "task_type",
+            "values": [
+              "Barrier Compliance Check",
+              "Case Closure",
+              "Cleanup Verification",
+              "Drainage Survey",
+              "Field Inspection",
+              "Re-Inspection",
+              "STR Audit",
+              "Sign Removal Verification",
+              "Stop-Work Follow-Up",
+              "Structural Assessment",
+              "Zoning Review"
+            ]
+          },
+          "source_evidence": [
+            "code_tasks.csv"
+          ],
+          "source_facts": [],
+          "confidence": 0.82,
+          "status": "pending"
+        },
+        {
+          "id": "prop_03ddb27d",
+          "proposal_type": "enum_to_lookup",
+          "title": "'assignee' \u2014 fixed list or open-ended?",
+          "question": "'assignee' in 'code_tasks' contains 4 distinct values: \"Charles Edwards\", \"Derek Cole\", \"Maria Lopez\", \"Priya Nair\". Is this list fixed, or can users add new values?",
+          "options": [
+            "Fixed list \u2014 store as reference/lookup table",
+            "Open-ended \u2014 keep as a plain text column",
+            "Not sure"
+          ],
+          "context": {
+            "source_table": "code_tasks",
+            "column": "assignee",
+            "values": [
+              "Charles Edwards",
+              "Derek Cole",
+              "Maria Lopez",
+              "Priya Nair"
+            ]
+          },
+          "source_evidence": [
+            "code_tasks.csv"
+          ],
+          "source_facts": [],
+          "confidence": 0.82,
+          "status": "pending"
+        },
+        {
+          "id": "prop_193f1502",
+          "proposal_type": "enum_to_lookup",
+          "title": "'status' \u2014 fixed list or open-ended?",
+          "question": "'status' in 'code_tasks' contains 2 distinct values: \"Closed\", \"Open\". Is this list fixed, or can users add new values?",
+          "options": [
+            "Fixed list \u2014 store as reference/lookup table",
+            "Open-ended \u2014 keep as a plain text column",
+            "Not sure"
+          ],
+          "context": {
+            "source_table": "code_tasks",
+            "column": "status",
+            "values": [
+              "Closed",
+              "Open"
+            ]
+          },
+          "source_evidence": [
+            "code_tasks.csv"
+          ],
+          "source_facts": [],
+          "confidence": 0.82,
+          "status": "pending"
+        }
+      ],
+      "warnings": [
+        {
+          "rule_id": "ERD-01",
+          "severity": "warning",
+          "node_kind": "entity",
+          "node_id": "ent_permits",
+          "node_name": "Permits",
+          "message": "Entity 'Permits' has no relationships. It will not appear in the DFD until you connect it or mark it rejected.",
+          "context": {
+            "entity_id": "ent_permits"
+          }
+        },
+        {
+          "rule_id": "ERD-01",
+          "severity": "warning",
+          "node_kind": "entity",
+          "node_id": "ent_plan_reviews",
+          "node_name": "Plan Reviews",
+          "message": "Entity 'Plan Reviews' has no relationships. It will not appear in the DFD until you connect it or mark it rejected.",
+          "context": {
+            "entity_id": "ent_plan_reviews"
+          }
+        },
+        {
+          "rule_id": "ERD-01",
+          "severity": "warning",
+          "node_kind": "entity",
+          "node_id": "ent_code_complaints",
+          "node_name": "Code Complaints",
+          "message": "Entity 'Code Complaints' has no relationships. It will not appear in the DFD until you connect it or mark it rejected.",
+          "context": {
+            "entity_id": "ent_code_complaints"
+          }
+        },
+        {
+          "rule_id": "ERD-01",
+          "severity": "warning",
+          "node_kind": "entity",
+          "node_id": "ent_code_tasks",
+          "node_name": "Code Tasks",
+          "message": "Entity 'Code Tasks' has no relationships. It will not appear in the DFD until you connect it or mark it rejected.",
+          "context": {
+            "entity_id": "ent_code_tasks"
+          }
+        }
+      ],
+      "dismissed_warnings": []
+    }
+  }
+}

@@ -1,0 +1,741 @@
+{
+  "documentType": "dashbot.dfdmaker",
+  "schemaVersion": "0.1",
+  "pen_version": "0.1",
+  "project": {
+    "id": "proj_example_store",
+    "name": "Example Store Schema",
+    "revision": 0
+  },
+  "sources": [
+    {
+      "id": "src_example",
+      "type": "text",
+      "name": "Hand-built example schema",
+      "raw_path": null
+    }
+  ],
+  "erd": {
+    "notation": "crows_foot",
+    "model_level": "physical",
+    "entities": [
+      {
+        "id": "ent_customers",
+        "kind": "strong_entity",
+        "name": "customers",
+        "display_name": "Customers",
+        "attributes": [
+          {
+            "id": "attr_customers_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_customers_email",
+            "name": "email",
+            "display_name": "Email",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_customers_full_name",
+            "name": "full_name",
+            "display_name": "Full Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_customers_created_at",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [
+          {
+            "source_id": "src_example",
+            "source_columns": []
+          }
+        ],
+        "proposal_reason": null,
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_products",
+        "kind": "strong_entity",
+        "name": "products",
+        "display_name": "Products",
+        "attributes": [
+          {
+            "id": "attr_products_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_products_sku",
+            "name": "sku",
+            "display_name": "Sku",
+            "pg_type": "text",
+            "key_role": "business_key",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_products_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_products_price",
+            "name": "price",
+            "display_name": "Price",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": "price >= 0",
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [
+          {
+            "source_id": "src_example",
+            "source_columns": []
+          }
+        ],
+        "proposal_reason": null,
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_orders",
+        "kind": "strong_entity",
+        "name": "orders",
+        "display_name": "Orders",
+        "attributes": [
+          {
+            "id": "attr_orders_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_orders_customer_id",
+            "name": "customer_id",
+            "display_name": "Customer Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_orders_status",
+            "name": "status",
+            "display_name": "Status",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": "'pending'",
+            "check_constraint": "status in ('pending', 'paid', 'shipped', 'cancelled')",
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_orders_ordered_at",
+            "name": "ordered_at",
+            "display_name": "Ordered At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [
+          {
+            "source_id": "src_example",
+            "source_columns": []
+          }
+        ],
+        "proposal_reason": null,
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_order_items",
+        "kind": "weak_entity",
+        "name": "order_items",
+        "display_name": "Order Items",
+        "attributes": [
+          {
+            "id": "attr_order_items_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_order_items_order_id",
+            "name": "order_id",
+            "display_name": "Order Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_order_items_product_id",
+            "name": "product_id",
+            "display_name": "Product Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_order_items_quantity",
+            "name": "quantity",
+            "display_name": "Quantity",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "1",
+            "check_constraint": "quantity > 0",
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_order_items_unit_price",
+            "name": "unit_price",
+            "display_name": "Unit Price",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": "unit_price >= 0",
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [
+          {
+            "source_id": "src_example",
+            "source_columns": []
+          }
+        ],
+        "proposal_reason": null,
+        "confidence": 1.0,
+        "review_status": "accepted"
+      }
+    ],
+    "relationships": [
+      {
+        "id": "rel_orders_customers",
+        "name": "placed by",
+        "from": {
+          "entity_id": "ent_orders",
+          "attribute_id": "attr_orders_customer_id"
+        },
+        "to": {
+          "entity_id": "ent_customers",
+          "attribute_id": "attr_customers_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_orders_customer_id",
+          "on_delete": "restrict",
+          "on_update": "cascade"
+        },
+        "dfd_process_id": "proc_place_order",
+        "evidence": [
+          "orders.customer_id references customers.id"
+        ],
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_order_items_orders",
+        "name": "contains",
+        "from": {
+          "entity_id": "ent_order_items",
+          "attribute_id": "attr_order_items_order_id"
+        },
+        "to": {
+          "entity_id": "ent_orders",
+          "attribute_id": "attr_orders_id"
+        },
+        "cardinality": {
+          "from_min": 1,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_order_items_order_id",
+          "on_delete": "cascade",
+          "on_update": "cascade"
+        },
+        "dfd_process_id": "proc_place_order",
+        "evidence": [
+          "order_items.order_id references orders.id"
+        ],
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_order_items_products",
+        "name": "uses",
+        "from": {
+          "entity_id": "ent_order_items",
+          "attribute_id": "attr_order_items_product_id"
+        },
+        "to": {
+          "entity_id": "ent_products",
+          "attribute_id": "attr_products_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_order_items_product_id",
+          "on_delete": "restrict",
+          "on_update": "cascade"
+        },
+        "dfd_process_id": "proc_place_order",
+        "evidence": [
+          "order_items.product_id references products.id"
+        ],
+        "confidence": 1.0,
+        "review_status": "accepted"
+      }
+    ]
+  },
+  "dfd": {
+    "level": 0,
+    "notation": "yourdon_coad",
+    "system_boundary": {
+      "id": "boundary_store",
+      "name": "Storefront"
+    },
+    "external_entities": [
+      {
+        "id": "ext_customer",
+        "name": "Customer",
+        "description": "Person browsing products and placing orders.",
+        "source": "manual"
+      },
+      {
+        "id": "ext_payment_gateway",
+        "name": "Payment Gateway",
+        "description": "External processor that authorizes card payments.",
+        "source": "manual"
+      }
+    ],
+    "processes": [
+      {
+        "id": "proc_place_order",
+        "number": "1.0",
+        "name": "Place Order",
+        "description": "Accepts customer order details and creates order records.",
+        "user_modified": false,
+        "mapped_relationship_id": "rel_orders_customers"
+      },
+      {
+        "id": "proc_collect_payment",
+        "number": "2.0",
+        "name": "Collect Payment",
+        "description": "Sends payment details to the gateway and updates order status.",
+        "user_modified": false,
+        "mapped_relationship_id": null
+      }
+    ],
+    "data_stores": [
+      {
+        "id": "store_customers",
+        "name": "Customers",
+        "description": "Registered customer profiles.",
+        "mapped_erd_entity": "ent_customers",
+        "user_modified": false
+      },
+      {
+        "id": "store_products",
+        "name": "Products",
+        "description": "Sellable product catalog.",
+        "mapped_erd_entity": "ent_products",
+        "user_modified": false
+      },
+      {
+        "id": "store_orders",
+        "name": "Orders",
+        "description": "Orders and line items.",
+        "mapped_erd_entity": "ent_orders",
+        "user_modified": false
+      }
+    ],
+    "data_flows": [
+      {
+        "id": "flow_customer_order",
+        "from": "ext_customer",
+        "to": "proc_place_order",
+        "data_name": "Cart and customer details",
+        "mapped_relationship_id": "rel_orders_customers",
+        "mapped_erd_entities": [
+          "ent_customers",
+          "ent_orders",
+          "ent_order_items"
+        ],
+        "mapped_erd_attributes": [
+          "attr_customers_email",
+          "attr_orders_customer_id",
+          "attr_order_items_product_id",
+          "attr_order_items_quantity"
+        ]
+      },
+      {
+        "id": "flow_catalog",
+        "from": "store_products",
+        "to": "proc_place_order",
+        "data_name": "Product catalog",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [
+          "ent_products"
+        ],
+        "mapped_erd_attributes": [
+          "attr_products_sku",
+          "attr_products_name",
+          "attr_products_price"
+        ]
+      },
+      {
+        "id": "flow_payment_request",
+        "from": "proc_collect_payment",
+        "to": "ext_payment_gateway",
+        "data_name": "Payment authorization request",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [
+          "ent_orders"
+        ],
+        "mapped_erd_attributes": [
+          "attr_orders_id"
+        ]
+      },
+      {
+        "id": "flow_order_records",
+        "from": "proc_place_order",
+        "to": "store_orders",
+        "data_name": "Order and line items",
+        "mapped_relationship_id": "rel_order_items_orders",
+        "mapped_erd_entities": [
+          "ent_orders",
+          "ent_order_items"
+        ],
+        "mapped_erd_attributes": [
+          "attr_orders_id",
+          "attr_order_items_order_id",
+          "attr_order_items_product_id"
+        ]
+      }
+    ]
+  },
+  "layout": {
+    "erd": {
+      "nodes": [
+        {
+          "id": "ent_customers",
+          "x": 80,
+          "y": 70,
+          "width": 280,
+          "height": 180
+        },
+        {
+          "id": "ent_orders",
+          "x": 450,
+          "y": 80,
+          "width": 280,
+          "height": 190
+        },
+        {
+          "id": "ent_products",
+          "x": 80,
+          "y": 370,
+          "width": 280,
+          "height": 180
+        },
+        {
+          "id": "ent_order_items",
+          "x": 450,
+          "y": 350,
+          "width": 300,
+          "height": 220
+        }
+      ],
+      "edges": [
+        {
+          "id": "rel_orders_customers",
+          "route": "orthogonal"
+        },
+        {
+          "id": "rel_order_items_orders",
+          "route": "orthogonal"
+        },
+        {
+          "id": "rel_order_items_products",
+          "route": "orthogonal"
+        }
+      ]
+    },
+    "dfd": {
+      "nodes": [
+        {
+          "id": "ext_customer",
+          "x": 80,
+          "y": 80,
+          "width": 180,
+          "height": 80
+        },
+        {
+          "id": "proc_place_order",
+          "x": 360,
+          "y": 120,
+          "width": 200,
+          "height": 100
+        },
+        {
+          "id": "proc_collect_payment",
+          "x": 650,
+          "y": 120,
+          "width": 200,
+          "height": 100
+        },
+        {
+          "id": "ext_payment_gateway",
+          "x": 940,
+          "y": 120,
+          "width": 220,
+          "height": 80
+        },
+        {
+          "id": "store_products",
+          "x": 360,
+          "y": 330,
+          "width": 220,
+          "height": 80
+        },
+        {
+          "id": "store_orders",
+          "x": 650,
+          "y": 330,
+          "width": 220,
+          "height": 80
+        }
+      ],
+      "edges": [
+        {
+          "id": "flow_customer_order",
+          "route": "orthogonal"
+        },
+        {
+          "id": "flow_catalog",
+          "route": "orthogonal"
+        },
+        {
+          "id": "flow_payment_request",
+          "route": "orthogonal"
+        },
+        {
+          "id": "flow_order_records",
+          "route": "orthogonal"
+        }
+      ]
+    },
+    "dfd_level_1": {}
+  },
+  "styles": {
+    "theme": "clean_default",
+    "erd": {
+      "entity": {
+        "shape": "rectangle",
+        "header_fill": "#f5f5f5",
+        "border_radius": 4,
+        "border_color": "#d1d5db",
+        "font_size": 13
+      },
+      "primary_key_attribute": {
+        "prefix": "PK",
+        "font_weight": "bold"
+      },
+      "foreign_key_attribute": {
+        "prefix": "FK"
+      },
+      "unique_attribute": {
+        "prefix": "UQ"
+      },
+      "audit_attribute": {
+        "prefix": ""
+      },
+      "relationship": {
+        "notation": "crows_foot",
+        "line_style": "solid",
+        "line_color": "#6b7280"
+      }
+    },
+    "dfd": {
+      "external_entity": {
+        "shape": "rectangle"
+      },
+      "process": {
+        "shape": "rounded_rectangle"
+      },
+      "data_store": {
+        "shape": "open_ended_rectangle"
+      },
+      "data_flow": {
+        "shape": "arrow",
+        "label_position": "middle"
+      }
+    }
+  },
+  "postgres": {
+    "dialect": "postgresql",
+    "extensions": [
+      "pgcrypto"
+    ],
+    "schema_name": "public",
+    "default_primary_key": {
+      "type": "uuid",
+      "default": "gen_random_uuid()"
+    },
+    "add_audit_timestamps": true
+  },
+  "review": {
+    "proposals": [
+      {
+        "id": "prop_example_lookup",
+        "proposal_type": "enum_to_lookup",
+        "title": "Turn order status into a lookup table?",
+        "question": "Should order status values become a separate lookup table instead of a text check constraint?",
+        "options": [
+          "Keep text check constraint",
+          "Create order_statuses lookup table",
+          "Decide later"
+        ],
+        "context": {
+          "entity_id": "ent_orders",
+          "attribute_id": "attr_orders_status"
+        },
+        "source_evidence": [
+          "status in ('pending', 'paid', 'shipped', 'cancelled')"
+        ],
+        "confidence": 0.82,
+        "status": "pending"
+      }
+    ],
+    "warnings": []
+  }
+}

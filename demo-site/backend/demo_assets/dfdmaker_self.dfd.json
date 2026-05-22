@@ -1,0 +1,2031 @@
+{
+  "documentType": "dashbot.dfdmaker",
+  "schemaVersion": "0.1",
+  "pen_version": "0.1",
+  "project": {
+    "id": "proj_dfdmaker_self",
+    "name": "DFDMaker \u2014 Repo Analysis (this repo)",
+    "revision": 0
+  },
+  "sources": [
+    {
+      "id": "src_dfdmaker_repo",
+      "type": "text",
+      "name": "DFDMaker repository (self-portrait)",
+      "raw_path": null
+    }
+  ],
+  "erd": {
+    "notation": "crows_foot",
+    "model_level": "physical",
+    "entities": [
+      {
+        "id": "ent_project",
+        "kind": "strong_entity",
+        "name": "project",
+        "display_name": "Project",
+        "attributes": [
+          {
+            "id": "attr_project_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_project_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_project_revision",
+            "name": "revision",
+            "display_name": "Revision",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [
+          {
+            "source_id": "src_dfdmaker_repo",
+            "source_columns": []
+          }
+        ],
+        "proposal_reason": null,
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_source",
+        "kind": "strong_entity",
+        "name": "source",
+        "display_name": "Source",
+        "attributes": [
+          {
+            "id": "attr_source_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_source_project_id",
+            "name": "project_id",
+            "display_name": "Project Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_source_type",
+            "name": "type",
+            "display_name": "Type",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": "type in ('xlsx','csv','text')",
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_source_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_source_raw_path",
+            "name": "raw_path",
+            "display_name": "Raw Path",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [
+          {
+            "source_id": "src_dfdmaker_repo",
+            "source_columns": []
+          }
+        ],
+        "proposal_reason": null,
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_entity",
+        "kind": "strong_entity",
+        "name": "entity",
+        "display_name": "Entity",
+        "attributes": [
+          {
+            "id": "attr_entity_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_entity_project_id",
+            "name": "project_id",
+            "display_name": "Project Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_entity_kind",
+            "name": "kind",
+            "display_name": "Kind",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": "'strong_entity'",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_entity_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_entity_display_name",
+            "name": "display_name",
+            "display_name": "Display Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_entity_confidence",
+            "name": "confidence",
+            "display_name": "Confidence",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": "1.0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_entity_review_status",
+            "name": "review_status",
+            "display_name": "Review Status",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": "'needs_review'",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [
+          {
+            "source_id": "src_dfdmaker_repo",
+            "source_columns": []
+          }
+        ],
+        "proposal_reason": null,
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_attribute",
+        "kind": "strong_entity",
+        "name": "attribute",
+        "display_name": "Attribute",
+        "attributes": [
+          {
+            "id": "attr_attribute_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_attribute_entity_id",
+            "name": "entity_id",
+            "display_name": "Entity Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_attribute_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_attribute_pg_type",
+            "name": "pg_type",
+            "display_name": "Pg Type",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_attribute_key_role",
+            "name": "key_role",
+            "display_name": "Key Role",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": "'none'",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_attribute_nullable",
+            "name": "nullable",
+            "display_name": "Nullable",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "true",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_attribute_default",
+            "name": "default",
+            "display_name": "Default",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [
+          {
+            "source_id": "src_dfdmaker_repo",
+            "source_columns": []
+          }
+        ],
+        "proposal_reason": null,
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_relationship",
+        "kind": "strong_entity",
+        "name": "relationship",
+        "display_name": "Relationship",
+        "attributes": [
+          {
+            "id": "attr_relationship_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_relationship_project_id",
+            "name": "project_id",
+            "display_name": "Project Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_relationship_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_relationship_from_entity_id",
+            "name": "from_entity_id",
+            "display_name": "From Entity Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_relationship_to_entity_id",
+            "name": "to_entity_id",
+            "display_name": "To Entity Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_relationship_review_status",
+            "name": "review_status",
+            "display_name": "Review Status",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": "'needs_review'",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [
+          {
+            "source_id": "src_dfdmaker_repo",
+            "source_columns": []
+          }
+        ],
+        "proposal_reason": null,
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_process",
+        "kind": "strong_entity",
+        "name": "process",
+        "display_name": "Process",
+        "attributes": [
+          {
+            "id": "attr_process_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_process_project_id",
+            "name": "project_id",
+            "display_name": "Project Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_process_number",
+            "name": "number",
+            "display_name": "Number",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_process_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_process_user_modified",
+            "name": "user_modified",
+            "display_name": "User Modified",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_process_mapped_relationship_id",
+            "name": "mapped_relationship_id",
+            "display_name": "Mapped Relationship Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [
+          {
+            "source_id": "src_dfdmaker_repo",
+            "source_columns": []
+          }
+        ],
+        "proposal_reason": null,
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_data_store",
+        "kind": "strong_entity",
+        "name": "data_store",
+        "display_name": "Data Store",
+        "attributes": [
+          {
+            "id": "attr_data_store_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_data_store_project_id",
+            "name": "project_id",
+            "display_name": "Project Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_data_store_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_data_store_user_modified",
+            "name": "user_modified",
+            "display_name": "User Modified",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_data_store_mapped_erd_entity",
+            "name": "mapped_erd_entity",
+            "display_name": "Mapped Erd Entity",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [
+          {
+            "source_id": "src_dfdmaker_repo",
+            "source_columns": []
+          }
+        ],
+        "proposal_reason": null,
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_data_flow",
+        "kind": "strong_entity",
+        "name": "data_flow",
+        "display_name": "Data Flow",
+        "attributes": [
+          {
+            "id": "attr_data_flow_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_data_flow_project_id",
+            "name": "project_id",
+            "display_name": "Project Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_data_flow_from_node",
+            "name": "from_node",
+            "display_name": "From Node",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_data_flow_to_node",
+            "name": "to_node",
+            "display_name": "To Node",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_data_flow_data_name",
+            "name": "data_name",
+            "display_name": "Data Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_data_flow_mapped_relationship_id",
+            "name": "mapped_relationship_id",
+            "display_name": "Mapped Relationship Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [
+          {
+            "source_id": "src_dfdmaker_repo",
+            "source_columns": []
+          }
+        ],
+        "proposal_reason": null,
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_external_entity",
+        "kind": "strong_entity",
+        "name": "external_entity",
+        "display_name": "External Entity",
+        "attributes": [
+          {
+            "id": "attr_external_entity_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_external_entity_project_id",
+            "name": "project_id",
+            "display_name": "Project Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_external_entity_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_external_entity_description",
+            "name": "description",
+            "display_name": "Description",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [
+          {
+            "source_id": "src_dfdmaker_repo",
+            "source_columns": []
+          }
+        ],
+        "proposal_reason": null,
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_proposal",
+        "kind": "strong_entity",
+        "name": "proposal",
+        "display_name": "Proposal",
+        "attributes": [
+          {
+            "id": "attr_proposal_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_proposal_project_id",
+            "name": "project_id",
+            "display_name": "Project Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_proposal_proposal_type",
+            "name": "proposal_type",
+            "display_name": "Proposal Type",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_proposal_title",
+            "name": "title",
+            "display_name": "Title",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_proposal_status",
+            "name": "status",
+            "display_name": "Status",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": "'pending'",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_proposal_confidence",
+            "name": "confidence",
+            "display_name": "Confidence",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": "1.0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [
+          {
+            "source_id": "src_dfdmaker_repo",
+            "source_columns": []
+          }
+        ],
+        "proposal_reason": null,
+        "confidence": 1.0,
+        "review_status": "accepted"
+      }
+    ],
+    "relationships": [
+      {
+        "id": "rel_source_project",
+        "name": "owned by",
+        "from": {
+          "entity_id": "ent_source",
+          "attribute_id": "attr_source_project_id"
+        },
+        "to": {
+          "entity_id": "ent_project",
+          "attribute_id": "attr_project_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_source_project",
+          "on_delete": "cascade",
+          "on_update": "cascade"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "sources[].id under PenFile.sources"
+        ],
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_entity_project",
+        "name": "owned by",
+        "from": {
+          "entity_id": "ent_entity",
+          "attribute_id": "attr_entity_project_id"
+        },
+        "to": {
+          "entity_id": "ent_project",
+          "attribute_id": "attr_project_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_entity_project",
+          "on_delete": "cascade",
+          "on_update": "cascade"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "entities[] under PenFile.erd.entities"
+        ],
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_attribute_entity",
+        "name": "belongs to",
+        "from": {
+          "entity_id": "ent_attribute",
+          "attribute_id": "attr_attribute_entity_id"
+        },
+        "to": {
+          "entity_id": "ent_entity",
+          "attribute_id": "attr_entity_id"
+        },
+        "cardinality": {
+          "from_min": 1,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_attribute_entity",
+          "on_delete": "cascade",
+          "on_update": "cascade"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "Entity.attributes[] composition"
+        ],
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_relationship_project",
+        "name": "owned by",
+        "from": {
+          "entity_id": "ent_relationship",
+          "attribute_id": "attr_relationship_project_id"
+        },
+        "to": {
+          "entity_id": "ent_project",
+          "attribute_id": "attr_project_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_relationship_project",
+          "on_delete": "cascade",
+          "on_update": "cascade"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_relationship_from",
+        "name": "starts at",
+        "from": {
+          "entity_id": "ent_relationship",
+          "attribute_id": "attr_relationship_from_entity_id"
+        },
+        "to": {
+          "entity_id": "ent_entity",
+          "attribute_id": "attr_entity_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_relationship_from",
+          "on_delete": "restrict",
+          "on_update": "cascade"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "Relationship.from.entity_id"
+        ],
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_relationship_to",
+        "name": "ends at",
+        "from": {
+          "entity_id": "ent_relationship",
+          "attribute_id": "attr_relationship_to_entity_id"
+        },
+        "to": {
+          "entity_id": "ent_entity",
+          "attribute_id": "attr_entity_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_relationship_to",
+          "on_delete": "restrict",
+          "on_update": "cascade"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "Relationship.to.entity_id"
+        ],
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_process_project",
+        "name": "owned by",
+        "from": {
+          "entity_id": "ent_process",
+          "attribute_id": "attr_process_project_id"
+        },
+        "to": {
+          "entity_id": "ent_project",
+          "attribute_id": "attr_project_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_process_project",
+          "on_delete": "cascade",
+          "on_update": "cascade"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_process_relationship",
+        "name": "auto-generated from",
+        "from": {
+          "entity_id": "ent_process",
+          "attribute_id": "attr_process_mapped_relationship_id"
+        },
+        "to": {
+          "entity_id": "ent_relationship",
+          "attribute_id": "attr_relationship_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_process_relationship",
+          "on_delete": "set_null",
+          "on_update": "cascade"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "dfd_builder._generated_process_id(rel_id)"
+        ],
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_store_project",
+        "name": "owned by",
+        "from": {
+          "entity_id": "ent_data_store",
+          "attribute_id": "attr_data_store_project_id"
+        },
+        "to": {
+          "entity_id": "ent_project",
+          "attribute_id": "attr_project_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_store_project",
+          "on_delete": "cascade",
+          "on_update": "cascade"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_store_entity",
+        "name": "auto-generated from",
+        "from": {
+          "entity_id": "ent_data_store",
+          "attribute_id": "attr_data_store_mapped_erd_entity"
+        },
+        "to": {
+          "entity_id": "ent_entity",
+          "attribute_id": "attr_entity_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_store_entity",
+          "on_delete": "set_null",
+          "on_update": "cascade"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "dfd_builder._generated_store_id(entity_id)"
+        ],
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_flow_project",
+        "name": "owned by",
+        "from": {
+          "entity_id": "ent_data_flow",
+          "attribute_id": "attr_data_flow_project_id"
+        },
+        "to": {
+          "entity_id": "ent_project",
+          "attribute_id": "attr_project_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_flow_project",
+          "on_delete": "cascade",
+          "on_update": "cascade"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_flow_relationship",
+        "name": "auto-generated from",
+        "from": {
+          "entity_id": "ent_data_flow",
+          "attribute_id": "attr_data_flow_mapped_relationship_id"
+        },
+        "to": {
+          "entity_id": "ent_relationship",
+          "attribute_id": "attr_relationship_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_flow_relationship",
+          "on_delete": "set_null",
+          "on_update": "cascade"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "dfd_builder._generated_flow_id(rel_id, direction)"
+        ],
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_external_project",
+        "name": "owned by",
+        "from": {
+          "entity_id": "ent_external_entity",
+          "attribute_id": "attr_external_entity_project_id"
+        },
+        "to": {
+          "entity_id": "ent_project",
+          "attribute_id": "attr_project_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_external_project",
+          "on_delete": "cascade",
+          "on_update": "cascade"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_proposal_project",
+        "name": "owned by",
+        "from": {
+          "entity_id": "ent_proposal",
+          "attribute_id": "attr_proposal_project_id"
+        },
+        "to": {
+          "entity_id": "ent_project",
+          "attribute_id": "attr_project_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_proposal_project",
+          "on_delete": "cascade",
+          "on_update": "cascade"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1.0,
+        "review_status": "accepted"
+      }
+    ]
+  },
+  "dfd": {
+    "level": 0,
+    "notation": "yourdon_coad",
+    "system_boundary": {
+      "id": "boundary_dfdmaker",
+      "name": "DFDMaker Backend + Frontend"
+    },
+    "external_entities": [
+      {
+        "id": "ext_user",
+        "name": "User",
+        "description": "Person uploading spreadsheets, editing the canvas, and exporting schema.",
+        "source": "manual"
+      },
+      {
+        "id": "ext_filesystem",
+        "name": "Filesystem",
+        "description": "Local disk for .dfd.json project files and uploaded spreadsheets.",
+        "source": "manual"
+      },
+      {
+        "id": "ext_llm",
+        "name": "LLM Service",
+        "description": "Claude/GPT \u2014 assists with proposal generation (planned, not wired).",
+        "source": "manual"
+      }
+    ],
+    "processes": [
+      {
+        "id": "proc_parse_source",
+        "number": "1.0",
+        "name": "Parse Source File",
+        "description": "Excel/CSV parsers in backend/parsers/ extract column types into SourceTableModel.",
+        "user_modified": false,
+        "mapped_relationship_id": null
+      },
+      {
+        "id": "proc_build_pen",
+        "number": "2.0",
+        "name": "Build PenFile",
+        "description": "pen_builder.build_pen_file() creates initial Entities + Attributes from sources.",
+        "user_modified": false,
+        "mapped_relationship_id": null
+      },
+      {
+        "id": "proc_generate_proposals",
+        "number": "3.0",
+        "name": "Generate Proposals",
+        "description": "proposals.py detects M2M splits, lookup tables, cross-sheet FKs.",
+        "user_modified": false,
+        "mapped_relationship_id": null
+      },
+      {
+        "id": "proc_apply_ops",
+        "number": "4.0",
+        "name": "Apply Typed Operations",
+        "description": "ops_service.apply_op() routes typed commands to ERD/DFD/Layout handlers.",
+        "user_modified": false,
+        "mapped_relationship_id": null
+      },
+      {
+        "id": "proc_propagate_dfd",
+        "number": "5.0",
+        "name": "Propagate ERD \u2192 DFD",
+        "description": "sync_engine.propagate_erd_to_dfd() rebuilds DFD via dfd_builder.",
+        "user_modified": false,
+        "mapped_relationship_id": null
+      },
+      {
+        "id": "proc_validate_schema",
+        "number": "6.0",
+        "name": "Validate Schema",
+        "description": "sync_engine.validate() checks for blocking conflicts before commit.",
+        "user_modified": false,
+        "mapped_relationship_id": null
+      },
+      {
+        "id": "proc_export",
+        "number": "7.0",
+        "name": "Export Artifacts",
+        "description": "generators/sql.py, dbml.py, mermaid.py emit downloadable schema files.",
+        "user_modified": false,
+        "mapped_relationship_id": null
+      }
+    ],
+    "data_stores": [
+      {
+        "id": "store_projects",
+        "name": "In-Memory Projects",
+        "description": "_projects: dict[project_id, PenFile] in main.py",
+        "mapped_erd_entity": null,
+        "user_modified": false
+      },
+      {
+        "id": "store_project_files",
+        "name": "Saved .dfd.json Files",
+        "description": "ProjectService.save() / .open() on disk",
+        "mapped_erd_entity": null,
+        "user_modified": false
+      },
+      {
+        "id": "store_uploads",
+        "name": "Uploaded Spreadsheets",
+        "description": "Tempfiles created by _save_upload()",
+        "mapped_erd_entity": null,
+        "user_modified": false
+      }
+    ],
+    "data_flows": [
+      {
+        "id": "flow_user_upload",
+        "from": "ext_user",
+        "to": "proc_parse_source",
+        "data_name": "Spreadsheet upload (.xlsx/.csv)",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_upload_to_disk",
+        "from": "proc_parse_source",
+        "to": "store_uploads",
+        "data_name": "Tempfile bytes",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_parsed_tables",
+        "from": "proc_parse_source",
+        "to": "proc_build_pen",
+        "data_name": "SourceTableModel[]",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_initial_pen",
+        "from": "proc_build_pen",
+        "to": "store_projects",
+        "data_name": "Initial PenFile",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_proposal_request",
+        "from": "proc_build_pen",
+        "to": "proc_generate_proposals",
+        "data_name": "ERD entities + relationships",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_proposal_results",
+        "from": "proc_generate_proposals",
+        "to": "store_projects",
+        "data_name": "Pending proposals",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_llm_assist",
+        "from": "proc_generate_proposals",
+        "to": "ext_llm",
+        "data_name": "Future: prompt + ERD context",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_llm_response",
+        "from": "ext_llm",
+        "to": "proc_generate_proposals",
+        "data_name": "Future: structured proposal output",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_user_op",
+        "from": "ext_user",
+        "to": "proc_apply_ops",
+        "data_name": "Typed op (entity.add, dfd.flow.reconnect, layout.move_node, \u2026)",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_op_to_propagate",
+        "from": "proc_apply_ops",
+        "to": "proc_propagate_dfd",
+        "data_name": "Mutated PenFile (ERD ops only)",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_propagated_pen",
+        "from": "proc_propagate_dfd",
+        "to": "proc_validate_schema",
+        "data_name": "Rebuilt DFD",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_validated_pen",
+        "from": "proc_validate_schema",
+        "to": "store_projects",
+        "data_name": "Committed PenFile (revision++)",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_op_response",
+        "from": "proc_apply_ops",
+        "to": "ext_user",
+        "data_name": "Updated PenFile + revision",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_save_to_disk",
+        "from": "store_projects",
+        "to": "store_project_files",
+        "data_name": ".dfd.json bytes",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_open_from_disk",
+        "from": "store_project_files",
+        "to": "store_projects",
+        "data_name": "Loaded PenFile",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_export_request",
+        "from": "ext_user",
+        "to": "proc_export",
+        "data_name": "Export request (sql/dbml/mermaid)",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_export_input",
+        "from": "store_projects",
+        "to": "proc_export",
+        "data_name": "Current PenFile",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_export_output",
+        "from": "proc_export",
+        "to": "ext_user",
+        "data_name": "schema.sql / project.dbml / erd.mmd",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      }
+    ]
+  },
+  "layout": {
+    "erd": {
+      "nodes": [
+        {
+          "id": "ent_project",
+          "x": 700,
+          "y": 60,
+          "width": 240,
+          "height": 160
+        },
+        {
+          "id": "ent_source",
+          "x": 80,
+          "y": 280,
+          "width": 260,
+          "height": 200
+        },
+        {
+          "id": "ent_entity",
+          "x": 380,
+          "y": 280,
+          "width": 260,
+          "height": 220
+        },
+        {
+          "id": "ent_relationship",
+          "x": 700,
+          "y": 280,
+          "width": 260,
+          "height": 220
+        },
+        {
+          "id": "ent_external_entity",
+          "x": 1020,
+          "y": 280,
+          "width": 260,
+          "height": 180
+        },
+        {
+          "id": "ent_proposal",
+          "x": 1340,
+          "y": 280,
+          "width": 260,
+          "height": 200
+        },
+        {
+          "id": "ent_attribute",
+          "x": 380,
+          "y": 560,
+          "width": 260,
+          "height": 220
+        },
+        {
+          "id": "ent_process",
+          "x": 680,
+          "y": 560,
+          "width": 260,
+          "height": 220
+        },
+        {
+          "id": "ent_data_store",
+          "x": 980,
+          "y": 560,
+          "width": 260,
+          "height": 200
+        },
+        {
+          "id": "ent_data_flow",
+          "x": 1280,
+          "y": 560,
+          "width": 260,
+          "height": 220
+        }
+      ],
+      "edges": [
+        {
+          "id": "rel_source_project",
+          "route": "orthogonal"
+        },
+        {
+          "id": "rel_entity_project",
+          "route": "orthogonal"
+        },
+        {
+          "id": "rel_attribute_entity",
+          "route": "orthogonal"
+        },
+        {
+          "id": "rel_relationship_project",
+          "route": "orthogonal"
+        },
+        {
+          "id": "rel_relationship_from",
+          "route": "orthogonal"
+        },
+        {
+          "id": "rel_relationship_to",
+          "route": "orthogonal"
+        },
+        {
+          "id": "rel_process_project",
+          "route": "orthogonal"
+        },
+        {
+          "id": "rel_process_relationship",
+          "route": "orthogonal"
+        },
+        {
+          "id": "rel_store_project",
+          "route": "orthogonal"
+        },
+        {
+          "id": "rel_store_entity",
+          "route": "orthogonal"
+        },
+        {
+          "id": "rel_flow_project",
+          "route": "orthogonal"
+        },
+        {
+          "id": "rel_flow_relationship",
+          "route": "orthogonal"
+        },
+        {
+          "id": "rel_external_project",
+          "route": "orthogonal"
+        },
+        {
+          "id": "rel_proposal_project",
+          "route": "orthogonal"
+        }
+      ]
+    },
+    "dfd": {
+      "nodes": [
+        {
+          "id": "ext_user",
+          "x": 60,
+          "y": 320,
+          "width": 180,
+          "height": 80
+        },
+        {
+          "id": "proc_parse_source",
+          "x": 320,
+          "y": 60,
+          "width": 220,
+          "height": 100
+        },
+        {
+          "id": "proc_build_pen",
+          "x": 620,
+          "y": 60,
+          "width": 220,
+          "height": 100
+        },
+        {
+          "id": "proc_generate_proposals",
+          "x": 920,
+          "y": 60,
+          "width": 240,
+          "height": 100
+        },
+        {
+          "id": "ext_llm",
+          "x": 1240,
+          "y": 60,
+          "width": 200,
+          "height": 100
+        },
+        {
+          "id": "proc_apply_ops",
+          "x": 320,
+          "y": 280,
+          "width": 220,
+          "height": 100
+        },
+        {
+          "id": "proc_propagate_dfd",
+          "x": 620,
+          "y": 280,
+          "width": 220,
+          "height": 100
+        },
+        {
+          "id": "proc_validate_schema",
+          "x": 920,
+          "y": 280,
+          "width": 240,
+          "height": 100
+        },
+        {
+          "id": "store_projects",
+          "x": 620,
+          "y": 460,
+          "width": 240,
+          "height": 100
+        },
+        {
+          "id": "store_uploads",
+          "x": 320,
+          "y": 460,
+          "width": 220,
+          "height": 100
+        },
+        {
+          "id": "store_project_files",
+          "x": 920,
+          "y": 600,
+          "width": 240,
+          "height": 100
+        },
+        {
+          "id": "proc_export",
+          "x": 320,
+          "y": 600,
+          "width": 220,
+          "height": 100
+        }
+      ],
+      "edges": [
+        {
+          "id": "flow_user_upload",
+          "route": "orthogonal"
+        },
+        {
+          "id": "flow_upload_to_disk",
+          "route": "orthogonal"
+        },
+        {
+          "id": "flow_parsed_tables",
+          "route": "orthogonal"
+        },
+        {
+          "id": "flow_initial_pen",
+          "route": "orthogonal"
+        },
+        {
+          "id": "flow_proposal_request",
+          "route": "orthogonal"
+        },
+        {
+          "id": "flow_proposal_results",
+          "route": "orthogonal"
+        },
+        {
+          "id": "flow_llm_assist",
+          "route": "orthogonal"
+        },
+        {
+          "id": "flow_llm_response",
+          "route": "orthogonal"
+        },
+        {
+          "id": "flow_user_op",
+          "route": "orthogonal"
+        },
+        {
+          "id": "flow_op_to_propagate",
+          "route": "orthogonal"
+        },
+        {
+          "id": "flow_propagated_pen",
+          "route": "orthogonal"
+        },
+        {
+          "id": "flow_validated_pen",
+          "route": "orthogonal"
+        },
+        {
+          "id": "flow_op_response",
+          "route": "orthogonal"
+        },
+        {
+          "id": "flow_save_to_disk",
+          "route": "orthogonal"
+        },
+        {
+          "id": "flow_open_from_disk",
+          "route": "orthogonal"
+        },
+        {
+          "id": "flow_export_request",
+          "route": "orthogonal"
+        },
+        {
+          "id": "flow_export_input",
+          "route": "orthogonal"
+        },
+        {
+          "id": "flow_export_output",
+          "route": "orthogonal"
+        }
+      ]
+    },
+    "dfd_level_1": {}
+  },
+  "styles": {
+    "theme": "clean_default",
+    "erd": {
+      "entity": {
+        "shape": "rectangle",
+        "header_fill": "#f5f5f5",
+        "border_radius": 4,
+        "border_color": "#d1d5db",
+        "font_size": 13
+      },
+      "primary_key_attribute": {
+        "prefix": "PK",
+        "font_weight": "bold"
+      },
+      "foreign_key_attribute": {
+        "prefix": "FK"
+      },
+      "unique_attribute": {
+        "prefix": "UQ"
+      },
+      "audit_attribute": {
+        "prefix": ""
+      },
+      "relationship": {
+        "notation": "crows_foot",
+        "line_style": "solid",
+        "line_color": "#6b7280"
+      }
+    },
+    "dfd": {
+      "external_entity": {
+        "shape": "rectangle"
+      },
+      "process": {
+        "shape": "rounded_rectangle"
+      },
+      "data_store": {
+        "shape": "open_ended_rectangle"
+      },
+      "data_flow": {
+        "shape": "arrow",
+        "label_position": "middle"
+      }
+    }
+  },
+  "postgres": {
+    "dialect": "postgresql",
+    "extensions": [
+      "pgcrypto"
+    ],
+    "schema_name": "public",
+    "default_primary_key": {
+      "type": "uuid",
+      "default": "gen_random_uuid()"
+    },
+    "add_audit_timestamps": true
+  },
+  "review": {
+    "proposals": [
+      {
+        "id": "prop_dfd_lvl1",
+        "proposal_type": "dfd_decomposition",
+        "title": "Decompose 'Apply Typed Operations' into a Level 1 DFD?",
+        "question": "Process 4.0 fans out to ERD ops, DFD ops, and Layout ops. Decompose into a child diagram?",
+        "options": [
+          "Yes, decompose into Level 1 DFD",
+          "Keep as Level 0 process",
+          "Decide later"
+        ],
+        "context": {
+          "process_id": "proc_apply_ops"
+        },
+        "source_evidence": [
+          "backend/services/ops_service.py routes 11 op kinds"
+        ],
+        "confidence": 0.74,
+        "status": "pending"
+      },
+      {
+        "id": "prop_llm_wiring",
+        "proposal_type": "external_dependency",
+        "title": "Wire LLM service into proposal generation?",
+        "question": "Currently proposals are heuristic. Should an LLM be added as an external entity that augments process 3.0?",
+        "options": [
+          "Yes, add LLM dependency",
+          "Keep heuristic-only",
+          "Decide later"
+        ],
+        "context": {
+          "process_id": "proc_generate_proposals",
+          "external_entity_id": "ext_llm"
+        },
+        "source_evidence": [
+          "backend/llm/ exists but is empty"
+        ],
+        "confidence": 0.66,
+        "status": "pending"
+      }
+    ],
+    "warnings": []
+  }
+}

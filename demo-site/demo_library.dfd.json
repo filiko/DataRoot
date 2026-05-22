@@ -1,0 +1,572 @@
+{
+  "documentType": "dashbot.dfdmaker",
+  "schemaVersion": "0.1",
+  "pen_version": "0.1",
+  "project": {
+    "id": "proj_lib00001",
+    "name": "Library Management System",
+    "revision": 1
+  },
+  "sources": [],
+  "erd": {
+    "notation": "crows_foot",
+    "model_level": "physical",
+    "entities": [
+      {
+        "id": "ent_member001",
+        "kind": "strong_entity",
+        "name": "members",
+        "display_name": "Members",
+        "attributes": [
+          {
+            "id": "attr_mem_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_mem_name",
+            "name": "full_name",
+            "display_name": "Full Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_mem_email",
+            "name": "email",
+            "display_name": "Email",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_mem_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_book001",
+        "kind": "strong_entity",
+        "name": "books",
+        "display_name": "Books",
+        "attributes": [
+          {
+            "id": "attr_book_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_book_title",
+            "name": "title",
+            "display_name": "Title",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_book_isbn",
+            "name": "isbn",
+            "display_name": "ISBN",
+            "pg_type": "text",
+            "key_role": "business_key",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_book_available",
+            "name": "available",
+            "display_name": "Available",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "true",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_loan001",
+        "kind": "strong_entity",
+        "name": "loans",
+        "display_name": "Loans",
+        "attributes": [
+          {
+            "id": "attr_loan_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_loan_member_id",
+            "name": "member_id",
+            "display_name": "Member ID",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_loan_book_id",
+            "name": "book_id",
+            "display_name": "Book ID",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_loan_due",
+            "name": "due_date",
+            "display_name": "Due Date",
+            "pg_type": "date",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_loan_returned",
+            "name": "returned_at",
+            "display_name": "Returned At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_loan_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1.0,
+        "review_status": "accepted"
+      }
+    ],
+    "relationships": [
+      {
+        "id": "rel_loan_member",
+        "name": "borrows",
+        "from": {
+          "entity_id": "ent_loan001",
+          "attribute_id": "attr_loan_member_id"
+        },
+        "to": {
+          "entity_id": "ent_member001",
+          "attribute_id": "attr_mem_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_loans_member",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": "proc_checkout",
+        "evidence": [],
+        "confidence": 1.0,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_loan_book",
+        "name": "checks_out",
+        "from": {
+          "entity_id": "ent_loan001",
+          "attribute_id": "attr_loan_book_id"
+        },
+        "to": {
+          "entity_id": "ent_book001",
+          "attribute_id": "attr_book_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_loans_book",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": "proc_return",
+        "evidence": [],
+        "confidence": 1.0,
+        "review_status": "accepted"
+      }
+    ]
+  },
+  "dfd": {
+    "level": 0,
+    "notation": "yourdon_coad",
+    "system_boundary": {
+      "id": "boundary_lib01",
+      "name": "Library System"
+    },
+    "external_entities": [
+      {
+        "id": "ext_member",
+        "name": "Library Member",
+        "description": "Person who borrows books from the library",
+        "source": "manual"
+      },
+      {
+        "id": "ext_librarian",
+        "name": "Librarian",
+        "description": "Staff who manages books and loans",
+        "source": "manual"
+      }
+    ],
+    "processes": [
+      {
+        "id": "proc_checkout",
+        "number": "1.0",
+        "name": "Process Book Checkout",
+        "description": "Validates member, checks book availability, creates loan record",
+        "user_modified": true,
+        "mapped_relationship_id": "rel_loan_member",
+        "level_1_diagram": null
+      },
+      {
+        "id": "proc_return",
+        "number": "2.0",
+        "name": "Process Book Return",
+        "description": "Records return, updates book availability, flags overdue fines",
+        "user_modified": true,
+        "mapped_relationship_id": "rel_loan_book",
+        "level_1_diagram": null
+      },
+      {
+        "id": "proc_search",
+        "number": "3.0",
+        "name": "Search Catalogue",
+        "description": "Member searches books by title, author, or ISBN",
+        "user_modified": true,
+        "mapped_relationship_id": null,
+        "level_1_diagram": null
+      }
+    ],
+    "data_stores": [
+      {
+        "id": "store_members",
+        "name": "Members",
+        "description": "All registered library members",
+        "mapped_erd_entity": "ent_member001",
+        "user_modified": false
+      },
+      {
+        "id": "store_books",
+        "name": "Books",
+        "description": "Book catalogue with availability status",
+        "mapped_erd_entity": "ent_book001",
+        "user_modified": false
+      },
+      {
+        "id": "store_loans",
+        "name": "Loans",
+        "description": "Active and historical loan records",
+        "mapped_erd_entity": "ent_loan001",
+        "user_modified": false
+      }
+    ],
+    "data_flows": [
+      {
+        "id": "flow_member_checkout",
+        "from": "ext_member",
+        "to": "proc_checkout",
+        "data_name": "Checkout Request",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_checkout_read_member",
+        "from": "store_members",
+        "to": "proc_checkout",
+        "data_name": "Member Record",
+        "mapped_relationship_id": "rel_loan_member",
+        "mapped_erd_entities": ["ent_member001"],
+        "mapped_erd_attributes": ["attr_mem_id", "attr_mem_email"]
+      },
+      {
+        "id": "flow_checkout_read_book",
+        "from": "store_books",
+        "to": "proc_checkout",
+        "data_name": "Book Availability",
+        "mapped_relationship_id": "rel_loan_book",
+        "mapped_erd_entities": ["ent_book001"],
+        "mapped_erd_attributes": ["attr_book_id", "attr_book_available"]
+      },
+      {
+        "id": "flow_checkout_write_loan",
+        "from": "proc_checkout",
+        "to": "store_loans",
+        "data_name": "New Loan Record",
+        "mapped_relationship_id": "rel_loan_member",
+        "mapped_erd_entities": ["ent_loan001"],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_checkout_confirm",
+        "from": "proc_checkout",
+        "to": "ext_member",
+        "data_name": "Loan Confirmation",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_member_return",
+        "from": "ext_member",
+        "to": "proc_return",
+        "data_name": "Return Request",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_return_read_loan",
+        "from": "store_loans",
+        "to": "proc_return",
+        "data_name": "Loan Record",
+        "mapped_relationship_id": "rel_loan_book",
+        "mapped_erd_entities": ["ent_loan001"],
+        "mapped_erd_attributes": ["attr_loan_due", "attr_loan_returned"]
+      },
+      {
+        "id": "flow_return_update_book",
+        "from": "proc_return",
+        "to": "store_books",
+        "data_name": "Update Availability",
+        "mapped_relationship_id": "rel_loan_book",
+        "mapped_erd_entities": ["ent_book001"],
+        "mapped_erd_attributes": ["attr_book_available"]
+      },
+      {
+        "id": "flow_return_confirm",
+        "from": "proc_return",
+        "to": "ext_member",
+        "data_name": "Return Receipt",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_member_search",
+        "from": "ext_member",
+        "to": "proc_search",
+        "data_name": "Search Query",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_search_books",
+        "from": "store_books",
+        "to": "proc_search",
+        "data_name": "Book Catalogue",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": ["ent_book001"],
+        "mapped_erd_attributes": ["attr_book_title", "attr_book_isbn", "attr_book_available"]
+      },
+      {
+        "id": "flow_search_results",
+        "from": "proc_search",
+        "to": "ext_member",
+        "data_name": "Search Results",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_librarian_add",
+        "from": "ext_librarian",
+        "to": "proc_search",
+        "data_name": "Add / Remove Book",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_search_update_books",
+        "from": "proc_search",
+        "to": "store_books",
+        "data_name": "Catalogue Update",
+        "mapped_relationship_id": null,
+        "mapped_erd_entities": ["ent_book001"],
+        "mapped_erd_attributes": []
+      }
+    ]
+  },
+  "layout": {
+    "erd": {
+      "nodes": [
+        { "id": "ent_member001", "x": 40.0,  "y": 40.0,  "width": 240.0, "height": 180.0 },
+        { "id": "ent_book001",   "x": 40.0,  "y": 260.0, "width": 240.0, "height": 180.0 },
+        { "id": "ent_loan001",   "x": 360.0, "y": 150.0, "width": 240.0, "height": 240.0 }
+      ],
+      "edges": []
+    },
+    "dfd": {
+      "nodes": [
+        { "id": "ext_member",    "x": 40.0,  "y": 200.0, "width": 160.0, "height": 60.0 },
+        { "id": "ext_librarian", "x": 40.0,  "y": 480.0, "width": 160.0, "height": 60.0 },
+        { "id": "proc_checkout", "x": 320.0, "y": 80.0,  "width": 200.0, "height": 80.0 },
+        { "id": "proc_return",   "x": 320.0, "y": 240.0, "width": 200.0, "height": 80.0 },
+        { "id": "proc_search",   "x": 320.0, "y": 400.0, "width": 200.0, "height": 80.0 },
+        { "id": "store_members", "x": 620.0, "y": 80.0,  "width": 200.0, "height": 60.0 },
+        { "id": "store_books",   "x": 620.0, "y": 240.0, "width": 200.0, "height": 60.0 },
+        { "id": "store_loans",   "x": 620.0, "y": 400.0, "width": 200.0, "height": 60.0 }
+      ],
+      "edges": []
+    },
+    "dfd_level_1": {}
+  },
+  "styles": {
+    "theme": "clean_default",
+    "erd": {
+      "entity": {
+        "shape": "rectangle",
+        "header_fill": "#f5f5f5",
+        "border_radius": 4,
+        "border_color": "#d1d5db",
+        "font_size": 13
+      },
+      "primary_key_attribute": { "prefix": "PK", "font_weight": "bold" },
+      "foreign_key_attribute":  { "prefix": "FK" },
+      "unique_attribute":       { "prefix": "UQ" },
+      "audit_attribute":        { "prefix": "" },
+      "relationship": {
+        "notation": "crows_foot",
+        "line_style": "solid",
+        "line_color": "#6b7280"
+      }
+    },
+    "dfd": {
+      "external_entity": { "shape": "rectangle" },
+      "process":         { "shape": "rounded_rectangle" },
+      "data_store":      { "shape": "open_ended_rectangle" },
+      "data_flow":       { "shape": "arrow", "label_position": "middle" }
+    }
+  },
+  "postgres": {
+    "dialect": "postgresql",
+    "extensions": ["pgcrypto"],
+    "schema_name": "public",
+    "default_primary_key": {
+      "type": "uuid",
+      "default": "gen_random_uuid()"
+    },
+    "add_audit_timestamps": true
+  },
+  "review": {
+    "proposals": [],
+    "warnings": []
+  }
+}

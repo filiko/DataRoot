@@ -1,0 +1,197 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #f9fafb;
+  color: #111827;
+}
+
+#root {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* React Flow overrides */
+.react-flow__node {
+  font-size: 13px;
+}
+
+/* App theme bridge
+   The editor uses Tailwind utilities heavily. These scoped overrides make the
+   selected theme visible across the app shell without affecting landing pages. */
+.dfdmaker-app {
+  --app-bg: #f9fafb;
+  --app-panel: #ffffff;
+  --app-panel-soft: #f3f4f6;
+  --app-border: #e5e7eb;
+  --app-text: #111827;
+  --app-muted: #6b7280;
+  --app-subtle: #9ca3af;
+  --app-accent: #4338ca;
+  --app-accent-soft: #eef2ff;
+  --app-warning-soft: #fffbeb;
+  --app-warning-border: #fde68a;
+  --app-warning-text: #92400e;
+  --app-danger-soft: #fef2f2;
+  --app-danger-text: #b91c1c;
+  background: var(--app-bg);
+  color: var(--app-text);
+}
+
+.dfdmaker-app[data-app-theme="minimal"] {
+  --app-bg: #ffffff;
+  --app-panel: #ffffff;
+  --app-panel-soft: #f4f4f5;
+  --app-border: #e4e4e7;
+  --app-text: #09090b;
+  --app-muted: #52525b;
+  --app-subtle: #71717a;
+  --app-accent: #18181b;
+  --app-accent-soft: #f4f4f5;
+}
+
+.dfdmaker-app[data-app-theme="chalkboard"] {
+  --app-bg: #253325;
+  --app-panel: #1d2b1d;
+  --app-panel-soft: #2a3d2a;
+  --app-border: rgba(239, 232, 213, 0.22);
+  --app-text: #efe8d5;
+  --app-muted: rgba(239, 232, 213, 0.68);
+  --app-subtle: rgba(239, 232, 213, 0.48);
+  --app-accent: #a3c5a3;
+  --app-accent-soft: rgba(163, 197, 163, 0.14);
+  --app-warning-soft: rgba(146, 64, 14, 0.18);
+  --app-warning-border: rgba(251, 191, 36, 0.34);
+  --app-warning-text: #fde68a;
+  --app-danger-soft: rgba(127, 29, 29, 0.22);
+  --app-danger-text: #fca5a5;
+}
+
+.dfdmaker-app .bg-white,
+.dfdmaker-app .bg-gray-50 {
+  background-color: var(--app-panel);
+}
+
+.dfdmaker-app .bg-gray-100,
+.dfdmaker-app .bg-indigo-50,
+.dfdmaker-app .bg-blue-50,
+.dfdmaker-app .bg-emerald-50,
+.dfdmaker-app .bg-violet-50 {
+  background-color: var(--app-accent-soft);
+}
+
+.dfdmaker-app .bg-red-50 {
+  background-color: var(--app-danger-soft);
+}
+
+.dfdmaker-app .bg-yellow-50,
+.dfdmaker-app .bg-amber-50 {
+  background-color: var(--app-warning-soft);
+}
+
+.dfdmaker-app .text-gray-900,
+.dfdmaker-app .text-gray-800,
+.dfdmaker-app .text-gray-700 {
+  color: var(--app-text);
+}
+
+.dfdmaker-app .text-gray-600,
+.dfdmaker-app .text-gray-500,
+.dfdmaker-app .text-gray-400,
+.dfdmaker-app .text-indigo-700,
+.dfdmaker-app .text-blue-700,
+.dfdmaker-app .text-emerald-700,
+.dfdmaker-app .text-violet-700 {
+  color: var(--app-muted);
+}
+
+.dfdmaker-app .text-red-700,
+.dfdmaker-app .text-red-600 {
+  color: var(--app-danger-text);
+}
+
+.dfdmaker-app .text-yellow-800,
+.dfdmaker-app .text-yellow-700,
+.dfdmaker-app .text-amber-900 {
+  color: var(--app-warning-text);
+}
+
+.dfdmaker-app .border-gray-100,
+.dfdmaker-app .border-gray-200,
+.dfdmaker-app .border-gray-300,
+.dfdmaker-app .border-indigo-200,
+.dfdmaker-app .border-blue-200,
+.dfdmaker-app .border-emerald-200,
+.dfdmaker-app .border-violet-200 {
+  border-color: var(--app-border);
+}
+
+.dfdmaker-app .border-indigo-600,
+.dfdmaker-app .border-indigo-400,
+.dfdmaker-app .border-blue-600 {
+  border-color: var(--app-accent);
+}
+
+.dfdmaker-app .border-red-200 {
+  border-color: color-mix(in srgb, var(--app-danger-text) 35%, transparent);
+}
+
+.dfdmaker-app .border-yellow-200,
+.dfdmaker-app .border-yellow-300,
+.dfdmaker-app .border-amber-100,
+.dfdmaker-app .border-amber-200 {
+  border-color: var(--app-warning-border);
+}
+
+.dfdmaker-app .bg-indigo-600,
+.dfdmaker-app .bg-blue-600 {
+  background-color: var(--app-accent);
+}
+
+.dfdmaker-app .hover\:bg-gray-50:hover,
+.dfdmaker-app .hover\:bg-gray-100:hover,
+.dfdmaker-app .hover\:bg-gray-200:hover,
+.dfdmaker-app .hover\:bg-indigo-50:hover,
+.dfdmaker-app .hover\:bg-indigo-100:hover,
+.dfdmaker-app .hover\:bg-blue-700:hover {
+  background-color: var(--app-panel-soft);
+}
+
+.dfdmaker-app .hover\:text-gray-700:hover,
+.dfdmaker-app .hover\:text-indigo-700:hover {
+  color: var(--app-text);
+}
+
+.dfdmaker-app input,
+.dfdmaker-app textarea,
+.dfdmaker-app select {
+  background-color: var(--app-panel);
+  border-color: var(--app-border);
+  color: var(--app-text);
+}
+
+.dfdmaker-app ::placeholder {
+  color: var(--app-subtle);
+}
+
+.dfdmaker-app[data-app-theme="chalkboard"] .shadow,
+.dfdmaker-app[data-app-theme="chalkboard"] .shadow-sm,
+.dfdmaker-app[data-app-theme="chalkboard"] .shadow-lg {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+}
+
+.dfdmaker-app[data-app-theme="chalkboard"] .react-flow__controls button,
+.dfdmaker-app[data-app-theme="chalkboard"] .react-flow__minimap {
+  background: var(--app-panel);
+  color: var(--app-text);
+  border-color: var(--app-border);
+}

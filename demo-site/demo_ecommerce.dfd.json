@@ -1,0 +1,634 @@
+{
+  "documentType": "dashbot.dfdmaker",
+  "schemaVersion": "0.1",
+  "pen_version": "0.1",
+  "project": {
+    "id": "proj_a19c5b90",
+    "name": "Untitled Project",
+    "revision": 8
+  },
+  "sources": [],
+  "erd": {
+    "notation": "crows_foot",
+    "model_level": "physical",
+    "entities": [
+      {
+        "id": "ent_3cc90eb7",
+        "kind": "strong_entity",
+        "name": "users",
+        "display_name": "Users",
+        "attributes": [
+          {
+            "id": "attr_ff422830",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_f5f52fa1",
+            "name": "email",
+            "display_name": "Email",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_22a2160b",
+            "name": "full_name",
+            "display_name": "Full Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_86ed6f29",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1.0,
+        "review_status": "needs_review"
+      },
+      {
+        "id": "ent_b9f40d90",
+        "kind": "strong_entity",
+        "name": "products",
+        "display_name": "Products",
+        "attributes": [
+          {
+            "id": "attr_4fc9242d",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_33ac5de9",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_f0fa0892",
+            "name": "price",
+            "display_name": "Price",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_d91101d6",
+            "name": "stock_qty",
+            "display_name": "Stock Qty",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1.0,
+        "review_status": "needs_review"
+      },
+      {
+        "id": "ent_b7de98fc",
+        "kind": "strong_entity",
+        "name": "orders",
+        "display_name": "Orders",
+        "attributes": [
+          {
+            "id": "attr_d0958a3c",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_4f5b5f83",
+            "name": "status",
+            "display_name": "Status",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_4a9e8c13",
+            "name": "total",
+            "display_name": "Total",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_9f19727f",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_ae7bd290",
+            "name": "users_id",
+            "display_name": "Users ID",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1.0,
+        "review_status": "needs_review"
+      },
+      {
+        "id": "ent_6325a2ca",
+        "kind": "strong_entity",
+        "name": "order_items",
+        "display_name": "Order Items",
+        "attributes": [
+          {
+            "id": "attr_eaabc486",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_e623cab6",
+            "name": "quantity",
+            "display_name": "Quantity",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_bc152d2d",
+            "name": "unit_price",
+            "display_name": "Unit Price",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_062b58ac",
+            "name": "orders_id",
+            "display_name": "Orders ID",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          },
+          {
+            "id": "attr_17f53238",
+            "name": "products_id",
+            "display_name": "Products ID",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1.0,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1.0,
+        "review_status": "needs_review"
+      }
+    ],
+    "relationships": [
+      {
+        "id": "rel_0eeb9b2c",
+        "name": "placed_by",
+        "from": {
+          "entity_id": "ent_b7de98fc",
+          "attribute_id": "attr_ae7bd290"
+        },
+        "to": {
+          "entity_id": "ent_3cc90eb7",
+          "attribute_id": "attr_ff422830"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": null,
+        "dfd_process_id": "proc_b22fca28",
+        "evidence": [],
+        "confidence": 1.0,
+        "review_status": "needs_review"
+      },
+      {
+        "id": "rel_832ee52b",
+        "name": "belongs_to",
+        "from": {
+          "entity_id": "ent_6325a2ca",
+          "attribute_id": "attr_062b58ac"
+        },
+        "to": {
+          "entity_id": "ent_b7de98fc",
+          "attribute_id": "attr_d0958a3c"
+        },
+        "cardinality": {
+          "from_min": 1,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": null,
+        "dfd_process_id": "proc_d6cdad1c",
+        "evidence": [],
+        "confidence": 1.0,
+        "review_status": "needs_review"
+      },
+      {
+        "id": "rel_5641beef",
+        "name": "references",
+        "from": {
+          "entity_id": "ent_6325a2ca",
+          "attribute_id": "attr_17f53238"
+        },
+        "to": {
+          "entity_id": "ent_b9f40d90",
+          "attribute_id": "attr_4fc9242d"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": null,
+        "dfd_process_id": "proc_e20ceccf",
+        "evidence": [],
+        "confidence": 1.0,
+        "review_status": "needs_review"
+      }
+    ]
+  },
+  "dfd": {
+    "level": 0,
+    "notation": "yourdon_coad",
+    "system_boundary": {
+      "id": "boundary_14042da1",
+      "name": "System"
+    },
+    "external_entities": [],
+    "processes": [
+      {
+        "id": "proc_b22fca28",
+        "number": null,
+        "name": "Placed_by Orders",
+        "description": null,
+        "user_modified": false,
+        "mapped_relationship_id": "rel_0eeb9b2c",
+        "level_1_diagram": null
+      },
+      {
+        "id": "proc_d6cdad1c",
+        "number": null,
+        "name": "Belongs_to Order Items",
+        "description": null,
+        "user_modified": false,
+        "mapped_relationship_id": "rel_832ee52b",
+        "level_1_diagram": null
+      },
+      {
+        "id": "proc_e20ceccf",
+        "number": null,
+        "name": "Reference Order Items",
+        "description": null,
+        "user_modified": false,
+        "mapped_relationship_id": "rel_5641beef",
+        "level_1_diagram": null
+      }
+    ],
+    "data_stores": [
+      {
+        "id": "store_e12d1cf7",
+        "name": "Users",
+        "description": null,
+        "mapped_erd_entity": "ent_3cc90eb7",
+        "user_modified": false
+      },
+      {
+        "id": "store_702fd1d0",
+        "name": "Products",
+        "description": null,
+        "mapped_erd_entity": "ent_b9f40d90",
+        "user_modified": false
+      },
+      {
+        "id": "store_9e6a7609",
+        "name": "Orders",
+        "description": null,
+        "mapped_erd_entity": "ent_b7de98fc",
+        "user_modified": false
+      },
+      {
+        "id": "store_1bc632da",
+        "name": "Order Items",
+        "description": null,
+        "mapped_erd_entity": "ent_6325a2ca",
+        "user_modified": false
+      }
+    ],
+    "data_flows": [
+      {
+        "id": "flow_071eadd7",
+        "from": "store_9e6a7609",
+        "to": "proc_b22fca28",
+        "data_name": "placed_by",
+        "mapped_relationship_id": "rel_0eeb9b2c",
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_1961b01d",
+        "from": "proc_b22fca28",
+        "to": "store_e12d1cf7",
+        "data_name": "Users",
+        "mapped_relationship_id": "rel_0eeb9b2c",
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_cf0ea15a",
+        "from": "store_1bc632da",
+        "to": "proc_d6cdad1c",
+        "data_name": "belongs_to",
+        "mapped_relationship_id": "rel_832ee52b",
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_5ab6090e",
+        "from": "proc_d6cdad1c",
+        "to": "store_9e6a7609",
+        "data_name": "Orders",
+        "mapped_relationship_id": "rel_832ee52b",
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_707a1086",
+        "from": "store_1bc632da",
+        "to": "proc_e20ceccf",
+        "data_name": "references",
+        "mapped_relationship_id": "rel_5641beef",
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      },
+      {
+        "id": "flow_33c82091",
+        "from": "proc_e20ceccf",
+        "to": "store_702fd1d0",
+        "data_name": "Products",
+        "mapped_relationship_id": "rel_5641beef",
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": []
+      }
+    ]
+  },
+  "layout": {
+    "erd": {
+      "nodes": [],
+      "edges": []
+    },
+    "dfd": {
+      "nodes": [
+        {
+          "id": "store_e12d1cf7",
+          "x": 40.0,
+          "y": 40.0,
+          "width": 200.0,
+          "height": 80.0
+        },
+        {
+          "id": "store_702fd1d0",
+          "x": 40.0,
+          "y": 200.0,
+          "width": 200.0,
+          "height": 80.0
+        },
+        {
+          "id": "store_9e6a7609",
+          "x": 40.0,
+          "y": 360.0,
+          "width": 200.0,
+          "height": 80.0
+        },
+        {
+          "id": "store_1bc632da",
+          "x": 40.0,
+          "y": 520.0,
+          "width": 200.0,
+          "height": 80.0
+        },
+        {
+          "id": "proc_b22fca28",
+          "x": 320.0,
+          "y": 40.0,
+          "width": 200.0,
+          "height": 80.0
+        },
+        {
+          "id": "proc_d6cdad1c",
+          "x": 320.0,
+          "y": 200.0,
+          "width": 200.0,
+          "height": 80.0
+        },
+        {
+          "id": "proc_e20ceccf",
+          "x": 320.0,
+          "y": 360.0,
+          "width": 200.0,
+          "height": 80.0
+        }
+      ],
+      "edges": []
+    },
+    "dfd_level_1": {}
+  },
+  "styles": {
+    "theme": "clean_default",
+    "erd": {
+      "entity": {
+        "shape": "rectangle",
+        "header_fill": "#f5f5f5",
+        "border_radius": 4,
+        "border_color": "#d1d5db",
+        "font_size": 13
+      },
+      "primary_key_attribute": {
+        "prefix": "PK",
+        "font_weight": "bold"
+      },
+      "foreign_key_attribute": {
+        "prefix": "FK"
+      },
+      "unique_attribute": {
+        "prefix": "UQ"
+      },
+      "audit_attribute": {
+        "prefix": ""
+      },
+      "relationship": {
+        "notation": "crows_foot",
+        "line_style": "solid",
+        "line_color": "#6b7280"
+      }
+    },
+    "dfd": {
+      "external_entity": {
+        "shape": "rectangle"
+      },
+      "process": {
+        "shape": "rounded_rectangle"
+      },
+      "data_store": {
+        "shape": "open_ended_rectangle"
+      },
+      "data_flow": {
+        "shape": "arrow",
+        "label_position": "middle"
+      }
+    }
+  },
+  "postgres": {
+    "dialect": "postgresql",
+    "extensions": [
+      "pgcrypto"
+    ],
+    "schema_name": "public",
+    "default_primary_key": {
+      "type": "uuid",
+      "default": "gen_random_uuid()"
+    },
+    "add_audit_timestamps": true
+  },
+  "review": {
+    "proposals": [],
+    "warnings": []
+  }
+}

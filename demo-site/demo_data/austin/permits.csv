@@ -1,0 +1,13 @@
+permit_id,address,permit_type,work_description,applied_date,status
+2026-104882 BP,1417 BERKSHIRE DR,Building Permit,Residential kitchen remodel,2026-04-02,In Review
+2025-122556 BP,6403 ARNOLD DR,Building Permit,New residential pool,2025-07-17,Issued
+2026-098100 BP,2210 RIO GRANDE ST,Building Permit,Duplex foundation repair,2026-03-11,Issued
+2026-110233 EP,5101 WAGON HITCH CV,Electrical Permit,Panel upgrade 200A,2026-04-20,In Review
+2026-105540 MP,908 W 29TH ST,Mechanical Permit,HVAC replacement,2026-04-05,Issued
+2026-112874 BP,3402 GOVALLE AVE,Building Permit,Garage conversion to ADU,2026-04-28,In Review
+2026-099781 PP,1601 E CESAR CHAVEZ ST,Plumbing Permit,Sewer line replacement,2026-03-15,Issued
+2026-114002 BP,7008 MANCHACA RD,Building Permit,Commercial tenant finish-out,2026-05-01,In Review
+2026-101220 BP,4400 AVENUE G,Building Permit,Roof structural repair,2026-03-22,Issued
+2026-115119 BP,2300 E 6TH ST,Building Permit,Detached carport addition,2026-05-04,In Review
+2026-107644 EP,2810 SALADO ST,Electrical Permit,Solar PV interconnection,2026-04-12,Issued
+2026-113288 BP,5905 BULL CREEK RD,Building Permit,Second-story addition,2026-04-30,In Review
