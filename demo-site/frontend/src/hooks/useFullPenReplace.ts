@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import type { PenFile } from "../types/pen";
 
-const API = "";
+import { API_BASE as API } from "../config/api";
 
 export function useFullPenReplace(projectId: string) {
   const [saving, setSaving] = useState(false);

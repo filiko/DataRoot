@@ -1,7 +1,6 @@
 import type { PenFile } from "../types/pen";
 import { LandingChalkboard } from "./LandingChalkboard";
 import { LandingMinimal } from "./LandingMinimal";
-import { LandingGridly } from "./LandingGridly";
 import { useAppTheme } from "../context/ThemeContext";
 
 interface Props {
@@ -20,9 +19,7 @@ export function LandingPage(props: Props) {
     <div style={{ position: "relative" }}>
       {theme.id === "chalkboard"
         ? <LandingChalkboard {...props} />
-        : theme.id === "gridly"
-          ? <LandingGridly {...props} />
-          : <LandingMinimal {...props} />}
+        : <LandingMinimal {...props} />}
       <div
         style={{
           position: "fixed",
@@ -36,7 +33,7 @@ export function LandingPage(props: Props) {
           border: isDark ? "2px dashed rgba(239,232,213,0.30)" : "1px solid #d1d5db",
         }}
       >
-        {([["chalkboard", "✦ Board"], ["minimal", "○ Clean"], ["gridly", "◉ Gridly"]] as const).map(([id, label], i) => (
+        {([["chalkboard", "✦ Chalkboard"], ["minimal", "○ Technical Minimal"]] as const).map(([id, label], i) => (
           <button
             key={id}
             onClick={() => setTheme(id)}
@@ -45,7 +42,7 @@ export function LandingPage(props: Props) {
               fontSize: 12,
               fontFamily: "monospace",
               border: "none",
-              borderRight: i < 2 ? (isDark ? "1px dashed rgba(239,232,213,0.30)" : "1px solid #d1d5db") : "none",
+              borderRight: i < 1 ? (isDark ? "1px dashed rgba(239,232,213,0.30)" : "1px solid #d1d5db") : "none",
               cursor: "pointer",
               background: theme.id === id
                 ? (isDark ? "#efe8d5" : "#18181b")

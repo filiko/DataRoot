@@ -6,7 +6,7 @@ import { ChatPanel } from "./ChatPanel";
 import { AskPanel } from "./datademo/AskPanel";
 import type { PenFile, AnalyzeResponse } from "../types/pen";
 
-const API = "";
+import { API_BASE as API } from "../config/api";
 
 type SidebarTab = "ask" | "proposals" | "errors" | "chat";
 

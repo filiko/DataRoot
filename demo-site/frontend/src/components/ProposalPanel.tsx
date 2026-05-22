@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { AlertTriangle, CheckCircle, XCircle, HelpCircle } from "lucide-react";
 import type { ReviewProposal, PenFile, WarningEntry } from "../types/pen";
 
-const API = "";
+import { API_BASE as API } from "../config/api";
 
 interface Props {
   projectId: string;

@@ -26,6 +26,7 @@ import { useAppTheme, APP_THEMES } from "./context/ThemeContext";
 import { getDiagramTheme } from "./styles/diagramThemes";
 import { DemoSwitcher } from "./components/DemoSwitcher";
 import { loadDemoProject, DEMO_PROJECTS, type DemoProject } from "./components/datademo/loadDemo";
+import { DocsPage } from "./components/DocsPage";
 
 function ThemeSwitcher() {
   const { theme, setTheme } = useAppTheme();
@@ -145,6 +146,8 @@ export default function App() {
   const [collaboratorToast, setCollaboratorToast] = useState<string | null>(null);
   const diagramRef = useRef<HTMLDivElement>(null);
   const { patchLayout } = useLayoutPatch(projectId ?? "");
+  const isDocsRoute = window.location.pathname === "/docs" || window.location.pathname.startsWith("/docs/");
+  const isDemoRoute = window.location.pathname === "/demo";
 
   // ── Auth bootstrap ────────────────────────────────────────────────────────
   useEffect(() => {
@@ -159,6 +162,18 @@ export default function App() {
       .catch(() => {})
       .finally(() => setAuthChecked(true));
   }, []);
+
+  // ── Auto-load demo when visiting /demo ───────────────────────────────────
+  useEffect(() => {
+    if (!isDemoRoute || !authChecked || pen) return;
+    loadDemoProject().then(({ projectId: id, pen: p }) => {
+      if (!user) setUser({ id: "guest", username: "demo" });
+      setProjectId(id);
+      setPen(p);
+      setActiveTab("erd");
+      setActiveDemoId(DEMO_PROJECTS[0].id);
+    }).catch(() => {});
+  }, [authChecked]);
 
   // ── Invite acceptance after login ─────────────────────────────────────────
   useEffect(() => {
@@ -312,7 +327,11 @@ export default function App() {
   ];
 
   // ── Render gates ──────────────────────────────────────────────────────────
-  if (!authChecked) {
+  if (isDocsRoute) {
+    return <DocsPage />;
+  }
+
+  if (!authChecked || (isDemoRoute && !pen)) {
     return (
       <div className="min-h-screen flex items-center justify-center text-sm text-gray-500">
         Loading…

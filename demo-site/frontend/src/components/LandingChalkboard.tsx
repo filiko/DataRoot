@@ -87,6 +87,14 @@ export function LandingChalkboard({
       {/* ── Hero ── */}
       <section className="relative overflow-hidden" style={{ padding: "80px 24px 64px" }}>
         <ChalkSymbols />
+        <a href="/docs" style={{
+          position: "absolute", top: 22, right: 24, zIndex: 2,
+          color: CHALK, textDecoration: "none", fontSize: 13, fontWeight: 700,
+          border: `1px dashed ${CHALK_EDGE}`, borderRadius: 4, padding: "8px 14px",
+          background: "rgba(29,43,29,0.72)",
+        }}>
+          Read the docs
+        </a>
         <div style={{ maxWidth: 700, margin: "0 auto", position: "relative", textAlign: "center" }}>
           <div style={{ borderTop: `1px dashed ${CHALK_EDGE}`, marginBottom: 32 }} />
           <p style={dim({ fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 28, fontFamily: "monospace" })}>

@@ -143,9 +143,12 @@ export function LandingMinimal({
       <section className="bg-[#0a0a0a] text-white">
         <div className="border-b border-white/10 px-8 py-4 flex items-center justify-between">
           <span className="text-sm font-semibold tracking-tight">DataRoot</span>
+          <div className="flex items-center gap-4">
+            <a href="/docs" className="text-sm text-white/50 hover:text-white transition-colors">Docs</a>
           <button onClick={() => startRef.current?.scrollIntoView({ behavior: "smooth" })} className="text-sm text-white/50 hover:text-white transition-colors">
             Get started ↓
           </button>
+          </div>
         </div>
 
         <div className="px-8 pt-20 pb-24 max-w-5xl mx-auto">

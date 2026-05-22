@@ -3,6 +3,7 @@ DFDMaker — FastAPI backend (multi-user edition)
 """
 from __future__ import annotations
 
+import html
 import os
 import secrets
 import sys
@@ -10,12 +11,14 @@ import tempfile
 from pathlib import Path, PurePosixPath
 from typing import Annotated, Any, Literal
 
+import bcrypt
 from fastapi import Body, Depends, FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, PlainTextResponse
+from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
-from sqlmodel import Session
+from sqlmodel import Session, select
 from starlette.middleware.sessions import SessionMiddleware
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -32,7 +35,8 @@ from generators.proposals import generate_erd_m2m_proposals
 from generators.sql import export_dbml, export_mermaid, export_sql
 from generators.static_analysis import run_full_analysis
 from generators.sync_engine import propagate_erd_to_dfd, validate
-from llm.mock import mock_chat
+from llm.ask import answer_question
+from llm.minimax import chat_about_diagram
 from models.db_models import User
 from models.pen import DiagramLayout, LayoutEdge, LayoutNode, LayoutPoint, PenFile
 from models.source import SourceTableModel
@@ -63,7 +67,12 @@ app.add_middleware(
 )
 
 _FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN", "").strip()
-_allow_origins = [_FRONTEND_ORIGIN] if _FRONTEND_ORIGIN else ["http://localhost:5173", "http://127.0.0.1:5173"]
+# FRONTEND_ORIGIN may be a comma-separated list (apex + www + railway domains).
+_allow_origins = (
+    [o.strip() for o in _FRONTEND_ORIGIN.split(",") if o.strip()]
+    if _FRONTEND_ORIGIN
+    else ["http://localhost:5173", "http://127.0.0.1:5173"]
+)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_allow_origins,
@@ -862,6 +871,7 @@ def analyze_schema(
 
 
 class ChatRequest(BaseModel):
+    project_id: str
     message: str
     context: Literal["erd", "dfd", "both"] = "both"
 
@@ -878,23 +888,73 @@ class ChatResponse(BaseModel):
     suggestions: list[FixSuggestionResponse] = []
 
 
+def _diagram_summary(pen: PenFile) -> str:
+    """Compact text description of the ERD, used as MiniMax chat context."""
+    lines: list[str] = [f"Project: {pen.project.name}"]
+    entity_name = {e.id: e.name for e in pen.erd.entities}
+
+    ents = [e for e in pen.erd.entities if e.review_status != "rejected"]
+    lines.append(f"Entities ({len(ents)}):")
+    for e in ents:
+        attrs = ", ".join(
+            f"{a.name}:{a.pg_type}" + ("(PK)" if a.key_role == "primary" else "")
+            for a in e.attributes
+        )
+        lines.append(f"  - {e.name} [{e.display_name}]: {attrs or '(no attributes)'}")
+
+    rels = [r for r in pen.erd.relationships if r.review_status != "rejected"]
+    lines.append(f"Relationships ({len(rels)}):")
+    for r in rels:
+        a = entity_name.get(r.from_.entity_id, "?")
+        b = entity_name.get(r.to.entity_id, "?")
+        lines.append(f"  - {a} {r.name or 'relates to'} {b}")
+
+    warnings = pen.review.warnings
+    if warnings:
+        lines.append(f"Open warnings ({len(warnings)}):")
+        for w in warnings[:25]:
+            tag = w.node_name or w.node_kind
+            lines.append(f"  - [{w.severity}] {tag}: {w.message}")
+    return "\n".join(lines)
+
+
 @app.post("/llm/chat")
 def chat_route(
-    project_id: str,
     req: ChatRequest,
     db: Annotated[Session, Depends(get_session)],
     user: Annotated[User, Depends(current_user)],
 ):
-    require_member(project_id, user, db)
-    pen = ProjectStore.load(project_id, db)
-    reply = mock_chat(req.message, pen)
-    return ChatResponse(
-        message=reply.message,
-        suggestions=[
-            FixSuggestionResponse(op=s.op, payload=s.payload, label=s.label, reason=s.reason)
-            for s in reply.suggestions
-        ],
-    )
+    require_member(req.project_id, user, db)
+    pen = ProjectStore.load(req.project_id, db)
+    answer = chat_about_diagram(req.message, _diagram_summary(pen))
+    return ChatResponse(message=answer, suggestions=[])
+
+
+# ── Free-form Ask (MiniMax, cited answers over the Austin permit data) ─────────
+
+class AskRequest(BaseModel):
+    question: str
+
+
+class AskSource(BaseModel):
+    file: str
+    role: str
+    detail: str
+
+
+class AskResponse(BaseModel):
+    headline: str
+    answer: str
+    confidence: str
+    sources: list[AskSource] = []
+
+
+@app.post("/ask", response_model=AskResponse)
+def ask_route(req: AskRequest):
+    question = req.question.strip()
+    if not question:
+        raise HTTPException(400, "Question is required")
+    return AskResponse(**answer_question(question))
 
 
 @app.get("/schema/{project_id}/export/sql", response_class=PlainTextResponse)
@@ -957,6 +1017,84 @@ def join_waitlist(entry: WaitlistEntry, db: Annotated[Session, Depends(get_sessi
     db.add(row)
     db.commit()
     return {"status": "ok"}
+
+
+# ── Admin (waitlist viewer) ───────────────────────────────────────────────────
+
+_ADMIN_PASSWORD_HASH = os.getenv("ADMIN_PASSWORD_HASH", "").strip()
+_admin_basic = HTTPBasic()
+
+
+def _require_admin(
+    credentials: Annotated[HTTPBasicCredentials, Depends(_admin_basic)],
+) -> None:
+    """HTTP Basic gate for the admin page. Username is 'admin'; the password is
+    verified against the bcrypt hash in the ADMIN_PASSWORD_HASH env var."""
+    unauthorized = HTTPException(
+        401, "Unauthorized", headers={"WWW-Authenticate": "Basic"}
+    )
+    if not _ADMIN_PASSWORD_HASH:
+        raise unauthorized
+    user_ok = secrets.compare_digest(credentials.username, "admin")
+    try:
+        pw_ok = bcrypt.checkpw(
+            credentials.password.encode("utf-8")[:72],
+            _ADMIN_PASSWORD_HASH.encode("utf-8"),
+        )
+    except ValueError:
+        pw_ok = False
+    if not (user_ok and pw_ok):
+        raise unauthorized
+
+
+@app.get("/admin", response_class=HTMLResponse)
+def admin_waitlist(
+    _: Annotated[None, Depends(_require_admin)],
+    db: Annotated[Session, Depends(get_session)],
+):
+    from models.db_models import WaitlistSubmission
+
+    rows = db.exec(
+        select(WaitlistSubmission).order_by(WaitlistSubmission.submitted_at.desc())
+    ).all()
+
+    def td(value: Any) -> str:
+        return f"<td>{html.escape(str(value)) if value not in (None, '') else '—'}</td>"
+
+    body_rows = "\n".join(
+        "<tr>"
+        + td(r.submitted_at.strftime("%Y-%m-%d %H:%M"))
+        + td(r.name)
+        + f'<td><a href="mailto:{html.escape(r.email)}">{html.escape(r.email)}</a></td>'
+        + td(r.project_url)
+        + td(r.message)
+        + "</tr>"
+        for r in rows
+    ) or '<tr><td colspan="5" class="empty">No submissions yet.</td></tr>'
+
+    return HTMLResponse(f"""<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DataRoot · Waitlist</title>
+<style>
+  body{{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#253325;color:#efe8d5;margin:0;padding:32px}}
+  h1{{font-size:20px;margin:0 0 4px}}
+  .sub{{color:rgba(239,232,213,0.55);font-size:13px;margin:0 0 20px}}
+  table{{border-collapse:collapse;width:100%;background:#1d2b1d;border-radius:8px;overflow:hidden}}
+  th,td{{text-align:left;padding:10px 14px;font-size:13px;border-bottom:1px solid rgba(239,232,213,0.12);vertical-align:top}}
+  th{{background:rgba(239,232,213,0.06);color:#d7b46a;font-size:11px;text-transform:uppercase;letter-spacing:.08em}}
+  tr:last-child td{{border-bottom:0}}
+  td.empty{{text-align:center;color:rgba(239,232,213,0.45);padding:28px}}
+  a{{color:#91b88e}}
+</style></head><body>
+<h1>Waitlist submissions</h1>
+<p class="sub">{len(rows)} total · newest first</p>
+<table>
+<thead><tr><th>When</th><th>Name</th><th>Email</th><th>Link</th><th>Message</th></tr></thead>
+<tbody>
+{body_rows}
+</tbody></table>
+</body></html>""")
 
 
 # ── SPA static serving ────────────────────────────────────────────────────────

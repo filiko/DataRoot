@@ -1,4 +1,5 @@
 import React, { forwardRef, useState } from "react";
+import { API } from "../config/api";
 
 interface Props {
   dark?: boolean;
@@ -33,7 +34,7 @@ export const WaitlistSection = forwardRef<HTMLDivElement, Props>(function Waitli
     if (!name.trim() || !email.trim()) return;
     setLoading(true); setError(null);
     try {
-      const res = await fetch("/waitlist", {
+      const res = await fetch(API.waitlist(), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: name.trim(), email: email.trim(), project_url: url.trim(), message: msg.trim() }),
@@ -66,6 +67,7 @@ export const WaitlistSection = forwardRef<HTMLDivElement, Props>(function Waitli
 
   return (
     <section
+      id="waitlist"
       ref={ref}
       style={{ padding: "72px 24px", maxWidth: 520, margin: "0 auto", background: bg }}
     >

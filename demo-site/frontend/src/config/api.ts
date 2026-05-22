@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL || ''
+export const API_BASE = import.meta.env.VITE_API_URL || ''
 
 export function getApiUrl(path: string): string {
   if (API_BASE.startsWith('http')) {
@@ -36,6 +36,8 @@ export const API = {
   deleteProject: (id: string) => getApiUrl(`/projects/${id}`),
   projectList: () => getApiUrl('/projects'),
   projectRevision: (id: string) => getApiUrl(`/projects/${id}/revision`),
+  waitlist: () => getApiUrl('/waitlist'),
+  ask: () => getApiUrl('/ask'),
   signup: () => getApiUrl('/auth/signup'),
   login: () => getApiUrl('/auth/login'),
   logout: () => getApiUrl('/auth/logout'),

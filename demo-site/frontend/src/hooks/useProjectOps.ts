@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import type { PenFile } from "../types/pen";
 
-const API = "";
+import { API_BASE as API } from "../config/api";
 
 export interface ProjectOp {
   op: string;

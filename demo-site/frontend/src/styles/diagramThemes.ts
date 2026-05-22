@@ -42,7 +42,7 @@ export const DIAGRAM_THEMES: DiagramTheme[] = [
   },
   {
     id: "minimal",
-    name: "Minimal",
+    name: "Technical Minimal",
     dfd: {
       process: { border: "#18181b", header: "#fafafa", text: "#09090b", accent: "#09090b", lightAccent: "#e4e4e7" },
       store: { border: "#27272a", header: "#fafafa", text: "#09090b", accent: "#09090b", lightAccent: "#e4e4e7" },

@@ -1,0 +1,30 @@
+metabolite_id,name,compound_family,sensory_descriptors,associated_gene_ids,measurement_method,unit,notes
+B-MET-EHEX,ethyl hexanoate,ester,"apple;pineapple;citrus-like;bright fruit;waxy",B-GEN-AAT1,GC-MS,mg/L,Synthetic demo metabolite
+B-MET-EBUT,ethyl butyrate,ester,"pineapple;orange-like;sweet fruit;butter",B-GEN-AAT1,GC-MS,mg/L,Synthetic demo metabolite
+B-MET-EOCT,ethyl octanoate,ester,"orange peel;waxy fruit;floral;fatty",B-GEN-EHT1,GC-MS,mg/L,Synthetic demo metabolite
+B-MET-LACT,lactic acid,organic_acid,"creamy;sour;milk;fermented",B-GEN-LDH2,enzymatic,HPLC,mg/L,Synthetic demo metabolite
+B-MET-DIAC,diacetyl,ketone,"buttery;popcorn;creamy;off-note",B-GEN-ALDC,GC-MS,mg/L,Synthetic demo - monitor for off-notes
+B-MET-CIT,citric acid,organic_acid,"sour;citrus;bright;tart",B-GEN-CIT1,HPLC,mg/L,Synthetic demo metabolite
+B-MET-MAL,malic acid,organic_acid,"sour;green apple;tart",B-GEN-CIT1,HPLC,mg/L,Synthetic demo metabolite
+B-MET-TART,tartaric acid,organic_acid,"sour;wine-like;tart",B-GEN-TAH,HPLC,mg/L,Synthetic demo metabolite
+B-MET-IAA,isoamyl acetate,ester,"banana;pear;fruity;solvent",B-GEN-ATF1,GC-MS,mg/L,Synthetic demo metabolite
+B-MET-PEARY,pear ester,ester,"pear;fruity;ripe fruit",B-GEN-ATF1,GC-MS,mg/L,Synthetic demo metabolite
+B-MET-GERA,geraniol,monoterpene,"rose;floral;sweet;citrus",B-GEN-GER1,GC-MS,mg/L,Synthetic demo metabolite
+B-MET-CITRON,citronellol,monoterpene,"citrus;rose;green;floral",B-GEN-GER1,GC-MS,mg/L,Synthetic demo metabolite
+B-MET-LIMO,limonene,monoterpene,"citrus;orange;lemon;peel",B-GEN-LIM1,GC-MS,mg/L,Synthetic demo metabolite
+B-MET-GAMMA,gamma-terpinene,monoterpene,"citrus;herbal;lime;pine",B-GEN-LIM1,GC-MS,mg/L,Synthetic demo metabolite
+B-MET-ACET,acetate,organic_acid,"sour;vinegar;solvent",B-GEN-ALD,HPLC,mg/L,Monitor for overproduction
+B-MET-FARN,farnesol,sesquiterpene,"floral;fresh;green",B-GEN-FAR1,GC-MS,mg/L,Synthetic demo for specialty esters
+B-MET-NEROL,nerol,monoterpene,"rose;citrus;floral",B-GEN-GER1,GC-MS,mg/L,Synthetic demo co-product
+B-MET-EVAL,ethyl valerate,ester,"apple;fruity;pineapple",B-GEN-AAT2,GC-MS,mg/L,Synthetic demo minor ester
+B-MET-BUTY,butyric acid,organic_acid,"cheese;rancid;putrid",B-GEN-BUTY,GC-MS,mg/L,Off-note when elevated
+B-MET-EVAN,ethyl vanillin,aryl_ester,"vanilla;cream;sweet",B-GEN-EVH1,GC-MS,mg/L,High-value flavor compound
+B-MET-HEP,2-heptanone,ketone,"cheesy;fruity;blue cheese",B-GEN-ATF2,GC-MS,mg/L,Monitor for characteristic notes
+B-MET-EHEP,ethyl heptanoate,ester,"pineapple;fruity;waxy",B-GEN-EHT2,GC-MS,mg/L,Synthetic demo minor ester
+B-MET-OCTAN,octanoic acid,organic_acid,"coconut;rancid;waxy",B-GEN-FAS1,HPLC,mg/L,Medium chain fatty acid
+B-MET-ECAP,ethyl caprylate,ester,"coconut;peach;fruity",B-GEN-EHT1,GC-MS,mg/L,Synthetic demo ester
+B-MET-EPAD,ethyl phenylacetate,aryl_ester,"honey;rose;jasmine;sweet",B-GEN-EPH1,GC-MS,mg/L,Floral aromatic ester
+B-MET-BENZ,benzyl alcohol,aromatic_alcohol,"floral;rose;sweet",B-GEN-BNZ1,HPLC,mg/L,Aromatic alcohol
+B-MET-PHEN,phenethyl alcohol,aromatic_alcohol,"floral;rose;honey;花香",B-GEN-PNH1,GC-MS,mg/L,Important aroma alcohol
+B-MET-EPHEN,ethyl phenylethyl acetate,ester,"rose;honey;floral;fruity",B-GEN-EPH2,GC-MS,mg/L,Fruity-rose ester
+B-MET-ISOAM,isoamyl alcohol,higher_alcohol,"fusel;solvent;alcoholic",B-GEN-ALD2,HPLC,mg/L,Monitor levels for balance

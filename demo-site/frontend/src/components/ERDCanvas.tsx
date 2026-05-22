@@ -41,7 +41,7 @@ import type { Point } from "./diagram/layout/types";
 import { useAppTheme, DiagramThemeProvider, useDiagramTheme } from "../context/ThemeContext";
 import { getDiagramTheme, type DiagramThemeId } from "../styles/diagramThemes";
 
-const API = "";
+import { API_BASE as API } from "../config/api";
 
 type AttachmentSide = "left" | "right" | "top" | "bottom";
 

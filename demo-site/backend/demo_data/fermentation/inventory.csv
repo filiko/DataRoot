@@ -1,0 +1,36 @@
+Vial_Barcode,Vial_Position,Rack,Strain_ID,Strain_Name,Passage,Viability_pct,QC_Date,QC_Analyst,Status,Available_Vials,Cryovial_Count,Storage_Location,Last_Access_Date,Notes
+B-INV-STR-017-001,C-01-001,Rack C,B-STR-YE-017,Yeast EsterMax 17,P5,96,2026-04-08,MWebb,RELEASED,Yes,10,Cryobank Rack C,2026-04-10,Primary production strain
+B-INV-STR-017-002,C-01-002,Rack C,B-STR-YE-017,Yeast EsterMax 17,P5,96,2026-04-08,MWebb,RELEASED,Yes,10,Cryobank Rack C,2026-04-10,Primary production strain
+B-INV-STR-017-003,C-01-003,Rack C,B-STR-YE-017,Yeast EsterMax 17,P5,95,2026-04-08,MWebb,RELEASED,Yes,10,Cryobank Rack C,2026-04-10,Primary production strain
+B-INV-STR-017-004,C-01-004,Rack C,B-STR-YE-017,Yeast EsterMax 17,P5,94,2026-04-08,MWebb,RELEASED,Yes,10,Cryobank Rack C,2026-04-10,Primary production strain
+B-INV-STR-017-005,C-01-005,Rack C,B-STR-YE-017,Yeast EsterMax 17,P5,96,2026-04-08,MWebb,RELEASED,Yes,10,Cryobank Rack C,2026-04-10,Primary production strain
+B-INV-STR-017-006,C-01-006,Rack C,B-STR-YE-017,Yeast EsterMax 17,P5,97,2026-04-08,MWebb,RELEASED,Yes,10,Cryobank Rack C,2026-04-10,Primary production strain
+B-INV-STR-017-007,C-02-001,Rack C,B-STR-YE-017,Yeast EsterMax 17,P5,95,2026-04-08,MWebb,RELEASED,Yes,10,Cryobank Rack C,2026-04-10,Primary production strain
+B-INV-STR-017-008,C-02-002,Rack C,B-STR-YE-017,Yeast EsterMax 17,P5,96,2026-04-08,MWebb,RELEASED,Yes,10,Cryobank Rack C,2026-04-10,Primary production strain
+B-INV-STR-017-009,C-02-003,Rack C,B-STR-YE-017,Yeast EsterMax 17,P5,94,2026-04-08,MWebb,RELEASED,Yes,10,Cryobank Rack C,2026-04-10,Primary production strain
+B-INV-STR-017-010,C-02-004,Rack C,B-STR-YE-017,Yeast EsterMax 17,P5,95,2026-04-08,MWebb,RELEASED,Yes,10,Cryobank Rack C,2026-04-10,Primary production strain
+B-INV-STR-018-001,C-03-001,Rack C,B-STR-YE-018,Yeast BananaFlow 18,P4,94,2026-04-05,MWebb,RELEASED,Yes,3,Cryobank Rack C,2026-04-06,Bench screening strain
+B-INV-STR-018-002,C-03-002,Rack C,B-STR-YE-018,Yeast BananaFlow 18,P4,94,2026-04-05,MWebb,RELEASED,Yes,3,Cryobank Rack C,2026-04-06,Bench screening strain
+B-INV-STR-018-003,C-03-003,Rack C,B-STR-YE-018,Yeast BananaFlow 18,P4,93,2026-04-05,MWebb,RELEASED,Yes,3,Cryobank Rack C,2026-04-06,Bench screening strain
+B-INV-STR-019-001,C-04-001,Rack C,B-STR-YE-019,Yeast RoseMax 19,P3,91,2026-04-02,MWebb,RELEASED,Yes,2,Cryobank Rack C,2026-04-03,Floral profile screen
+B-INV-STR-019-002,C-04-002,Rack C,B-STR-YE-019,Yeast RoseMax 19,P3,91,2026-04-02,MWebb,RELEASED,Yes,2,Cryobank Rack C,2026-04-03,Floral profile screen
+B-INV-STR-020-001,C-04-003,Rack C,B-STR-YE-020,Yeast CitrusDrop 20,P4,93,2026-04-10,MWebb,RELEASED,Yes,3,Cryobank Rack B,2026-04-11,Citrus terpene producer
+B-INV-STR-020-002,C-04-004,Rack C,B-STR-YE-020,Yeast CitrusDrop 20,P4,92,2026-04-10,MWebb,RELEASED,Yes,3,Cryobank Rack B,2026-04-11,Citrus terpene producer
+B-INV-STR-021-001,A-01-001,Rack A,B-STR-YE-021,Yeast Citriflow 21,P4,93,2026-04-05,MWebb,HOLD-SCALEUP,No,2,Cryobank Rack A,2026-04-05,Pilot scaleup pending
+B-INV-STR-021-002,A-01-002,Rack A,B-STR-YE-021,Yeast Citriflow 21,P4,93,2026-04-05,MWebb,HOLD-SCALEUP,No,2,Cryobank Rack A,2026-04-05,Pilot scaleup pending
+B-INV-STR-022-001,D-01-001,Rack D,B-STR-LA-009,LactoCream 09,P6,97,2026-04-12,MWebb,RELEASED,Yes,3,Cryobank Rack D,2026-04-13,Lactobacillus production
+B-INV-STR-022-002,D-01-002,Rack D,B-STR-LA-009,LactoCream 09,P6,97,2026-04-12,MWebb,RELEASED,Yes,3,Cryobank Rack D,2026-04-13,Lactobacillus production
+B-INV-STR-022-003,D-01-003,Rack D,B-STR-LA-009,LactoCream 09,P6,96,2026-04-12,MWebb,RELEASED,Yes,3,Cryobank Rack D,2026-04-13,Lactobacillus production
+B-INV-STR-023-001,D-02-001,Rack D,B-STR-LA-010,LactoCitrus 10,P5,95,2026-04-08,MWebb,RELEASED,Yes,2,Cryobank Rack D,2026-04-09,Organic acid platform
+B-INV-STR-023-002,D-02-002,Rack D,B-STR-LA-010,LactoCitrus 10,P5,95,2026-04-08,MWebb,RELEASED,Yes,2,Cryobank Rack D,2026-04-09,Organic acid platform
+B-INV-STR-024-001,A-02-001,Rack A,B-STR-YE-022,Yeast IsoAmyl 22,P3,90,2026-03-28,MWebb,RELEASED,Yes,2,Cryobank Rack A,2026-03-29,Alternate banana strain
+B-INV-STR-024-002,A-02-002,Rack A,B-STR-YE-022,Yeast IsoAmyl 22,P3,90,2026-03-28,MWebb,RELEASED,Yes,2,Cryobank Rack A,2026-03-29,Alternate banana strain
+B-INV-STR-025-001,A-03-001,Rack A,B-STR-YE-023,Yeast FloralBlend 23,P2,88,2026-03-25,MWebb,HOLD-LOWVIAB,No,1,Cryobank Rack A,2026-03-25,Emerging strain low viability
+B-INV-STR-026-001,A-02-003,Rack A,B-STR-YE-024,Yeast CreamEst 24,P4,94,2026-04-06,MWebb,RELEASED,Yes,2,Cryobank Rack A,2026-04-07,Diacetyl control strain
+B-INV-STR-026-002,A-02-004,Rack A,B-STR-YE-024,Yeast CreamEst 24,P4,93,2026-04-06,MWebb,RELEASED,Yes,2,Cryobank Rack A,2026-04-07,Diacetyl control strain
+B-INV-STR-028-001,A-04-001,Rack A,B-STR-YE-025,Yeast VanillaEst 25,P2,86,2026-03-20,MWebb,HOLD-EARLY,No,1,Cryobank Rack B,2026-03-20,Early stage vanilla ester
+B-INV-STR-029-001,C-04-005,Rack C,B-STR-YE-026,Yeast PearDrop 26,P3,92,2026-04-04,MWebb,RELEASED,Yes,2,Cryobank Rack C,2026-04-05,Pear ester producer
+B-INV-STR-030-001,A-04-002,Rack A,B-STR-YE-027,Yeast Farnesol 27,P2,89,2026-03-30,MWebb,HOLD-EARLY,No,1,Cryobank Rack A,2026-03-30,Specialty sesquiterpene
+B-INV-STR-031-001,D-02-003,Rack D,B-STR-LA-011,LactoFloral 12,P4,94,2026-04-07,MWebb,RELEASED,Yes,2,Cryobank Rack D,2026-04-08,Secondary floral lactobacillus
+B-INV-STR-032-001,C-05-001,Rack C,B-STR-YE-028,Yeast AcidMax 28,P5,95,2026-04-09,MWebb,RELEASED,Yes,3,Cryobank Rack C,2026-04-10,Acetate producer
+B-INV-STR-033-001,A-03-002,Rack A,B-STR-YE-029,Yeast Balanced 29,P3,91,2026-04-03,MWebb,RELEASED,Yes,2,Cryobank Rack B,2026-04-04,Mixed profile screening

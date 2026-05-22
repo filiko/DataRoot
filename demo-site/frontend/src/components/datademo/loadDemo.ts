@@ -1,4 +1,5 @@
 import type { PenFile } from "../../types/pen";
+import { API } from "../../config/api";
 
 export interface DemoProject {
   id: string;
@@ -7,9 +8,10 @@ export interface DemoProject {
 }
 
 export const DEMO_PROJECTS: DemoProject[] = [
-  { id: "austin-permits", label: "Austin Permits", file: "/austin_permits.dfd.json" },
-  { id: "example-store",  label: "Example Store",  file: "/example_store.dfd.json"  },
-  { id: "dataroot-schema", label: "DataRoot Schema", file: "/dfdmaker_self.dfd.json" },
+  { id: "austin-permits",   label: "Austin Permits",   file: "/austin_permits.dfd.json"           },
+  { id: "example-store",    label: "Example Store",    file: "/example_store.dfd.json"            },
+  { id: "dataroot-schema",  label: "DataRoot Schema",  file: "/dfdmaker_self.dfd.json"            },
+  { id: "nexus-candidate",  label: "Nexus Candidate",  file: "/nexus_candidate_exercise.dfd.json" },
 ];
 
 export async function loadDemoProject(demo: DemoProject = DEMO_PROJECTS[0]): Promise<{ projectId: string; pen: PenFile }> {
@@ -19,7 +21,7 @@ export async function loadDemoProject(demo: DemoProject = DEMO_PROJECTS[0]): Pro
 
   // Try to register in backend so exports/validate/chat work (requires AUTH_DISABLED=1)
   try {
-    const importRes = await fetch("/projects/import", {
+    const importRes = await fetch(API.importProject(), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(pen),

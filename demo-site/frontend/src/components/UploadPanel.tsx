@@ -13,7 +13,7 @@ import {
   repoNameFromPath,
 } from "./repoAnalysis";
 
-const API = "";
+import { API_BASE as API } from "../config/api";
 
 interface Props {
   onIngested: (projectId: string, pen: PenFile) => void;

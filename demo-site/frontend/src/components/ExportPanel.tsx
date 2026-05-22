@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Download, Copy, Check, Loader2 } from "lucide-react";
 
-const API = "";
+import { API_BASE as API } from "../config/api";
 
 type ExportFormat = "sql" | "mermaid" | "dbml" | "pen";
 

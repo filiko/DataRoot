@@ -65,7 +65,7 @@ export const DEMO_QUESTIONS: DemoQuestion[] = [
     question: "Which department owns the open issue blocking this address?",
     headline: "Code Enforcement owns it — assigned, with an active task.",
     answer:
-      "The open issue at 4502 Elm Ave is a structure-condition violation owned by " +
+      "The open issue at 4502 Elm Ave is a noise violation owned by " +
       "Austin Code Enforcement. It is assigned to inspector C. Edwards, with an " +
       "active enforcement task due before the permit can be issued.",
     confidence: "2 linked sources",
@@ -74,7 +74,7 @@ export const DEMO_QUESTIONS: DemoQuestion[] = [
         file: "code_complaints.csv",
         role: "starting record",
         detail:
-          "Case 2024-0488-CC — case_type: Structure Condition, department: Code Enforcement.",
+          "Case 2024-0488-CC — case_type: Noise Violation, department: Code Enforcement.",
       },
       {
         file: "code_tasks.csv",
@@ -104,6 +104,56 @@ export const DEMO_QUESTIONS: DemoQuestion[] = [
         file: "permits.csv",
         role: "final proof",
         detail: "Permit BP-2024-014823 — status: in_review, issued_date: empty.",
+      },
+    ],
+  },
+  {
+    question: "Which strain had the highest citrus ester yield in the Q1 2026 assays?",
+    headline: "B-STR-YE-017 (EsterMax 17) peaked at 42 mg/L ethyl hexanoate in run B-RUN-FERM-033.",
+    answer:
+      "Across the Q1 2026 GC-MS assay batch, strain B-STR-YE-017 (Yeast EsterMax 17) " +
+      "produced the highest recorded ethyl hexanoate (B-MET-EHEX) at 42 mg/L in run " +
+      "B-RUN-FERM-033 — above target for a bright fruit note. The next closest was " +
+      "B-STR-YE-021 (Citriflow 21) at 38 mg/L. EsterMax 17 carries both B-GEN-AAT1 and " +
+      "B-GEN-EHT1 pathway genes and is at pilot_ready stage.",
+    confidence: "3 linked sources",
+    sources: [
+      {
+        file: "fermentation/assays.csv",
+        role: "starting record",
+        detail: "B-ASSAY-GCMS-018 — strain B-STR-YE-017, run B-RUN-FERM-033, B-MET-EHEX: 42 mg/L, pass.",
+      },
+      {
+        file: "fermentation/strains.csv",
+        role: "linked context",
+        detail: "B-STR-YE-017 Yeast EsterMax 17 — status: active, stage: pilot_ready, target: B-PROF-EST-01.",
+      },
+      {
+        file: "fermentation/metabolites.csv",
+        role: "final proof",
+        detail: "B-MET-EHEX ethyl hexanoate — sensory: apple/pineapple/citrus-like/bright fruit/waxy.",
+      },
+    ],
+  },
+  {
+    question: "Is strain B-STR-YE-021 available for a new fermentation run?",
+    headline: "No — Citriflow 21 is on HOLD-SCALEUP with no vials available.",
+    answer:
+      "Strain B-STR-YE-021 (Yeast Citriflow 21) currently has a HOLD-SCALEUP status in " +
+      "the Q1 2026 strain bank with no vials available for dispensing. The hold is pending " +
+      "completion of a scale-up pilot run. The strain is bench-validated with strong ester " +
+      "output (38 mg/L EHEX in B-RUN-FERM-036) but cannot be allocated until the pilot run completes.",
+    confidence: "2 linked sources",
+    sources: [
+      {
+        file: "fermentation/inventory.csv",
+        role: "starting record",
+        detail: "B-INV-STR-021-001 — strain B-STR-YE-021, status: HOLD-SCALEUP, Available_Vials: No.",
+      },
+      {
+        file: "fermentation/strains.csv",
+        role: "final proof",
+        detail: "B-STR-YE-021 Yeast Citriflow 21 — development_stage: bench_validated, scale-up run incomplete.",
       },
     ],
   },

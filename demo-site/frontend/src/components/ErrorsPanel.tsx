@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { AlertTriangle, AlertCircle } from "lucide-react";
 import type { AnalyzeResponse, PenFile } from "../types/pen";
 
-const API = "";
+import { API_BASE as API } from "../config/api";
 
 interface Props {
   projectId: string;
