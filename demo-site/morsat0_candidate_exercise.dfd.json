@@ -3,8 +3,8 @@
   "schemaVersion": "0.1",
   "pen_version": "0.1",
   "project": {
-    "id": "proj_nexus_module_ab",
-    "name": "Nexus Agriscience Module A/B Systems",
+    "id": "proj_morsat0_module_ab",
+    "name": "MorSat0 Agriscience Module A/B Systems",
     "revision": 0
   },
   "sources": [
@@ -4759,8 +4759,8 @@
     "level": 0,
     "notation": "yourdon_coad",
     "system_boundary": {
-      "id": "boundary_nexus",
-      "name": "Nexus Agriscience Operating Data System"
+      "id": "boundary_morsat0",
+      "name": "MorSat0 Agriscience Operating Data System"
     },
     "external_entities": [
       {

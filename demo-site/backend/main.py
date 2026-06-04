@@ -210,12 +210,12 @@ def create_example_schema(
     return {"project_id": pen.project.id, "pen": pen.model_dump(by_alias=True)}
 
 
-@app.post("/schema/nexus-exercise")
-def create_nexus_exercise_schema(
+@app.post("/schema/morsat0-exercise")
+def create_morsat0_exercise_schema(
     user: Annotated[User, Depends(current_user)],
     db: Annotated[Session, Depends(get_session)],
 ):
-    pen = _load_bundled_example(_BACKEND_ROOT / "demo_assets" / "nexus_candidate_exercise.dfd.json")
+    pen = _load_bundled_example(_BACKEND_ROOT / "demo_assets" / "morsat0_candidate_exercise.dfd.json")
     apply_rules_gate(pen)
     ProjectStore.create(pen, user, db)
     return {"project_id": pen.project.id, "pen": pen.model_dump(by_alias=True)}
@@ -227,7 +227,7 @@ def create_claude_eval_schema(
     db: Annotated[Session, Depends(get_session)],
 ):
     # The original LabTest eval file isn't in the repo; the self-analysis demo
-    # stands in for the "Nexus — Claude" button.
+    # stands in for the "MorSat0 — Claude" button.
     pen = _load_bundled_example(_BACKEND_ROOT / "demo_assets" / "dfdmaker_self.dfd.json")
     apply_rules_gate(pen)
     ProjectStore.create(pen, user, db)

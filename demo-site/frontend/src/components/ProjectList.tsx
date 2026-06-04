@@ -81,7 +81,7 @@ export function ProjectList({ username, onOpenProject, onLogout }: Props) {
           onIngested={onOpenProject}
           onStartBlank={onOpenProject}
           onLoadExample={onOpenProject}
-          onLoadNexusExercise={onOpenProject}
+          onLoadMorSat0Exercise={onOpenProject}
           onLoadClaudeEval={onOpenProject}
           onLoadRepoAnalysis={onOpenProject}
         />

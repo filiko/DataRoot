@@ -19,7 +19,7 @@ interface Props {
   onIngested: (projectId: string, pen: PenFile) => void;
   onStartBlank: (projectId: string, pen: PenFile) => void;
   onLoadExample: (projectId: string, pen: PenFile) => void;
-  onLoadNexusExercise: (projectId: string, pen: PenFile) => void;
+  onLoadMorSat0Exercise: (projectId: string, pen: PenFile) => void;
   onLoadClaudeEval: (projectId: string, pen: PenFile) => void;
   onLoadRepoAnalysis: (projectId: string, pen: PenFile) => void;
 }
@@ -48,7 +48,7 @@ export function UploadPanel({
   onIngested,
   onStartBlank,
   onLoadExample,
-  onLoadNexusExercise,
+  onLoadMorSat0Exercise,
   onLoadClaudeEval,
   onLoadRepoAnalysis,
 }: Props) {
@@ -193,20 +193,20 @@ export function UploadPanel({
     }
   }, [onLoadRepoAnalysis]);
 
-  const handleLoadNexusExercise = useCallback(async () => {
+  const handleLoadMorSat0Exercise = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API}/schema/nexus-exercise`, { method: "POST" });
+      const res = await fetch(`${API}/schema/morsat0-exercise`, { method: "POST" });
       if (!res.ok) throw new Error(await res.text());
       const data = await res.json();
-      onLoadNexusExercise(data.project_id, data.pen);
+      onLoadMorSat0Exercise(data.project_id, data.pen);
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : "Failed to load Nexus exercise");
+      setError(e instanceof Error ? e.message : "Failed to load MorSat0 exercise");
     } finally {
       setLoading(false);
     }
-  }, [onLoadNexusExercise]);
+  }, [onLoadMorSat0Exercise]);
 
   const handleOpenDfdFile = useCallback(async (file: File | undefined) => {
     if (!file) return;
@@ -426,12 +426,12 @@ export function UploadPanel({
           Load example schema
         </button>
         <button
-          onClick={handleLoadNexusExercise}
+          onClick={handleLoadMorSat0Exercise}
           disabled={loading}
           className="flex items-center gap-2 px-4 py-2 rounded-lg border border-emerald-200 bg-emerald-50 text-sm font-medium text-emerald-700 hover:border-emerald-400 hover:bg-emerald-100 transition-colors disabled:opacity-50"
         >
           <Boxes className="w-4 h-4" />
-          Nexus — Codex eval
+          MorSat0 — Codex eval
         </button>
         <button
           onClick={handleLoadClaudeEval}
@@ -439,7 +439,7 @@ export function UploadPanel({
           className="flex items-center gap-2 px-4 py-2 rounded-lg border border-violet-200 bg-violet-50 text-sm font-medium text-violet-700 hover:border-violet-400 hover:bg-violet-100 transition-colors disabled:opacity-50"
         >
           <BrainCircuit className="w-4 h-4" />
-          Nexus — Claude eval
+          MorSat0 — Claude eval
         </button>
         <button
           onClick={handleStartBlank}

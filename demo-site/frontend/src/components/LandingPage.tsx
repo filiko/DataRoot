@@ -7,7 +7,7 @@ interface Props {
   onIngested: (projectId: string, pen: PenFile) => void;
   onStartBlank: (projectId: string, pen: PenFile) => void;
   onLoadExample: (projectId: string, pen: PenFile) => void;
-  onLoadNexusExercise: (projectId: string, pen: PenFile) => void;
+  onLoadMorSat0Exercise: (projectId: string, pen: PenFile) => void;
   onLoadClaudeEval: (projectId: string, pen: PenFile) => void;
   onLoadRepoAnalysis: (projectId: string, pen: PenFile) => void;
 }

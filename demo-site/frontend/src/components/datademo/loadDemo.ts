@@ -11,7 +11,7 @@ export const DEMO_PROJECTS: DemoProject[] = [
   { id: "austin-permits",   label: "Austin Permits",   file: "/austin_permits.dfd.json"           },
   { id: "example-store",    label: "Example Store",    file: "/example_store.dfd.json"            },
   { id: "dataroot-schema",  label: "DataRoot Schema",  file: "/dfdmaker_self.dfd.json"            },
-  { id: "nexus-candidate",  label: "Nexus Candidate",  file: "/nexus_candidate_exercise.dfd.json" },
+  { id: "morsat0-candidate",  label: "MorSat0 Candidate",  file: "/morsat0_candidate_exercise.dfd.json" },
 ];
 
 export async function loadDemoProject(demo: DemoProject = DEMO_PROJECTS[0]): Promise<{ projectId: string; pen: PenFile }> {

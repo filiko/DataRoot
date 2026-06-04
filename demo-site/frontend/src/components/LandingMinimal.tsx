@@ -38,13 +38,13 @@ interface Props {
   onIngested: (projectId: string, pen: PenFile) => void;
   onStartBlank: (projectId: string, pen: PenFile) => void;
   onLoadExample: (projectId: string, pen: PenFile) => void;
-  onLoadNexusExercise: (projectId: string, pen: PenFile) => void;
+  onLoadMorSat0Exercise: (projectId: string, pen: PenFile) => void;
   onLoadClaudeEval: (projectId: string, pen: PenFile) => void;
   onLoadRepoAnalysis: (projectId: string, pen: PenFile) => void;
 }
 
 export function LandingMinimal({
-  onIngested, onStartBlank, onLoadExample, onLoadNexusExercise, onLoadClaudeEval, onLoadRepoAnalysis,
+  onIngested, onStartBlank, onLoadExample, onLoadMorSat0Exercise, onLoadClaudeEval, onLoadRepoAnalysis,
 }: Props) {
   const [dragging,     setDragging]     = useState(false);
   const [loading,      setLoading]      = useState(false);
@@ -330,8 +330,8 @@ export function LandingMinimal({
           </button>
           {[
             { label: "Load example",   action: () => apiCall(API_ROUTES.example(),       (d) => onLoadExample(d.project_id, d.pen)) },
-            { label: "Nexus — Codex",  action: () => apiCall(API_ROUTES.nexusExercise(), (d) => onLoadNexusExercise(d.project_id, d.pen)) },
-            { label: "Nexus — Claude", action: () => apiCall(API_ROUTES.claudeEval(),    (d) => onLoadClaudeEval(d.project_id, d.pen)) },
+            { label: "MorSat0 — Codex",  action: () => apiCall(API_ROUTES.morsat0Exercise(), (d) => onLoadMorSat0Exercise(d.project_id, d.pen)) },
+            { label: "MorSat0 — Claude", action: () => apiCall(API_ROUTES.claudeEval(),      (d) => onLoadClaudeEval(d.project_id, d.pen)) },
             { label: "Blank canvas",   action: () => apiCall(API_ROUTES.blank(),         (d) => onStartBlank(d.project_id, d.pen)) },
           ].map((b) => (
             <button key={b.label} onClick={b.action} disabled={loading}

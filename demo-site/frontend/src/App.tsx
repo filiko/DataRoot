@@ -354,7 +354,7 @@ export default function App() {
         onIngested={openProject}
         onStartBlank={openProject}
         onLoadExample={openProject}
-        onLoadNexusExercise={openProject}
+        onLoadMorSat0Exercise={openProject}
         onLoadClaudeEval={openProject}
         onLoadRepoAnalysis={openProject}
       />
@@ -380,7 +380,7 @@ export default function App() {
         onIngested={openProject}
         onStartBlank={openProject}
         onLoadExample={openProject}
-        onLoadNexusExercise={openProject}
+        onLoadMorSat0Exercise={openProject}
         onLoadClaudeEval={openProject}
         onLoadRepoAnalysis={openProject}
       />

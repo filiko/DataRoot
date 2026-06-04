@@ -46,7 +46,7 @@ interface Props {
   onIngested: (projectId: string, pen: PenFile) => void;
   onStartBlank: (projectId: string, pen: PenFile) => void;
   onLoadExample: (projectId: string, pen: PenFile) => void;
-  onLoadNexusExercise: (projectId: string, pen: PenFile) => void;
+  onLoadMorSat0Exercise: (projectId: string, pen: PenFile) => void;
   onLoadClaudeEval: (projectId: string, pen: PenFile) => void;
   onLoadRepoAnalysis: (projectId: string, pen: PenFile) => void;
 }
@@ -320,7 +320,7 @@ function GridlyProcessPreview() {
   );
 }
 export function LandingChalkboard({
-  onIngested: _onIngested, onStartBlank: _onStartBlank, onLoadExample, onLoadNexusExercise: _onNexus, onLoadClaudeEval: _onClaude, onLoadRepoAnalysis: _onRepo,
+  onIngested: _onIngested, onStartBlank: _onStartBlank, onLoadExample, onLoadMorSat0Exercise: _onMorSat0, onLoadClaudeEval: _onClaude, onLoadRepoAnalysis: _onRepo,
 }: Props) {
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState<string | null>(null);
