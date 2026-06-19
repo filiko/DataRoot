@@ -12,7 +12,11 @@ import type { LayoutNodeBox, Point, Rect, RoutedEdge } from "./types";
 const EDGE_NODE_GAP = 28;
 const EXIT_LENGTH = 42;
 
-export function routeEdges(nodes: LayoutNodeBox[], edges: RoutedEdge[]): RoutedEdge[] {
+export function routeEdges(
+  nodes: LayoutNodeBox[],
+  edges: RoutedEdge[],
+  options: { reuseExistingPoints?: boolean } = {},
+): RoutedEdge[] {
   const nodeMap = new Map(nodes.map((node) => [node.id, node]));
   const previousRoutes: Point[][] = [];
 
@@ -20,6 +24,13 @@ export function routeEdges(nodes: LayoutNodeBox[], edges: RoutedEdge[]): RoutedE
     const source = nodeMap.get(edge.source);
     const target = nodeMap.get(edge.target);
     if (!source || !target) return edge;
+
+    // Keep an already-routed edge as-is, but treat its polyline as an obstacle
+    // so newly routed edges still avoid crossing it.
+    if (options.reuseExistingPoints && edge.points.length >= 2) {
+      previousRoutes.push(edge.points);
+      return edge;
+    }
 
     const points = source.id === target.id
       ? routeSelfLoop(source, edge)

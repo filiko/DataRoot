@@ -1,0 +1,1364 @@
+{
+  "documentType": "dashbot.dfdmaker",
+  "schemaVersion": "0.1",
+  "pen_version": "0.1",
+  "project": {
+    "id": "proj_nexus_02_cn",
+    "name": "Nexus · 02 Control Numbers",
+    "revision": 1
+  },
+  "sources": [],
+  "erd": {
+    "notation": "crows_foot",
+    "model_level": "physical",
+    "entities": [
+      {
+        "id": "ent_cn",
+        "kind": "strong_entity",
+        "name": "control_numbers",
+        "display_name": "Control Numbers",
+        "domain": "control-numbers",
+        "connects": [
+          "all"
+        ],
+        "attributes": [
+          {
+            "id": "a_cn_value",
+            "name": "value",
+            "display_name": "Value",
+            "pg_type": "text",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "legacy: control_numbers.control_number (string)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cn_type",
+            "name": "type",
+            "display_name": "Type",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": "type BETWEEN 1 AND 18",
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "18-type code enum — shared/src/control-number.ts; legacy type_id"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cn_facprefix",
+            "name": "facility_prefix",
+            "display_name": "Facility Prefix",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cn_genocode",
+            "name": "genocode",
+            "display_name": "Genocode",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cn_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cn_finished",
+            "name": "finished_at",
+            "display_name": "Finished At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "set once when retired; immutable thereafter (DB trigger)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Universal traceability spine — every trackable entity owns exactly one. IMMUTABLE (DB trigger blocks UPDATE/DELETE except a one-time finished_at). PK is the text `value`; all control-number-bearing tables FK to it. Matches db/migrations/0000_control_numbers.sql exactly.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_cntype",
+        "kind": "lookup_table",
+        "name": "control_number_types",
+        "display_name": "Control Number Types",
+        "domain": "control-numbers",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_cnt_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "integer",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cnt_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Reference list of the 18 types. The target stores `type` as a plain integer (enum in shared/src/control-number.ts), not a FK — shown here for documentation.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_cntl",
+        "kind": "strong_entity",
+        "name": "control_number_tracking_location",
+        "display_name": "Control Number Tracking Location",
+        "domain": "control-numbers",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_cntl_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cntl_cn",
+            "name": "control_number",
+            "display_name": "Control Number",
+            "pg_type": "text",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cntl_loc",
+            "name": "tracking_location_id",
+            "display_name": "Tracking Location Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cntl_at",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Append-only location history; current location = most recent row.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_tl",
+        "kind": "strong_entity",
+        "name": "tracking_locations",
+        "display_name": "Tracking Locations",
+        "domain": "control-numbers",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_tl_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_tl_fac",
+            "name": "facility_prefix",
+            "display_name": "Facility Prefix",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "tenant key; facilities entity defined in 01_identity"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_tl_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "as-built: surviving column after 2018_09_27_202554 merged full_name->name (original 'name' dropped)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_tl_full",
+            "name": "full_name",
+            "display_name": "Full Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: NOT a separate as-built column — full_name was renamed to 'name' and original 'name' dropped in PhytoVerify 2018_09_27_202554_merge_tracking_location_name_and_full_name.php. Retained as a deprecated/no-op alias only because ids are stable contracts; do not materialize. Surviving column is 'name' (a_tl_name)."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_tl_loc",
+            "name": "location_id",
+            "display_name": "Location Id",
+            "pg_type": "integer",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": "1",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: as-built tracking_locations.location_id unsigned integer FK -> locations.id (PhytoVerify 2017_01_30_195600 + 2018_08_31_113903_change_data_tracking_locations.php). locations entity lives in 01_identity — cross-domain, no edge drawn here. Replaces stale a_tl_type (tracking_location_type was DROPPED in 2017_09_21_174512)."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_tl_type",
+            "name": "location_type",
+            "display_name": "Location Type",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: DEPRECATED — not in as-built. tracking_location_type (tinyInteger default 1) created 2017_01_30_195600 but DROPPED in PhytoVerify 2017_09_21_174512_remove_tracking_location_type_column_from_tracking_locations_table.php. Retained only because ids are stable contracts; do not materialize. Real location link is location_id (a_tl_loc)."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_tl_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_tl_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_tlt",
+        "kind": "strong_entity",
+        "name": "tracking_location_tags",
+        "display_name": "Tracking Location Tags",
+        "domain": "control-numbers",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_tlt_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_tlt_loc",
+            "name": "tracking_location_id",
+            "display_name": "Tracking Location Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_tlt_tag",
+            "name": "tag",
+            "display_name": "Tag",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "e.g. quality_assurance, veg, flower"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_tlt_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_cnf",
+        "kind": "strong_entity",
+        "name": "control_number_fitness",
+        "display_name": "Control Number Fitness",
+        "domain": "control-numbers",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_cnf_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cnf_cn",
+            "name": "control_number",
+            "display_name": "Control Number",
+            "pg_type": "text",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cnf_user",
+            "name": "user_id",
+            "display_name": "User Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "references users (01_identity); cross-domain — no edge drawn here. As-built NOT NULL: integer user_id created in PhytoVerify 2017_01_23_001651_create_control_number_fitness_table.php, FK -> users.id added 2018_08_28_151811_add_missing_foreign_keys_control_number_fitness.php."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cnf_fit",
+            "name": "is_fit",
+            "display_name": "Is Fit",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cnf_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cnf_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_cnd",
+        "kind": "strong_entity",
+        "name": "control_number_documents",
+        "display_name": "Control Number Documents",
+        "domain": "control-numbers",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_cnd_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cnd_cn",
+            "name": "control_number",
+            "display_name": "Control Number",
+            "pg_type": "text",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cnd_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cnd_doctype",
+            "name": "document_type",
+            "display_name": "Document Type",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cnd_path",
+            "name": "file_path",
+            "display_name": "File Path",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cnd_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_nb",
+        "kind": "strong_entity",
+        "name": "notebook_indexes",
+        "display_name": "Notebook Indexes (sequences)",
+        "domain": "control-numbers",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_nb_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_nb_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "e.g. SAMP"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_nb_letter",
+            "name": "letter",
+            "display_name": "Letter",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": "'A'",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_nb_idx",
+            "name": "current_index",
+            "display_name": "Current Index",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "1",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_nb_roll",
+            "name": "rollover",
+            "display_name": "Rollover",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "100",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_nb_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_nb_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      }
+    ],
+    "relationships": [
+      {
+        "id": "rel_cn_type",
+        "name": "is of type",
+        "from": {
+          "entity_id": "ent_cn",
+          "attribute_id": "a_cn_type"
+        },
+        "to": {
+          "entity_id": "ent_cntype",
+          "attribute_id": "a_cnt_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_cn_type",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "logical only — target stores type as an integer enum, no physical FK"
+        ],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_cntl_cn",
+        "name": "tracks",
+        "from": {
+          "entity_id": "ent_cntl",
+          "attribute_id": "a_cntl_cn"
+        },
+        "to": {
+          "entity_id": "ent_cn",
+          "attribute_id": "a_cn_value"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_cntl_control_number",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_cntl_loc",
+        "name": "at location",
+        "from": {
+          "entity_id": "ent_cntl",
+          "attribute_id": "a_cntl_loc"
+        },
+        "to": {
+          "entity_id": "ent_tl",
+          "attribute_id": "a_tl_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_cntl_location",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_tlt_loc",
+        "name": "tags",
+        "from": {
+          "entity_id": "ent_tlt",
+          "attribute_id": "a_tlt_loc"
+        },
+        "to": {
+          "entity_id": "ent_tl",
+          "attribute_id": "a_tl_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_tlt_location",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_cnf_cn",
+        "name": "fitness of",
+        "from": {
+          "entity_id": "ent_cnf",
+          "attribute_id": "a_cnf_cn"
+        },
+        "to": {
+          "entity_id": "ent_cn",
+          "attribute_id": "a_cn_value"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_cnf_control_number",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_cnd_cn",
+        "name": "documents",
+        "from": {
+          "entity_id": "ent_cnd",
+          "attribute_id": "a_cnd_cn"
+        },
+        "to": {
+          "entity_id": "ent_cn",
+          "attribute_id": "a_cn_value"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_cnd_control_number",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      }
+    ]
+  },
+  "dfd": {
+    "level": 0,
+    "notation": "yourdon_coad",
+    "system_boundary": {
+      "id": "boundary_cn",
+      "name": "Control-Number Authority"
+    },
+    "external_entities": [
+      {
+        "id": "ext_operator",
+        "name": "Operator",
+        "description": "Creates/retires trackable entities",
+        "source": "manual",
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "ext_qa",
+        "name": "QA / Lab",
+        "description": "Updates fitness from test outcomes",
+        "source": "manual",
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "processes": [
+      {
+        "id": "proc_alloc",
+        "number": "1.0",
+        "name": "Allocate Control Number",
+        "description": "Allocate next sequence + stamp control number",
+        "user_modified": true,
+        "mapped_relationship_id": null,
+        "source_evidence": [],
+        "source_facts": [],
+        "level_1_diagram": null
+      },
+      {
+        "id": "proc_move",
+        "number": "2.0",
+        "name": "Record Location Move",
+        "description": "Append a tracking-location row",
+        "user_modified": true,
+        "mapped_relationship_id": "rel_cntl_cn",
+        "source_evidence": [],
+        "source_facts": [],
+        "level_1_diagram": null
+      },
+      {
+        "id": "proc_fit",
+        "number": "3.0",
+        "name": "Update Fitness",
+        "description": "Record quality/compliance fitness",
+        "user_modified": true,
+        "mapped_relationship_id": "rel_cnf_cn",
+        "source_evidence": [],
+        "source_facts": [],
+        "level_1_diagram": null
+      }
+    ],
+    "data_stores": [
+      {
+        "id": "store_cn",
+        "name": "Control Numbers",
+        "description": "The spine",
+        "mapped_erd_entity": "ent_cn",
+        "user_modified": false,
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "store_seq",
+        "name": "Sequences",
+        "description": "Notebook indexes",
+        "mapped_erd_entity": "ent_nb",
+        "user_modified": false,
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "store_loc",
+        "name": "Location History",
+        "description": "Append-only",
+        "mapped_erd_entity": "ent_cntl",
+        "user_modified": false,
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "store_fit",
+        "name": "Fitness",
+        "description": "Per control number",
+        "mapped_erd_entity": "ent_cnf",
+        "user_modified": false,
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "data_flows": [
+      {
+        "id": "f1",
+        "from": "ext_operator",
+        "to": "proc_alloc",
+        "data_name": "New entity request",
+        "mapped_relationship_id": null,
+        "user_modified": false,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "f2",
+        "from": "proc_alloc",
+        "to": "store_seq",
+        "data_name": "Next index",
+        "mapped_relationship_id": null,
+        "user_modified": false,
+        "mapped_erd_entities": [
+          "ent_nb"
+        ],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "f3",
+        "from": "proc_alloc",
+        "to": "store_cn",
+        "data_name": "Control number",
+        "mapped_relationship_id": null,
+        "user_modified": false,
+        "mapped_erd_entities": [
+          "ent_cn"
+        ],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "f4",
+        "from": "ext_operator",
+        "to": "proc_move",
+        "data_name": "Move request",
+        "mapped_relationship_id": null,
+        "user_modified": false,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "f5",
+        "from": "proc_move",
+        "to": "store_loc",
+        "data_name": "Location row",
+        "mapped_relationship_id": "rel_cntl_cn",
+        "user_modified": false,
+        "mapped_erd_entities": [
+          "ent_cntl"
+        ],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "f6",
+        "from": "ext_qa",
+        "to": "proc_fit",
+        "data_name": "Fitness result",
+        "mapped_relationship_id": null,
+        "user_modified": false,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "f7",
+        "from": "proc_fit",
+        "to": "store_fit",
+        "data_name": "Fitness record",
+        "mapped_relationship_id": "rel_cnf_cn",
+        "user_modified": false,
+        "mapped_erd_entities": [
+          "ent_cnf"
+        ],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "business_rules": [
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/control-numbers/domain/control-number.ts:36-66"
+        ],
+        "to_contexts": [],
+        "id": "CN-INV-01",
+        "title": "Immutable after creation",
+        "category": "invariant",
+        "statement": "Control numbers are never edited or deleted — only marked finished. finishControlNumber returns a NEW frozen object.",
+        "condition": "Object.freeze; finish creates new object",
+        "spec_source": "spec-control-numbers.md §54-58",
+        "verified_by": "docs/context/behavioral-parity.md (control-numbers: Immutability invariant)"
+      },
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/control-numbers/domain/control-number.ts:62-64"
+        ],
+        "to_contexts": [],
+        "id": "CN-INV-02",
+        "title": "No double-finish",
+        "category": "invariant",
+        "statement": "Finishing an already-finished control number is rejected.",
+        "condition": "throw if cn.finishedAt !== null",
+        "spec_source": "spec-control-numbers.md",
+        "verified_by": "docs/context/behavioral-parity.md (No double-finish)"
+      },
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "shared/src/control-number.ts:13-32"
+        ],
+        "to_contexts": [],
+        "id": "CN-INV-03",
+        "title": "18 fixed type codes",
+        "category": "invariant",
+        "statement": "Exactly 18 control-number types (PLANT_LOT=1 … PACKAGE=18) with fixed IDs.",
+        "spec_source": "spec-control-numbers.md §29-50",
+        "verified_by": "docs/context/behavioral-parity.md (18 type codes)"
+      },
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/control-numbers/domain/control-number.ts:43-45"
+        ],
+        "to_contexts": [],
+        "id": "CN-VAL-01",
+        "title": "Format {facilityPrefix}{YYMMDD}-{genocode}",
+        "category": "validation",
+        "statement": "Value composes facility prefix + YYMMDD date + genocode, with optional .NN sub-unit sequence and -SUFFIX (e.g. -HVST).",
+        "spec_source": "spec-control-numbers.md §20-27",
+        "verified_by": "docs/context/behavioral-parity.md (Format pattern)"
+      }
+    ],
+    "connectors": [
+      {
+        "id": "conn_seam1_control_numbers",
+        "name": "Seam 1 — Control-Number authority",
+        "kind": "shared_service",
+        "trigger": "Any context mints a traceable record",
+        "effect": "A single immutable control number ({prefix}{YYMMDD}-{genocode}, 18 type codes) is issued and never edited/deleted",
+        "from_context": "02_control_numbers",
+        "to_contexts": [
+          "03_genetics",
+          "04_cultivation_harvest",
+          "05_refinement_packaging",
+          "06_qa_lab",
+          "07_quality_batch"
+        ],
+        "contract": "ControlNumberService.create(type, facilityPrefix, genocode, date) -> value",
+        "enforced_at": [
+          "backend/src/contexts/control-numbers/domain/control-number.ts:36-66",
+          "backend/src/contexts/control-numbers/service/control-number-service.ts:18-32"
+        ],
+        "spec_source": "40-unified-workflow-graph.md (Seam 1); spec-control-numbers.md",
+        "status": "wired",
+        "review_status": "accepted"
+      },
+      {
+        "id": "conn_harvest_finish_cn",
+        "name": "Harvest FINISHED → control-number finish",
+        "kind": "seam",
+        "trigger": "Harvest phase transitions to FINISHED (40)",
+        "effect": "The harvest's control number is stamped finished (is_finished/finishedAt) — forward, no double-finish",
+        "from_context": "04_cultivation_harvest",
+        "to_contexts": [
+          "02_control_numbers"
+        ],
+        "contract": "transitionHarvestPhase(id, FINISHED) -> controlNumberService.finish(harvest.controlNumber, now)",
+        "enforced_at": [
+          "backend/src/contexts/cultivation/service/cultivation-service.ts:225-228"
+        ],
+        "spec_source": "spec-workflow-harvest.md §56-57",
+        "status": "wired",
+        "review_status": "accepted"
+      }
+    ]
+  },
+  "layout": {
+    "erd": {
+      "nodes": [
+        {
+          "id": "ent_cntype",
+          "x": 60,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_cn",
+          "x": 440,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_nb",
+          "x": 820,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_cnf",
+          "x": 60,
+          "y": 380,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_cntl",
+          "x": 440,
+          "y": 380,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_tl",
+          "x": 820,
+          "y": 380,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_cnd",
+          "x": 60,
+          "y": 700,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_tlt",
+          "x": 440,
+          "y": 700,
+          "width": 300,
+          "height": 230
+        }
+      ],
+      "edges": []
+    },
+    "dfd": {
+      "nodes": [],
+      "edges": []
+    },
+    "dfd_level_1": {}
+  },
+  "styles": {
+    "theme": "minimal"
+  },
+  "postgres": {
+    "dialect": "postgresql",
+    "extensions": [
+      "pgcrypto"
+    ],
+    "schema_name": "public",
+    "default_primary_key": {
+      "type": "uuid",
+      "default": "gen_random_uuid()"
+    },
+    "add_audit_timestamps": false
+  },
+  "review": {
+    "proposals": [],
+    "warnings": [],
+    "dismissed_warnings": []
+  }
+}

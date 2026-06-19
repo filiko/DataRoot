@@ -1,4 +1,4 @@
-"""Runtime bootstrap for the hosted DataRoot Miro panel."""
+"""Runtime bootstrap for the hosted DataRoot Ask API."""
 
 from __future__ import annotations
 

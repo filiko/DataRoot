@@ -68,16 +68,16 @@ of focused build (Friday eve through Sunday demo).
 
 ## Hour 26–28: Tier 2 (only after Tier 1 passes)
 
-- Miro REST renderer using `MIRO_ACCESS_TOKEN`.
-- Cytoscape/HTML fallback.
-- Web UI with chat + Miro embed.
+- Web UI with chat, answer pane, and provenance display.
+- Demo-site DFD/ERD editor polish.
+- Export/import polish for local diagram fixtures.
 
 ## Hour 28–30: Buffer
 
 - Record backup video.
 - Practice demo script.
 - Test on actual demo laptop.
-- Pre-warm Miro board the night before.
+- Pre-load the Nexus demo fixtures and known-good question set.
 
 ## Cut order if behind
 
@@ -85,7 +85,7 @@ At any checkpoint, if more than 2 hours behind: cut from the bottom
 of Tier 3, then Tier 2. Demo polish and buffer are non-negotiable —
 a polished Tier 1 demo wins more often than a janky Tier 3.
 
-**Cut order:** Web UI → Miro → Tier 3 polish → Tier 2 features.
+**Cut order:** export polish → Tier 3 polish → Tier 2 features.
 Always protect: profiler, linker, Domain Spec Generator, query agent.
 
 ← Back to [CONTEXT.md](../CONTEXT.md)

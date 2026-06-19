@@ -8,6 +8,7 @@ from pathlib import Path
 
 from models.pen import PenFile
 from repo_analysis.compiler import compile_pen_from_facts
+from repo_analysis.systemmap_to_pen import synthesize_behavioral_layer
 from repo_analysis.evidence_store import write_evidence_jsonl
 from repo_analysis.fact_store import write_facts_jsonl
 from repo_analysis.fastapi_provider import (
@@ -201,6 +202,12 @@ def analyze_repo(
         project_name=f"{repo.name} Repo Analysis",
         repo_root=repo,
     )
+    # Behavioral layer: detect real business rules (validators/state machines)
+    # and connectors (middleware/auth/outbound calls) so the Business Rules and
+    # Connectors tabs are populated with evidence-linked content for this repo.
+    rules, connectors = synthesize_behavioral_layer(repo, inventory)
+    pen.dfd.business_rules = rules
+    pen.dfd.connectors = connectors
     run_logs.append(_provider_log(run_id, "pen_compiler", started_at, started_perf, len(pen.dfd.processes)))
     pen_path = output / "project.dfd.json"
     pen_path.write_text(

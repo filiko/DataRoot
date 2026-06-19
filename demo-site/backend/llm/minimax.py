@@ -27,16 +27,24 @@ def is_configured() -> bool:
     return bool(MINIMAX_API_KEY)
 
 
-def _complete(system: str, user: str, *, max_tokens: int = 1024) -> str:
-    """Single-turn completion against MiniMax. Returns concatenated text content."""
+def _complete(system: str, user: str, *, max_tokens: int = 1024,
+              temperature: float | None = None) -> str:
+    """Single-turn completion against MiniMax. Returns concatenated text content.
+
+    `temperature` is passed through only when set — eval/deterministic callers
+    pass 0; the chat/ask paths leave it unset to use the provider default."""
     from anthropic import Anthropic
 
     client = Anthropic(api_key=MINIMAX_API_KEY, base_url=MINIMAX_BASE_URL)
+    extra: dict[str, Any] = {}
+    if temperature is not None:
+        extra["temperature"] = temperature
     resp = client.messages.create(
         model=MINIMAX_MODEL,
         max_tokens=max_tokens,
         system=system,
         messages=[{"role": "user", "content": user}],
+        **extra,
     )
     parts = [b.text for b in resp.content if getattr(b, "type", None) == "text"]
     return "\n".join(parts).strip()

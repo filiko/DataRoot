@@ -1,0 +1,2938 @@
+{
+  "documentType": "dashbot.dfdmaker",
+  "schemaVersion": "0.1",
+  "pen_version": "0.1",
+  "project": {
+    "id": "proj_nexus_03_genetics",
+    "name": "Nexus · 03 Genetics",
+    "revision": 1
+  },
+  "sources": [],
+  "erd": {
+    "notation": "crows_foot",
+    "model_level": "physical",
+    "entities": [
+      {
+        "id": "ent_cn",
+        "kind": "strong_entity",
+        "name": "control_numbers",
+        "display_name": "Control Numbers",
+        "domain": "control-numbers",
+        "connects": [
+          "all"
+        ],
+        "attributes": [
+          {
+            "id": "a_cn_value",
+            "name": "value",
+            "display_name": "Value",
+            "pg_type": "text",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cn_type",
+            "name": "type",
+            "display_name": "Type",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": "type BETWEEN 1 AND 18",
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cn_finished",
+            "name": "finished_at",
+            "display_name": "Finished At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Traceability spine (full definition in 02_control_numbers). Every control-number-bearing entity here FKs to value.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_gl",
+        "kind": "strong_entity",
+        "name": "genocode_library",
+        "display_name": "Genocode Library (strain master)",
+        "domain": "genetics",
+        "connects": [
+          "product-master",
+          "consumer-profile",
+          "sales"
+        ],
+        "attributes": [
+          {
+            "id": "a_gl_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gl_genocode",
+            "name": "genocode",
+            "display_name": "Genocode",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gl_name",
+            "name": "common_name",
+            "display_name": "Common Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gl_terp",
+            "name": "primary_terpene",
+            "display_name": "Primary Terpene",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "1",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gl_thc",
+            "name": "thc_cbd_type",
+            "display_name": "Thc Cbd Type",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "2",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gl_breed",
+            "name": "notes",
+            "display_name": "Notes",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2018_01_31_152200_add_production_code_chemocode_and_notes_column_to_genocode_library.php renameColumn('breeding_code','notes')"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gl_prodcode",
+            "name": "production_code",
+            "display_name": "Production Code",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2018_01_31_152200_add_production_code_chemocode_and_notes_column_to_genocode_library.php production_code string nullable"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gl_chemocode",
+            "name": "chemocode",
+            "display_name": "Chemocode",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": "'XXXXX'",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2018_01_31_152200_add_production_code_chemocode_and_notes_column_to_genocode_library.php chemocode string(5) default 'XXXXX'"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gl_prdd",
+            "name": "is_prdd",
+            "display_name": "Is Prdd",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2017_12_15_202747_add_is_prdd_field_to_genocode_library.php is_prdd boolean default 0 (backfilled true)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gl_loc",
+            "name": "location_id",
+            "display_name": "Location Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: 2018_08_29_122529_add_missing_fk_to_genocode_library.php location_id FK->locations. locations is out-of-domain (identity/facilities); modeled as a nullable FK column, no in-diagram relationship."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gl_active",
+            "name": "is_active",
+            "display_name": "Is Active",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "true",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gl_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gl_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Strain identity (genocode). Referenced downstream by product-master, consumer profile, and sales strain data — a cross-department connection point.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_clone",
+        "kind": "strong_entity",
+        "name": "clone_lots",
+        "display_name": "Clone Lots",
+        "domain": "genetics",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_cl_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cl_geno",
+            "name": "genocode_library_id",
+            "display_name": "Genocode Library Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cl_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cl_terp",
+            "name": "primary_terpene",
+            "display_name": "Primary Terpene",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "1",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cl_thc",
+            "name": "thc_cbd_type",
+            "display_name": "Thc Cbd Type",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "2",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cl_count",
+            "name": "number_of_clones",
+            "display_name": "Number Of Clones",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cl_isseed",
+            "name": "is_seed",
+            "display_name": "Is Seed",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2018_09_17_191307_add_is_seed_is_clone_to_clone_lots_table.php is_seed boolean default 0"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cl_isclone",
+            "name": "is_clone",
+            "display_name": "Is Clone",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: non-source convenience flag. No is_clone column exists in any migration (grep is_clone across all 339 migrations = 0 hits). Its namesake migration 2018_09_17_191307_add_is_seed_is_clone_to_clone_lots_table.php has a misleading filename: up() adds ONLY is_seed. The real column is_seed is already modeled as a_cl_isseed; is_clone is retained as a derived/convenience boolean (default false), not source-backed."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cl_prdd",
+            "name": "is_prdd",
+            "display_name": "Is Prdd",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2018_01_30_152421_add_is_prdd_to_clone_lots.php is_prdd tinyInteger default 0 (backfilled 1)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cl_loc",
+            "name": "location_id",
+            "display_name": "Location Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: 2017_01_24_123359_create_clone_lots_table.php + 2018_08_27_202335 location_id FK->locations. locations is out-of-domain; modeled as a nullable FK column, no in-diagram relationship."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cl_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cl_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Cuttings from a mother plant; not control-number-bearing. Feeds gene lots.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_genelot",
+        "kind": "strong_entity",
+        "name": "gene_lots",
+        "display_name": "Gene Lots",
+        "domain": "genetics",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_gel_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gel_cn",
+            "name": "control_number",
+            "display_name": "Control Number",
+            "pg_type": "text",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ control_numbers.value (type 9)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gel_clone",
+            "name": "clone_lot_id",
+            "display_name": "Clone Lot Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gel_geno",
+            "name": "genocode_library_id",
+            "display_name": "Genocode Library Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2017_12_18_004137_add_genocode_library_id_to_gene_lots_table.php genocode_library_id added nullable unsigned (backfilled)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gel_breed",
+            "name": "breeding_code",
+            "display_name": "Breeding Code",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gel_culled",
+            "name": "is_culled",
+            "display_name": "Is Culled",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gel_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gel_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Control# type 9. Created from clone lots.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_gep",
+        "kind": "strong_entity",
+        "name": "gene_lot_plants",
+        "display_name": "Gene Lot Plants",
+        "domain": "genetics",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_gep_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gep_cn",
+            "name": "control_number",
+            "display_name": "Control Number",
+            "pg_type": "text",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ control_numbers.value (type 10)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gep_lot",
+            "name": "gene_lot_id",
+            "display_name": "Gene Lot Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gep_dry",
+            "name": "dry_weight",
+            "display_name": "Dry Weight",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2017_12_11_222914_add_dry_weight_and_seed_scale_to_gene_lot_plants_table.php dry_weight float default 0 (legacy float -> numeric)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gep_scale",
+            "name": "seed_scale",
+            "display_name": "Seed Scale",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: non-source convenience field. No seed_scale column exists in any migration (grep seed_scale across all 339 migrations = 0 hits). Its namesake migration 2017_12_11_222914_add_dry_weight_and_seed_scale_to_gene_lot_plants_table.php has a misleading filename: up() adds ONLY seed_set (tinyInteger) and dry_weight (float). Both real columns are already modeled (a_gep_seedset, a_gep_dry); seed_scale is retained as a non-source numeric placeholder."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gep_seedset",
+            "name": "seed_set",
+            "display_name": "Seed Set",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2017_12_11_222914_add_dry_weight_and_seed_scale_to_gene_lot_plants_table.php seed_set tinyInteger default 0"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gep_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_gep_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Control# type 10. Donor/target candidates.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_se",
+        "kind": "strong_entity",
+        "name": "seed_experiments",
+        "display_name": "Seed Experiments",
+        "domain": "genetics",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_se_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_se_cn",
+            "name": "control_number",
+            "display_name": "Control Number",
+            "pg_type": "text",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ control_numbers.value (type 11)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_se_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: no source column. gnbr_experiments has no name; identity is the control_number (gnbr_number). Retained as an optional human label."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_se_desc",
+            "name": "description",
+            "display_name": "Description",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: no source column on gnbr_experiments/seed_experiments. Retained as an optional free-text description."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_se_phase",
+            "name": "current_phase",
+            "display_name": "Current Phase",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "1",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2017_11_29_171049_add_phases_to_gnbr_experiment_table.php current_phase tinyInteger default 1"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_se_expout",
+            "name": "expected_output",
+            "display_name": "Expected Output",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2017_10_02_174907_create_gnbr_experiment_table.php expected_output (string)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_se_fertdate",
+            "name": "fertilization_date",
+            "display_name": "Fertilization Date",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2017_11_29_171049_add_phases_to_gnbr_experiment_table.php fertilization_date timestamp"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_se_harvdate",
+            "name": "harvest_date",
+            "display_name": "Harvest Date",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2017_11_29_171049_add_phases_to_gnbr_experiment_table.php harvest_date timestamp"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_se_drydate",
+            "name": "dry_date",
+            "display_name": "Dry Date",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2017_11_29_171049_add_phases_to_gnbr_experiment_table.php dry_date timestamp"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_se_sortdate",
+            "name": "sort_date",
+            "display_name": "Sort Date",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2017_11_29_171049_add_phases_to_gnbr_experiment_table.php sort_date timestamp"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_se_culled",
+            "name": "is_culled",
+            "display_name": "Is Culled",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_se_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_se_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Control# type 11. Cross-pollination: donor plants × target plants (legacy gnbr_experiments).",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_sl",
+        "kind": "strong_entity",
+        "name": "seed_lots",
+        "display_name": "Seed Lots",
+        "domain": "genetics",
+        "connects": [
+          "product-master"
+        ],
+        "attributes": [
+          {
+            "id": "a_sl_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_sl_cn",
+            "name": "control_number",
+            "display_name": "Control Number",
+            "pg_type": "text",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ control_numbers.value (type 12)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_sl_exp",
+            "name": "seed_experiment_id",
+            "display_name": "Seed Experiment Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_sl_target",
+            "name": "target_gene_lot_id",
+            "display_name": "Target Gene Lot Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_sl_donor",
+            "name": "donor_gene_lot_id",
+            "display_name": "Donor Gene Lot Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_sl_total",
+            "name": "total_weight",
+            "display_name": "Total Weight",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_sl_good",
+            "name": "good_weight",
+            "display_name": "Good Weight",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_sl_sample",
+            "name": "sample_weight",
+            "display_name": "Sample Weight",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_sl_seeds",
+            "name": "number_of_seeds",
+            "display_name": "Number Of Seeds",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_sl_expout",
+            "name": "expected_output",
+            "display_name": "Expected Output",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2018_02_05_205520_add_expected_output_to_seed_lots_table.php expected_output string(5) default ''"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_sl_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_sl_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Control# type 12. Resulting seeds (target × donor). N seed lots → 1 product (mapping defined in 08_product_master) — a connection point.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_germ",
+        "kind": "strong_entity",
+        "name": "germ_lots",
+        "display_name": "Germ Lots",
+        "domain": "genetics",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_germ_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_germ_cn",
+            "name": "control_number",
+            "display_name": "Control Number",
+            "pg_type": "text",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ control_numbers.value (type 15)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_germ_sl",
+            "name": "seed_lot_id",
+            "display_name": "Seed Lot Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_germ_planted",
+            "name": "number_of_seeds_planted",
+            "display_name": "Number Of Seeds Planted",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_germ_seldate",
+            "name": "selection_date",
+            "display_name": "Selection Date",
+            "pg_type": "date",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_germ_sampdate",
+            "name": "sample_date",
+            "display_name": "Sample Date",
+            "pg_type": "date",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2017_12_28_150201_create_germ_lots_table.php harvest_date; 2018_01_16_191759 renamed harvest_date->sampling_date (source name: sampling_date)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_germ_reveg",
+            "name": "reveg_date",
+            "display_name": "Reveg Date",
+            "pg_type": "date",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_germ_veg",
+            "name": "veg_date",
+            "display_name": "Veg Date",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2017_12_28_150201_create_germ_lots_table.php veg_date timestamp"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_germ_flower",
+            "name": "flower_date",
+            "display_name": "Flower Date",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2017_12_28_150201_create_germ_lots_table.php flower_date timestamp"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_germ_phase",
+            "name": "current_phase",
+            "display_name": "Current Phase",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "1",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2017_12_28_150201_create_germ_lots_table.php current_phase tinyInteger default 1"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_germ_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_germ_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Control# type 15 (GNBR_EXPERIMENT). Germination tracking for a seed lot (legacy germ_lots, renamed gnbr_experiments).",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_slp",
+        "kind": "strong_entity",
+        "name": "seed_lot_plants",
+        "display_name": "Seed Lot Plants",
+        "domain": "genetics",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_slp_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_slp_cn",
+            "name": "control_number",
+            "display_name": "Control Number",
+            "pg_type": "text",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ control_numbers.value (type 14)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_slp_sl",
+            "name": "seed_lot_id",
+            "display_name": "Seed Lot Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_slp_germ",
+            "name": "germ_lot_id",
+            "display_name": "Germ Lot Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_slp_weight",
+            "name": "weight",
+            "display_name": "Weight",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_slp_nose",
+            "name": "has_nose",
+            "display_name": "Has Nose",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2018_01_18_024321_add_nose_structure_and_notes_columsn_to_seed_lot_plants_table.php has_nose boolean default false"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_slp_struct",
+            "name": "has_structure",
+            "display_name": "Has Structure",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2018_01_18_024321_add_nose_structure_and_notes_columsn_to_seed_lot_plants_table.php has_structure boolean default false"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_slp_notes",
+            "name": "notes",
+            "display_name": "Notes",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_slp_selected",
+            "name": "selected",
+            "display_name": "Selected",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2018_01_18_151342_add_selected_column_to_seed_lot_plants_table.php is_selected boolean default false (source name: is_selected)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_slp_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_slp_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Control# type 14. Plants grown from a seed lot; selected ones feed cultivation.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_ct",
+        "kind": "lookup_table",
+        "name": "chemotypic_traits",
+        "display_name": "Chemotypic Traits",
+        "domain": "genetics",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_ct_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "integer",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ct_trait",
+            "name": "trait",
+            "display_name": "Trait",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ct_code",
+            "name": "code",
+            "display_name": "Code",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ct_type",
+            "name": "type",
+            "display_name": "Type",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ct_active",
+            "name": "is_active",
+            "display_name": "Is Active",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "true",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: 2017_10_23_211806_create_chemotypic_traits_table.php is_active is NOT NULL with no default; default 'true' is a design hardening choice."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_glpse",
+        "kind": "strong_entity",
+        "name": "gene_lot_plant_seed_experiment",
+        "display_name": "Gene Lot Plant × Seed Experiment (M:N)",
+        "domain": "genetics",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_glpse_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_glpse_plant",
+            "name": "gene_lot_plant_id",
+            "display_name": "Gene Lot Plant Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_glpse_exp",
+            "name": "seed_experiment_id",
+            "display_name": "Seed Experiment Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_glpse_role",
+            "name": "is_donor",
+            "display_name": "Is Donor",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2017_11_14_145610_create_gene_lot_plant_gnbr_experiment_table.php is_donor boolean default false"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_glpse_alias",
+            "name": "seed_experiment_plant_name",
+            "display_name": "Seed Experiment Plant Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2018_02_01_192343_add_seed_experiment_plant_name_alias...php seed_experiment_plant_name string default ''"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_glpse_expout",
+            "name": "expected_output",
+            "display_name": "Expected Output",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2018_02_05_153315_add_expected_output_to_gene_lot_plant_seed_experiment_pivot_table.php expected_output string(5) default ''"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Assigns gene-lot plants to an experiment as donor or target (is_donor).",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_sec",
+        "kind": "strong_entity",
+        "name": "seed_experiment_components",
+        "display_name": "Seed Experiment Components",
+        "domain": "genetics",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_sec_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_sec_cn",
+            "name": "control_number",
+            "display_name": "Control Number",
+            "pg_type": "text",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ control_numbers.value (type 13)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_sec_se",
+            "name": "seed_experiment_id",
+            "display_name": "Seed Experiment Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2017_12_26_175838_create_gnbr_experiment_components_table.php gnbr_experiment_id FK; renamed seed_experiment_id (2018_01_30_184753)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_sec_type",
+            "name": "seed_experiment_component_type",
+            "display_name": "Seed Experiment Component Type",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2017_12_26_175838_create_gnbr_experiment_components_table.php gnbr_experiment_component_type tinyInteger default 0 (renamed seed_experiment_component_type)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_sec_weight",
+            "name": "weight",
+            "display_name": "Weight",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2017_12_26_175838_create_gnbr_experiment_components_table.php weight float default 0.0"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_sec_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_sec_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Control# type 13 (SEED_EXPERIMENT_COMPONENT). Component weights of a seed experiment (legacy gnbr_experiment_components -> seed_experiment_components).",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_pt",
+        "kind": "lookup_table",
+        "name": "phenotypic_traits",
+        "display_name": "Phenotypic Traits",
+        "domain": "genetics",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_pt_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "integer",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pt_trait",
+            "name": "trait",
+            "display_name": "Trait",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2017_10_02_175550_create_gnbr_traits_table.php trait string(64); renamed phenotypic_traits (2017_10_09_191640)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pt_code",
+            "name": "code",
+            "display_name": "Code",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pt_type",
+            "name": "type",
+            "display_name": "Type",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pt_active",
+            "name": "is_active",
+            "display_name": "Is Active",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "true",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: 2017_10_02_175550_create_gnbr_traits_table.php is_active is NOT NULL with no default; default 'true' is a design hardening choice."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Phenotypic trait lookup (legacy gnbr_traits -> phenotypic_traits), parallel to chemotypic_traits. DESIGN: source trait<->experiment pivots were dropped (2018_02_05_192059); kept as a standalone lookup.",
+        "confidence": 1,
+        "review_status": "accepted"
+      }
+    ],
+    "relationships": [
+      {
+        "id": "rel_genelot_cn",
+        "name": "identified by",
+        "from": {
+          "entity_id": "ent_genelot",
+          "attribute_id": "a_gel_cn"
+        },
+        "to": {
+          "entity_id": "ent_cn",
+          "attribute_id": "a_cn_value"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_rel_genelot_cn",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_gep_cn",
+        "name": "identified by",
+        "from": {
+          "entity_id": "ent_gep",
+          "attribute_id": "a_gep_cn"
+        },
+        "to": {
+          "entity_id": "ent_cn",
+          "attribute_id": "a_cn_value"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_rel_gep_cn",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_se_cn",
+        "name": "identified by",
+        "from": {
+          "entity_id": "ent_se",
+          "attribute_id": "a_se_cn"
+        },
+        "to": {
+          "entity_id": "ent_cn",
+          "attribute_id": "a_cn_value"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_rel_se_cn",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_sl_cn",
+        "name": "identified by",
+        "from": {
+          "entity_id": "ent_sl",
+          "attribute_id": "a_sl_cn"
+        },
+        "to": {
+          "entity_id": "ent_cn",
+          "attribute_id": "a_cn_value"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_rel_sl_cn",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_slp_cn",
+        "name": "identified by",
+        "from": {
+          "entity_id": "ent_slp",
+          "attribute_id": "a_slp_cn"
+        },
+        "to": {
+          "entity_id": "ent_cn",
+          "attribute_id": "a_cn_value"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_rel_slp_cn",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_germ_cn",
+        "name": "identified by",
+        "from": {
+          "entity_id": "ent_germ",
+          "attribute_id": "a_germ_cn"
+        },
+        "to": {
+          "entity_id": "ent_cn",
+          "attribute_id": "a_cn_value"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_rel_germ_cn",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_sec_cn",
+        "name": "identified by",
+        "from": {
+          "entity_id": "ent_sec",
+          "attribute_id": "a_sec_cn"
+        },
+        "to": {
+          "entity_id": "ent_cn",
+          "attribute_id": "a_cn_value"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_rel_sec_cn",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_clone_geno",
+        "name": "of strain",
+        "from": {
+          "entity_id": "ent_clone",
+          "attribute_id": "a_cl_geno"
+        },
+        "to": {
+          "entity_id": "ent_gl",
+          "attribute_id": "a_gl_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_clone_geno",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_genelot_geno",
+        "name": "of strain",
+        "from": {
+          "entity_id": "ent_genelot",
+          "attribute_id": "a_gel_geno"
+        },
+        "to": {
+          "entity_id": "ent_gl",
+          "attribute_id": "a_gl_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_genelot_geno",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_genelot_clone",
+        "name": "from clones",
+        "from": {
+          "entity_id": "ent_genelot",
+          "attribute_id": "a_gel_clone"
+        },
+        "to": {
+          "entity_id": "ent_clone",
+          "attribute_id": "a_cl_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_genelot_clone",
+          "on_delete": "set_null",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_gep_lot",
+        "name": "in lot",
+        "from": {
+          "entity_id": "ent_gep",
+          "attribute_id": "a_gep_lot"
+        },
+        "to": {
+          "entity_id": "ent_genelot",
+          "attribute_id": "a_gel_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_gep_lot",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_sl_exp",
+        "name": "from experiment",
+        "from": {
+          "entity_id": "ent_sl",
+          "attribute_id": "a_sl_exp"
+        },
+        "to": {
+          "entity_id": "ent_se",
+          "attribute_id": "a_se_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_sl_exp",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "DESIGN: source 2017_12_17_205146_create_seed_lots_table.php gnbr_experiment_id onDelete('cascade'); hardened to restrict to prevent accidental loss of derived seed lots."
+        ],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_sl_target",
+        "name": "target",
+        "from": {
+          "entity_id": "ent_sl",
+          "attribute_id": "a_sl_target"
+        },
+        "to": {
+          "entity_id": "ent_genelot",
+          "attribute_id": "a_gel_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_sl_target",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "DESIGN: source 2017_12_17_205146_create_seed_lots_table.php target_id onDelete('cascade'); hardened to restrict."
+        ],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_sl_donor",
+        "name": "donor",
+        "from": {
+          "entity_id": "ent_sl",
+          "attribute_id": "a_sl_donor"
+        },
+        "to": {
+          "entity_id": "ent_genelot",
+          "attribute_id": "a_gel_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_sl_donor",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "DESIGN: source 2017_12_17_205146_create_seed_lots_table.php donor_id onDelete('cascade'); hardened to restrict."
+        ],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_germ_sl",
+        "name": "germinates",
+        "from": {
+          "entity_id": "ent_germ",
+          "attribute_id": "a_germ_sl"
+        },
+        "to": {
+          "entity_id": "ent_sl",
+          "attribute_id": "a_sl_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_germ_sl",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "DESIGN: source 2017_12_28_150201_create_germ_lots_table.php seed_lot_id onDelete('cascade'); hardened to restrict."
+        ],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_slp_sl",
+        "name": "in seed lot",
+        "from": {
+          "entity_id": "ent_slp",
+          "attribute_id": "a_slp_sl"
+        },
+        "to": {
+          "entity_id": "ent_sl",
+          "attribute_id": "a_sl_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_slp_sl",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_slp_germ",
+        "name": "germ lot",
+        "from": {
+          "entity_id": "ent_slp",
+          "attribute_id": "a_slp_germ"
+        },
+        "to": {
+          "entity_id": "ent_germ",
+          "attribute_id": "a_germ_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_slp_germ",
+          "on_delete": "set_null",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_glpse_plant",
+        "name": "plant",
+        "from": {
+          "entity_id": "ent_glpse",
+          "attribute_id": "a_glpse_plant"
+        },
+        "to": {
+          "entity_id": "ent_gep",
+          "attribute_id": "a_gep_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_glpse_plant",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_glpse_exp",
+        "name": "experiment",
+        "from": {
+          "entity_id": "ent_glpse",
+          "attribute_id": "a_glpse_exp"
+        },
+        "to": {
+          "entity_id": "ent_se",
+          "attribute_id": "a_se_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_glpse_exp",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_sec_se",
+        "name": "component of",
+        "from": {
+          "entity_id": "ent_sec",
+          "attribute_id": "a_sec_se"
+        },
+        "to": {
+          "entity_id": "ent_se",
+          "attribute_id": "a_se_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_sec_se",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      }
+    ]
+  },
+  "dfd": {
+    "level": 0,
+    "notation": "yourdon_coad",
+    "system_boundary": {
+      "id": "boundary_nexus",
+      "name": "Nexus · 03 Genetics"
+    },
+    "external_entities": [],
+    "processes": [],
+    "data_stores": [],
+    "data_flows": [],
+    "business_rules": [
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/genetics/service/genetics-service.ts"
+        ],
+        "to_contexts": [],
+        "id": "GEN-INV-01",
+        "title": "Per-entity control-number types",
+        "category": "invariant",
+        "statement": "GeneLot=9, GeneLotPlant=10, SeedExperiment=11, SeedLot=12, SeedLotPlant=14, GermLot(GNBR)=15.",
+        "spec_source": "spec-workflow-genetics.md",
+        "verified_by": "docs/context/behavioral-parity.md (genetics: CN types)"
+      },
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/genetics/domain/genetics.ts:351-372"
+        ],
+        "to_contexts": [],
+        "id": "GEN-INV-02",
+        "title": "Cull is immutable",
+        "category": "invariant",
+        "statement": "cullGeneLot/cullSeedExperiment return NEW frozen objects with isCulled=true; originals never mutated.",
+        "spec_source": "spec-workflow-genetics.md §45",
+        "verified_by": "docs/context/behavioral-parity.md (Cull semantics)"
+      },
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/genetics/domain/genetics.ts:220-237",
+          "backend/src/contexts/genetics/service/genetics-service.ts:227-233"
+        ],
+        "to_contexts": [],
+        "id": "GEN-VAL-01",
+        "title": "SeedLot requires donor + target lineage",
+        "category": "validation",
+        "statement": "Creating a SeedLot requires both targetGeneLotId and donorGeneLotId; the service verifies both exist.",
+        "spec_source": "spec-workflow-genetics.md §55",
+        "verified_by": "docs/context/behavioral-parity.md (SeedLot lineage)"
+      },
+      {
+        "severity": "warning",
+        "status": "gap",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/genetics/service/genetics-service.ts (createGeneLot)"
+        ],
+        "to_contexts": [],
+        "id": "GEN-GAP-01",
+        "title": "CloneLot.numberOfClones decrement",
+        "category": "invariant",
+        "statement": "Spec: creating a gene lot from a clone lot decrements clone_lot.number_of_clones by N. cloneLotRepo is now injected, but the decrement is not yet applied.",
+        "spec_source": "spec-workflow-genetics.md §32",
+        "verified_by": "docs/context/behavioral-parity.md (genetics GAP)"
+      },
+      {
+        "severity": "warning",
+        "status": "gap",
+        "review_status": "accepted",
+        "enforced_at": [],
+        "to_contexts": [],
+        "id": "GEN-GAP-02",
+        "title": "ChemocodeFuser",
+        "category": "invariant",
+        "statement": "Spec: fuse chemotype data onto gene lots (ChemocodeFuser). Not implemented.",
+        "spec_source": "spec-workflow-genetics.md §70",
+        "verified_by": "docs/context/behavioral-parity.md (genetics GAP)"
+      }
+    ],
+    "connectors": [
+      {
+        "id": "conn_seam1_control_numbers",
+        "name": "Seam 1 — Control-Number authority",
+        "kind": "shared_service",
+        "trigger": "Any context mints a traceable record",
+        "effect": "A single immutable control number ({prefix}{YYMMDD}-{genocode}, 18 type codes) is issued and never edited/deleted",
+        "from_context": "02_control_numbers",
+        "to_contexts": [
+          "03_genetics",
+          "04_cultivation_harvest",
+          "05_refinement_packaging",
+          "06_qa_lab",
+          "07_quality_batch"
+        ],
+        "contract": "ControlNumberService.create(type, facilityPrefix, genocode, date) -> value",
+        "enforced_at": [
+          "backend/src/contexts/control-numbers/domain/control-number.ts:36-66",
+          "backend/src/contexts/control-numbers/service/control-number-service.ts:18-32"
+        ],
+        "spec_source": "40-unified-workflow-graph.md (Seam 1); spec-control-numbers.md",
+        "status": "wired",
+        "review_status": "accepted"
+      },
+      {
+        "id": "conn_seam4_genocode_authority",
+        "name": "Seam 4 — Genocode / product master authority",
+        "kind": "shared_service",
+        "trigger": "Product + strain references resolved",
+        "effect": "Genocode is the authority; product-master unifies the legacy batch.Product + SpecProduct models",
+        "from_context": "08_product_master",
+        "to_contexts": [
+          "03_genetics",
+          "07_quality_batch",
+          "09_consumer_profile"
+        ],
+        "contract": "genocode -> product_id mapping (canonical)",
+        "enforced_at": [
+          "backend/src/contexts/product-master/service/product-master-service.ts"
+        ],
+        "spec_source": "40-unified-workflow-graph.md (Seam 4)",
+        "status": "deferred",
+        "review_status": "needs_review"
+      }
+    ]
+  },
+  "layout": {
+    "erd": {
+      "nodes": [
+        {
+          "id": "ent_cn",
+          "x": 60,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_gl",
+          "x": 420,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_clone",
+          "x": 780,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_genelot",
+          "x": 1140,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_gep",
+          "x": 60,
+          "y": 360,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_se",
+          "x": 420,
+          "y": 360,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_sl",
+          "x": 780,
+          "y": 360,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_germ",
+          "x": 1140,
+          "y": 360,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_slp",
+          "x": 60,
+          "y": 660,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_ct",
+          "x": 420,
+          "y": 660,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_glpse",
+          "x": 780,
+          "y": 660,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_sec",
+          "x": 1140,
+          "y": 660,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_pt",
+          "x": 60,
+          "y": 960,
+          "width": 300,
+          "height": 230
+        }
+      ],
+      "edges": []
+    },
+    "dfd": {
+      "nodes": [],
+      "edges": []
+    },
+    "dfd_level_1": {}
+  },
+  "styles": {
+    "theme": "minimal"
+  },
+  "postgres": {
+    "dialect": "postgresql",
+    "extensions": [
+      "pgcrypto"
+    ],
+    "schema_name": "public",
+    "default_primary_key": {
+      "type": "uuid",
+      "default": "gen_random_uuid()"
+    },
+    "add_audit_timestamps": false
+  },
+  "review": {
+    "proposals": [],
+    "warnings": [],
+    "dismissed_warnings": []
+  }
+}

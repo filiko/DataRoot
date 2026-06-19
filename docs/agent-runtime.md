@@ -23,7 +23,6 @@ This file is the canonical reference for DataRoot's submission to the
 | `src/dataroot/agent/tool_sets.py`        | Per-role tool allowlists (Role A / B / C have different scopes).|
 | `src/dataroot/agent/prompts/*.md`        | Hand-authored system prompts; one file per role.               |
 | `src/dataroot/query.py`                  | `answer_question` — the high-level entry point Role C runs.    |
-| `src/dataroot/render/miro.py`            | The agent's external-system effect: writing a Miro board.      |
 
 ### What makes it more than a chatbot
 
@@ -34,18 +33,17 @@ This file is the canonical reference for DataRoot's submission to the
   forces an explicit "lineage gap" admission rather than fabrication; the
   deterministic fallback in `src/dataroot/query.py` takes over so the user
   always gets a cited answer.
-- **Two effects on external systems.** Each turn ends by writing
-  `inquiries/<timestamp>` and a provenance trace into GitKB, then calling
-  the Miro REST API to render the trace as a board the user can interact
-  with. The agent's output is observable, not just chat.
+- **Persisted provenance.** Each turn ends by writing
+  `inquiries/<timestamp>` and a provenance trace into GitKB. The agent's
+  output is observable and replayable, not just chat.
 - **Scoped autonomy.** Roles A and B are write-capable but only inside
   `.dataroot/` and the KB; Role C is read-only against the KB and append-
   only against `inquiries/`. The tool allowlists in `tool_sets.py` enforce
   this — the model can't escape its scope by asking nicely.
-- **Deterministic fallback for every LLM step.** `interpretation.py` and
-  `miro_plan.py` both ship deterministic implementations the agent falls
-  back to if `OPENAI_API_KEY` is missing or the model errors. The system
-  degrades gracefully instead of failing.
+- **Deterministic fallback for every LLM step.** The query path ships a
+  deterministic implementation the agent falls back to if `OPENAI_API_KEY`
+  is missing or the model errors. The system degrades gracefully instead of
+  failing.
 
 For the same loop exposed as MCP tools (the Texas Open Data Track artifact),
 see `docs/mcp-server.md`.
@@ -145,9 +143,6 @@ Thin wrappers over KB plus domain logic:
   Roles: C
 - `project_timeline(cultivar_slug, target)` — projects product
   availability based on planting/harvest state.
-  Roles: C
-- `render_provenance(trace, mode)` — renders provenance trace
-  to Miro or Cytoscape. Mode is "miro" or "html".
   Roles: C
 - `log_inquiry(question, answer, trace)` — writes the customer
   question, agent's answer, and provenance trace as a new KB doc

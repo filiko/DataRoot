@@ -55,6 +55,9 @@ export function PillEdgeLabel({
           maxWidth: 220,
           overflow: "hidden",
           textOverflow: "ellipsis",
+          // Paint pills above entity/process nodes so a label stays readable
+          // even where dense layouts make some overlap unavoidable.
+          zIndex: 1000,
           ...style,
         }}
       >

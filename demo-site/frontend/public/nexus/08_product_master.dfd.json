@@ -1,0 +1,2515 @@
+{
+  "documentType": "dashbot.dfdmaker",
+  "schemaVersion": "0.1",
+  "pen_version": "0.1",
+  "project": {
+    "id": "proj_nexus_08_product_master",
+    "name": "Nexus · 08 Product Master",
+    "revision": 1
+  },
+  "sources": [],
+  "erd": {
+    "notation": "crows_foot",
+    "model_level": "physical",
+    "entities": [
+      {
+        "id": "ent_cn",
+        "kind": "strong_entity",
+        "name": "control_numbers",
+        "display_name": "Control Numbers",
+        "domain": "control-numbers",
+        "connects": [
+          "all"
+        ],
+        "attributes": [
+          {
+            "id": "a_cn_value",
+            "name": "value",
+            "display_name": "Value",
+            "pg_type": "text",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cn_type",
+            "name": "type",
+            "display_name": "Type",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": "type BETWEEN 1 AND 18",
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cn_finished",
+            "name": "finished_at",
+            "display_name": "Finished At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Traceability spine (full definition in 02_control_numbers). Every control-number-bearing entity here FKs to value.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_ptype",
+        "kind": "strong_entity",
+        "name": "product_types",
+        "display_name": "Product Types",
+        "domain": "product-master",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_pt_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pt_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pt_code",
+            "name": "code",
+            "display_name": "Code",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pt_active",
+            "name": "is_active",
+            "display_name": "Is Active",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "true",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pt_creator",
+            "name": "created_by_id",
+            "display_name": "Created By Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ users (01)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pt_legacysf",
+            "name": "legacy_sf_id",
+            "display_name": "Legacy Sf Id",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS ProductType.legacy_sf_id (batch.py:40) — Salesforce migration provenance"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pt_migsrc",
+            "name": "migration_source",
+            "display_name": "Migration Source",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS ProductType.migration_source (batch.py:41)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pt_legacyowner",
+            "name": "legacy_owner",
+            "display_name": "Legacy Owner",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS ProductType.legacy_owner (batch.py:42)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pt_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_product",
+        "kind": "strong_entity",
+        "name": "products",
+        "display_name": "Products",
+        "domain": "product-master",
+        "connects": [
+          "genetics",
+          "quality",
+          "sales",
+          "consumer-profile"
+        ],
+        "attributes": [
+          {
+            "id": "a_p_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_p_type",
+            "name": "product_type_id",
+            "display_name": "Product Type Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_p_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_p_active",
+            "name": "is_active",
+            "display_name": "Is Active",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "true",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_p_sds",
+            "name": "auto_sds_path",
+            "display_name": "Auto Sds Path",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_p_pss",
+            "name": "auto_pss_path",
+            "display_name": "Auto Pss Path",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_p_creator",
+            "name": "created_by_id",
+            "display_name": "Created By Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ users (01)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_p_legacysf",
+            "name": "legacy_sf_id",
+            "display_name": "Legacy Sf Id",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS Product.legacy_sf_id (batch.py:57) — Salesforce origin trace"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_p_migsrc",
+            "name": "migration_source",
+            "display_name": "Migration Source",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS Product.migration_source (batch.py:58)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_p_legacyowner",
+            "name": "legacy_owner",
+            "display_name": "Legacy Owner",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS Product.legacy_owner (batch.py:59)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_p_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_p_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: QMS Product has created_at only, no updated_at (batch.py:48-66). Added for target audit-column convention."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "The stable inventory shell. N seed lots → 1 product (mapping below). Batches release against it (07), sales sells it (10), consumer profile describes it (09) — the product-master seam. DESIGN: PhytoVerify EAV product_attributes/product_attribute_types tables (2018_09_04_165558/170117) are deprecated in the unified QMS target in favor of typed columns; not modeled here by design.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_psl",
+        "kind": "strong_entity",
+        "name": "product_seed_lots",
+        "display_name": "Product ↔ Seed Lots (N:1)",
+        "domain": "product-master",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_psl_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_psl_product",
+            "name": "product_id",
+            "display_name": "Product Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_psl_seedlot",
+            "name": "seed_lot_control_number",
+            "display_name": "Seed Lot Control Number",
+            "pg_type": "text",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ control_numbers.value (a seed lot, 03_genetics) — the genetics↔product mapping"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_psl_variance",
+            "name": "variance_notes",
+            "display_name": "Variance Notes",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_psl_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "New in Nexus: maps many seed lots to one product inventory shell, with per-lot variance notes.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_npf",
+        "kind": "strong_entity",
+        "name": "new_product_forms",
+        "display_name": "New Product Forms",
+        "domain": "product-master",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_n_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_n_product",
+            "name": "product_id",
+            "display_name": "Product Id",
+            "pg_type": "uuid",
+            "key_role": "unique",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS NewProductForm.product_id is unique=True (batch.py:73) — one form per product"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_n_lab",
+            "name": "has_lab_safety_testing",
+            "display_name": "Has Lab Safety Testing",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_n_labfile",
+            "name": "lab_safety_file_path",
+            "display_name": "Lab Safety File Path",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS NewProductForm.lab_safety_file_path (batch.py:75) — pairs with has_lab_safety_testing"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_n_othertests_desc",
+            "name": "other_tests_description",
+            "display_name": "Other Tests Description",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS NewProductForm.other_tests_description (batch.py:76)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_n_othertests_file",
+            "name": "other_tests_file_path",
+            "display_name": "Other Tests File Path",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS NewProductForm.other_tests_file_path (batch.py:77)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_n_sds",
+            "name": "has_sds",
+            "display_name": "Has Sds",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_n_sdsfile",
+            "name": "sds_file_path",
+            "display_name": "Sds File Path",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS NewProductForm.sds_file_path (batch.py:79) — pairs with has_sds"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_n_inv",
+            "name": "inventory_info_confirmed",
+            "display_name": "Inventory Info Confirmed",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_n_invshot",
+            "name": "inventory_screenshot_path",
+            "display_name": "Inventory Screenshot Path",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS NewProductForm.inventory_screenshot_path (batch.py:81) — pairs with inventory_info_confirmed"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_n_coa",
+            "name": "coa_matches_inventory",
+            "display_name": "Coa Matches Inventory",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_n_panel",
+            "name": "sensory_panel_member_ids",
+            "display_name": "Sensory Panel Member Ids",
+            "pg_type": "jsonb",
+            "key_role": "none",
+            "nullable": false,
+            "default": "'[]'::jsonb",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS NewProductForm.sensory_panel_member_ids nullable=False default=[] (batch.py:83)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_n_comments",
+            "name": "comments",
+            "display_name": "Comments",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS NewProductForm.comments (batch.py:84)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_n_creator",
+            "name": "created_by_id",
+            "display_name": "Created By Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ users (01)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_n_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Idea→quality gate at product level: blocks an un-vetted product from production.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_dd",
+        "kind": "strong_entity",
+        "name": "dd_projects",
+        "display_name": "D&D Projects (idea gate)",
+        "domain": "product-master",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_dd_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_dd_title",
+            "name": "title",
+            "display_name": "Title",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_dd_purpose",
+            "name": "purpose",
+            "display_name": "Purpose",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_dd_materials",
+            "name": "materials",
+            "display_name": "Materials",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_dd_status",
+            "name": "status",
+            "display_name": "Status",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": "'draft'",
+            "check_constraint": "status IN ('draft','in_review','work_proposal','execution','outcome','completed','closed_no_go')",
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS ddstatus enum (dd.py:10-18): draft,in_review,work_proposal,execution,outcome,completed,closed_no_go"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_dd_method",
+            "name": "proposed_method",
+            "display_name": "Proposed Method",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_dd_outcome",
+            "name": "outcome_decision",
+            "display_name": "Outcome Decision",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_dd_proposalby",
+            "name": "proposal_by_id",
+            "display_name": "Proposal By Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS DDProject.proposal_by_id (dd.py:33) → users (01) — who authored the work proposal"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_dd_nextsteps",
+            "name": "next_steps",
+            "display_name": "Next Steps",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS DDProject.next_steps (dd.py:36)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_dd_creator",
+            "name": "created_by_id",
+            "display_name": "Created By Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ users (01)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_dd_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_dd_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_ddrev",
+        "kind": "strong_entity",
+        "name": "dd_reviewers",
+        "display_name": "D&D Reviewers",
+        "domain": "product-master",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_ddr_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddr_proj",
+            "name": "project_id",
+            "display_name": "Project Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddr_user",
+            "name": "user_id",
+            "display_name": "User Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ users (01)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddr_status",
+            "name": "status",
+            "display_name": "Status",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": "'pending'",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS DDReviewer.status values (dd.py:55): pending, approved, rejected"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddr_comments",
+            "name": "comments",
+            "display_name": "Comments",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS DDReviewer.comments (dd.py:56)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddr_at",
+            "name": "reviewed_at",
+            "display_name": "Reviewed At",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_ddsig",
+        "kind": "strong_entity",
+        "name": "dd_signatures",
+        "display_name": "D&D Signatures",
+        "domain": "product-master",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_dds_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_dds_proj",
+            "name": "project_id",
+            "display_name": "Project Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_dds_user",
+            "name": "user_id",
+            "display_name": "User Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ users (01)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_dds_action",
+            "name": "action",
+            "display_name": "Action",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_dds_comments",
+            "name": "comments",
+            "display_name": "Comments",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS DDSignature.comments (dd.py:84) — signer's comment on the sign action"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_dds_at",
+            "name": "signed_at",
+            "display_name": "Signed At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_ddwpr",
+        "kind": "strong_entity",
+        "name": "dd_work_proposal_reviewers",
+        "display_name": "D&D Work-Proposal Reviewers",
+        "domain": "product-master",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_ddwpr_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddwpr_proj",
+            "name": "project_id",
+            "display_name": "Project Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddwpr_user",
+            "name": "user_id",
+            "display_name": "User Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ users (01)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddwpr_status",
+            "name": "status",
+            "display_name": "Status",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": "'pending'",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS DDWorkProposalReviewer.status values (dd.py:69): pending, approved, rejected"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddwpr_comments",
+            "name": "comments",
+            "display_name": "Comments",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS DDWorkProposalReviewer.comments (dd.py:70)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddwpr_at",
+            "name": "reviewed_at",
+            "display_name": "Reviewed At",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Second reviewer round of the D&D idea→quality gate (work-proposal review), distinct from initial dd_reviewers (QMS dd.py:63-74).",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_ddpr",
+        "kind": "strong_entity",
+        "name": "dd_processing_results",
+        "display_name": "D&D Processing Results (execution)",
+        "domain": "product-master",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_ddpr_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddpr_proj",
+            "name": "project_id",
+            "display_name": "Project Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddpr_round",
+            "name": "round_number",
+            "display_name": "Round Number",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddpr_runs",
+            "name": "run_numbers",
+            "display_name": "Run Numbers",
+            "pg_type": "jsonb",
+            "key_role": "none",
+            "nullable": false,
+            "default": "'[]'::jsonb",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS DDProcessingResult.run_numbers nullable=False default=[] (dd.py:98)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddpr_materials",
+            "name": "material_ids",
+            "display_name": "Material Ids",
+            "pg_type": "jsonb",
+            "key_role": "none",
+            "nullable": false,
+            "default": "'[]'::jsonb",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS DDProcessingResult.material_ids nullable=False default=[] (dd.py:99)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddpr_obs",
+            "name": "observations",
+            "display_name": "Observations",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddpr_subby",
+            "name": "submitted_by_id",
+            "display_name": "Submitted By Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ users (01)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddpr_subat",
+            "name": "submitted_at",
+            "display_name": "Submitted At",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddpr_superseded",
+            "name": "is_superseded",
+            "display_name": "Is Superseded",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS DDProcessingResult.is_superseded (dd.py:103) stored String(5) 'false'; DESIGN: typed as boolean in target"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Execution phase of the D&D idea→quality gate (QMS dd.py:91-106).",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_ddqr",
+        "kind": "strong_entity",
+        "name": "dd_quality_results",
+        "display_name": "D&D Quality Results (outcome)",
+        "domain": "product-master",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_ddqr_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddqr_proj",
+            "name": "project_id",
+            "display_name": "Project Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddqr_round",
+            "name": "round_number",
+            "display_name": "Round Number",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddqr_claimedby",
+            "name": "claimed_by_id",
+            "display_name": "Claimed By Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ users (01)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddqr_findings",
+            "name": "findings",
+            "display_name": "Findings",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddqr_sensdate",
+            "name": "sensory_date",
+            "display_name": "Sensory Date",
+            "pg_type": "date",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddqr_panel",
+            "name": "sensory_panel_member_ids",
+            "display_name": "Sensory Panel Member Ids",
+            "pg_type": "jsonb",
+            "key_role": "none",
+            "nullable": false,
+            "default": "'[]'::jsonb",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS DDQualityResult.sensory_panel_member_ids nullable=False default=[] (dd.py:119) — dd-level sensory panel, distinct from new_product_forms copy"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddqr_sensresult",
+            "name": "sensory_result",
+            "display_name": "Sensory Result",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS DDQualityResult.sensory_result (dd.py:120): approved / failed"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddqr_sensfail",
+            "name": "sensory_failure_comments",
+            "display_name": "Sensory Failure Comments",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddqr_subat",
+            "name": "submitted_at",
+            "display_name": "Submitted At",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddqr_superseded",
+            "name": "is_superseded",
+            "display_name": "Is Superseded",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS DDQualityResult.is_superseded (dd.py:123) stored String(5) 'false'; DESIGN: typed as boolean in target"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Outcome/quality-decision phase of the D&D gate and home of sensory-panel evaluation (QMS dd.py:109-126).",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_ddtrf",
+        "kind": "strong_entity",
+        "name": "dd_test_result_files",
+        "display_name": "D&D Test-Result Files",
+        "domain": "product-master",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_ddtrf_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddtrf_qr",
+            "name": "quality_result_id",
+            "display_name": "Quality Result Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddtrf_name",
+            "name": "file_name",
+            "display_name": "File Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddtrf_s3",
+            "name": "s3_key",
+            "display_name": "S3 Key",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddtrf_upby",
+            "name": "uploaded_by_id",
+            "display_name": "Uploaded By Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ users (01)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddtrf_upat",
+            "name": "uploaded_at",
+            "display_name": "Uploaded At",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Uploaded test-result documents attached to a dd_quality_results row (QMS dd.py:130-141).",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_ddspm",
+        "kind": "strong_entity",
+        "name": "dd_sensory_panel_members",
+        "display_name": "D&D Sensory Panel Members",
+        "domain": "product-master",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_ddspm_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddspm_user",
+            "name": "user_id",
+            "display_name": "User Id",
+            "pg_type": "uuid",
+            "key_role": "unique",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "QMS DDSensoryPanelMember.user_id unique=True (dd.py:148) → users (01)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddspm_addedby",
+            "name": "added_by_id",
+            "display_name": "Added By Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ users (01)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ddspm_addedat",
+            "name": "added_at",
+            "display_name": "Added At",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Roster that sensory_panel_member_ids jsonb lists reference; unifies QMS DDSensoryPanelMember (dd.py:144-152) + batch.py SensoryPanelMember (batch.py:92-101).",
+        "confidence": 1,
+        "review_status": "accepted"
+      }
+    ],
+    "relationships": [
+      {
+        "id": "rel_psl_cn",
+        "name": "identified by",
+        "from": {
+          "entity_id": "ent_psl",
+          "attribute_id": "a_psl_seedlot"
+        },
+        "to": {
+          "entity_id": "ent_cn",
+          "attribute_id": "a_cn_value"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_rel_psl_cn",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_p_type",
+        "name": "of type",
+        "from": {
+          "entity_id": "ent_product",
+          "attribute_id": "a_p_type"
+        },
+        "to": {
+          "entity_id": "ent_ptype",
+          "attribute_id": "a_pt_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_product_type",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_psl_product",
+        "name": "rolls up to",
+        "from": {
+          "entity_id": "ent_psl",
+          "attribute_id": "a_psl_product"
+        },
+        "to": {
+          "entity_id": "ent_product",
+          "attribute_id": "a_p_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_psl_product",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_npf_product",
+        "name": "vets",
+        "from": {
+          "entity_id": "ent_npf",
+          "attribute_id": "a_n_product"
+        },
+        "to": {
+          "entity_id": "ent_product",
+          "attribute_id": "a_p_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": 1,
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_npf_product",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_ddrev_proj",
+        "name": "reviews",
+        "from": {
+          "entity_id": "ent_ddrev",
+          "attribute_id": "a_ddr_proj"
+        },
+        "to": {
+          "entity_id": "ent_dd",
+          "attribute_id": "a_dd_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_ddrev_proj",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_ddsig_proj",
+        "name": "signs",
+        "from": {
+          "entity_id": "ent_ddsig",
+          "attribute_id": "a_dds_proj"
+        },
+        "to": {
+          "entity_id": "ent_dd",
+          "attribute_id": "a_dd_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_ddsig_proj",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_ddwpr_proj",
+        "name": "proposal-reviews",
+        "from": {
+          "entity_id": "ent_ddwpr",
+          "attribute_id": "a_ddwpr_proj"
+        },
+        "to": {
+          "entity_id": "ent_dd",
+          "attribute_id": "a_dd_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_ddwpr_proj",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_ddpr_proj",
+        "name": "executes",
+        "from": {
+          "entity_id": "ent_ddpr",
+          "attribute_id": "a_ddpr_proj"
+        },
+        "to": {
+          "entity_id": "ent_dd",
+          "attribute_id": "a_dd_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_ddpr_proj",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_ddqr_proj",
+        "name": "evaluates",
+        "from": {
+          "entity_id": "ent_ddqr",
+          "attribute_id": "a_ddqr_proj"
+        },
+        "to": {
+          "entity_id": "ent_dd",
+          "attribute_id": "a_dd_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_ddqr_proj",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_ddtrf_qr",
+        "name": "attaches to",
+        "from": {
+          "entity_id": "ent_ddtrf",
+          "attribute_id": "a_ddtrf_qr"
+        },
+        "to": {
+          "entity_id": "ent_ddqr",
+          "attribute_id": "a_ddqr_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_ddtrf_qr",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      }
+    ]
+  },
+  "dfd": {
+    "level": 0,
+    "notation": "yourdon_coad",
+    "system_boundary": {
+      "id": "boundary_pm",
+      "name": "Product Master"
+    },
+    "external_entities": [],
+    "processes": [
+      {
+        "id": "proc_idea",
+        "number": "1.0",
+        "name": "Idea → Quality Gate",
+        "description": "D&D review + sign-off before a product can go to production",
+        "user_modified": true,
+        "mapped_relationship_id": "rel_ddrev_proj",
+        "source_evidence": [],
+        "source_facts": [],
+        "level_1_diagram": null
+      },
+      {
+        "id": "proc_map",
+        "number": "2.0",
+        "name": "Map Seed Lots → Product",
+        "description": "Attach N seed lots to one product shell",
+        "user_modified": true,
+        "mapped_relationship_id": "rel_psl_product",
+        "source_evidence": [],
+        "source_facts": [],
+        "level_1_diagram": null
+      }
+    ],
+    "data_stores": [
+      {
+        "id": "store_p",
+        "name": "Products",
+        "description": "Inventory shells",
+        "mapped_erd_entity": "ent_product",
+        "user_modified": false,
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "store_psl",
+        "name": "Product ↔ Seed Lots",
+        "description": "N:1 mapping",
+        "mapped_erd_entity": "ent_psl",
+        "user_modified": false,
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "data_flows": [
+      {
+        "id": "p1",
+        "from": "proc_idea",
+        "to": "store_p",
+        "data_name": "Vetted product",
+        "mapped_relationship_id": null,
+        "user_modified": false,
+        "mapped_erd_entities": [
+          "ent_product"
+        ],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "p2",
+        "from": "proc_map",
+        "to": "store_psl",
+        "data_name": "Seed-lot mapping",
+        "mapped_relationship_id": "rel_psl_product",
+        "user_modified": false,
+        "mapped_erd_entities": [
+          "ent_psl"
+        ],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "business_rules": [
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/product-master/domain/product.ts:5,42"
+        ],
+        "to_contexts": [],
+        "id": "PM-INV-01",
+        "title": "Products are immutable after creation",
+        "category": "invariant",
+        "statement": "Product records (and document versions) are frozen at creation — immutable at type and runtime level.",
+        "spec_source": "06-production-and-costing.md",
+        "verified_by": "AGENTS.md §6"
+      },
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/product-master/service/product-master-service.ts (advanceDdProjectGate)",
+          "shared/src/product-master.ts:12-22"
+        ],
+        "to_contexts": [],
+        "id": "PM-SM-01",
+        "title": "DD project gate state machine",
+        "category": "state_machine",
+        "statement": "Design & Development projects advance through gates: draft→in_review→work_proposal→execution→outcome→completed (or closed_no_go).",
+        "spec_source": "06-production-and-costing.md"
+      },
+      {
+        "severity": "best_practice",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "scripts/endpoint-parity.mjs (ALLOW_EXTRA)"
+        ],
+        "to_contexts": [],
+        "id": "PM-VAL-01",
+        "title": "SKU is a documented surrogate",
+        "category": "validation",
+        "statement": "`sku` is a domain-view surrogate with no persisted ERD column (allow-listed in endpoint-parity).",
+        "spec_source": "data-model.md"
+      },
+      {
+        "severity": "warning",
+        "status": "gap",
+        "review_status": "accepted",
+        "enforced_at": [],
+        "to_contexts": [],
+        "id": "PM-GAP-01",
+        "title": "Genocode authority (redesign)",
+        "category": "invariant",
+        "statement": "Genocode should be the canonical product/strain authority unifying the legacy models (Seam 4). Redesign pending.",
+        "spec_source": "40-unified-workflow-graph.md (Seam 4)",
+        "verified_by": "missing-functionality-backlog.md (P2 #12)"
+      }
+    ],
+    "connectors": [
+      {
+        "id": "conn_seam4_genocode_authority",
+        "name": "Seam 4 — Genocode / product master authority",
+        "kind": "shared_service",
+        "trigger": "Product + strain references resolved",
+        "effect": "Genocode is the authority; product-master unifies the legacy batch.Product + SpecProduct models",
+        "from_context": "08_product_master",
+        "to_contexts": [
+          "03_genetics",
+          "07_quality_batch",
+          "09_consumer_profile"
+        ],
+        "contract": "genocode -> product_id mapping (canonical)",
+        "enforced_at": [
+          "backend/src/contexts/product-master/service/product-master-service.ts"
+        ],
+        "spec_source": "40-unified-workflow-graph.md (Seam 4)",
+        "status": "deferred",
+        "review_status": "needs_review"
+      }
+    ]
+  },
+  "layout": {
+    "erd": {
+      "nodes": [
+        {
+          "id": "ent_cn",
+          "x": 60,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_ptype",
+          "x": 440,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_product",
+          "x": 820,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_psl",
+          "x": 60,
+          "y": 380,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_npf",
+          "x": 440,
+          "y": 380,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_dd",
+          "x": 820,
+          "y": 380,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_ddrev",
+          "x": 60,
+          "y": 700,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_ddsig",
+          "x": 440,
+          "y": 700,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_ddwpr",
+          "x": 820,
+          "y": 700,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_ddpr",
+          "x": 60,
+          "y": 1020,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_ddqr",
+          "x": 440,
+          "y": 1020,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_ddtrf",
+          "x": 820,
+          "y": 1020,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_ddspm",
+          "x": 60,
+          "y": 1340,
+          "width": 300,
+          "height": 230
+        }
+      ],
+      "edges": []
+    },
+    "dfd": {
+      "nodes": [],
+      "edges": []
+    },
+    "dfd_level_1": {}
+  },
+  "styles": {
+    "theme": "minimal"
+  },
+  "postgres": {
+    "dialect": "postgresql",
+    "extensions": [
+      "pgcrypto"
+    ],
+    "schema_name": "public",
+    "default_primary_key": {
+      "type": "uuid",
+      "default": "gen_random_uuid()"
+    },
+    "add_audit_timestamps": false
+  },
+  "review": {
+    "proposals": [],
+    "warnings": [],
+    "dismissed_warnings": []
+  }
+}

@@ -35,6 +35,11 @@ import {
   toLayoutEdgePatch,
   toLayoutNodePatch,
 } from "./diagram/layout/optimizeLayout";
+import { assignHandles } from "./diagram/layout/handleAssignment";
+import { routeEdges } from "./diagram/layout/orthogonalRouter";
+import { placeEdgeLabels } from "./diagram/layout/labelPlacement";
+import { repairNodeOverlaps } from "./diagram/layout/overlap";
+import type { LayoutEdgeRef, LayoutNodeBox, RoutedEdge } from "./diagram/layout/types";
 import { useAppTheme, DiagramThemeProvider, useDiagramTheme } from "../context/ThemeContext";
 
 type DiagramOption = {
@@ -205,6 +210,61 @@ function DfdFlowView({
     setEdges(initialFlow.edges);
   }, [initialFlow, setNodes, setEdges]);
 
+  // Gently spread apart overlapping DFD objects at their real rendered size,
+  // preserving the rest of the layout. Re-checked on measured-geometry changes;
+  // guarded by a signature so it only acts when geometry changed and overlaps.
+  const spreadGeomRef = useRef<string>("");
+  useEffect(() => {
+    if (nodes.length < 2 || isDragging.current || nodes.some((n) => n.dragging)) return;
+    const sized = (n: Node) => ({
+      w: n.measured?.width ?? n.width ?? 0,
+      h: n.measured?.height ?? n.height ?? 0,
+    });
+    if (!nodes.every((n) => { const s = sized(n); return s.w > 0 && s.h > 0; })) return;
+    const signature = nodes
+      .map((n) => { const s = sized(n); return `${n.id}:${Math.round(n.position.x)}:${Math.round(n.position.y)}:${Math.round(s.w)}:${Math.round(s.h)}`; })
+      .join("|");
+    if (spreadGeomRef.current === signature) return;
+    spreadGeomRef.current = signature;
+
+    const kindMap = { external: "dfd_external", process: "dfd_process", store: "dfd_store" } as const;
+    const boxes: LayoutNodeBox[] = nodes.map((n) => {
+      const s = sized(n);
+      return {
+        id: n.id,
+        kind: kindMap[(n.data as DfdNodeData).kind],
+        x: n.position.x,
+        y: n.position.y,
+        width: s.w,
+        height: s.h,
+      };
+    });
+    // Small gap → only genuinely overlapping objects get nudged just clear,
+    // so a single drag stays local instead of re-spacing the whole layout.
+    const repaired = repairNodeOverlaps(boxes, 24, 16);
+    const moved = repaired.filter((r, i) =>
+      Math.round(r.x) !== Math.round(boxes[i].x) || Math.round(r.y) !== Math.round(boxes[i].y));
+    if (moved.length === 0) return;
+
+    const byId = new Map(repaired.map((r) => [r.id, r]));
+    setNodes((prev) => prev.map((n) => {
+      const r = byId.get(n.id);
+      return r ? { ...n, position: { x: r.x, y: r.y } } : n;
+    }));
+    void (async () => {
+      try {
+        const updated = await patchLayout({
+          scope: active.scope,
+          baseRevision: pen.project.revision,
+          nodes: moved.map(toLayoutNodePatch),
+        });
+        onPenUpdate(updated);
+      } catch (err) {
+        console.warn("DFD de-overlap skipped:", err);
+      }
+    })();
+  }, [nodes, active.scope, pen.project.revision, patchLayout, onPenUpdate, setNodes]);
+
   const saveNodePosition = useCallback((node: Node) => {
     if (dragSaveTimer.current !== null) {
       window.clearTimeout(dragSaveTimer.current);
@@ -213,6 +273,24 @@ function DfdFlowView({
     dragSaveTimer.current = window.setTimeout(async () => {
       onSaveStatus("saving");
       try {
+        // Re-route the moved node's flows in the same patch so stored routes
+        // and label positions never go stale after a drag.
+        const measuredNodes = reactFlowRef.current?.getNodes() ?? [];
+        const graph = buildDfdLayoutGraph(pen, active.scope, measuredNodes);
+        const touched = graph.edges.filter(
+          (edge) => edge.source === node.id || edge.target === node.id,
+        );
+        const hasHandles = (
+          edge: LayoutEdgeRef,
+        ): edge is LayoutEdgeRef & { sourceHandle: string; targetHandle: string } =>
+          Boolean(edge.sourceHandle && edge.targetHandle);
+        const ready: RoutedEdge[] = touched
+          .filter(hasHandles)
+          .map((edge) => ({ ...edge, points: edge.points ?? [] }));
+        const assigned = assignHandles(graph.nodes, touched.filter((edge) => !hasHandles(edge)));
+        const routed = routeEdges(graph.nodes, [...ready, ...assigned]);
+        const labeled = placeEdgeLabels(graph.nodes, routed);
+
         const updated = await patchLayout({
           scope: active.scope,
           baseRevision: pen.project.revision,
@@ -220,9 +298,10 @@ function DfdFlowView({
             id: node.id,
             x: node.position.x,
             y: node.position.y,
-            width: node.width,
-            height: node.height,
+            width: node.measured?.width ?? node.width,
+            height: node.measured?.height ?? node.height,
           }],
+          edges: labeled.map(toLayoutEdgePatch),
         });
         onPenUpdate(updated);
         onSaveStatus("saved");
@@ -231,7 +310,7 @@ function DfdFlowView({
         onSaveStatus("error");
       }
     }, 500);
-  }, [active.scope, onPenUpdate, onSaveStatus, patchLayout, pen.project.revision]);
+  }, [active.scope, onPenUpdate, onSaveStatus, patchLayout, pen]);
 
   const onReconnect = useCallback(async (oldEdge: Edge, connection: Connection) => {
     if (!connection.source || !connection.target) return;

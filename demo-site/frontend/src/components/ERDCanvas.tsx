@@ -23,7 +23,7 @@ import {
   type Connection,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { Plus, Pencil, X, Wand2 } from "lucide-react";
+import { Plus, Pencil, X, Wand2, Link2, Table2, Box } from "lucide-react";
 import type {
   Entity, Attribute, PenFile, Relationship,
   KeyRole, ReviewStatus, Cardinality,
@@ -32,6 +32,14 @@ import { useLayoutPatch } from "../hooks/useLayoutPatch";
 import { DraggableEdgeLabel } from "./diagram/DraggableEdgeLabel";
 import { EdgeLabelDragProvider } from "./diagram/EdgeLabelDragProvider";
 import { buildErdLayoutGraph } from "./diagram/layout/graphModel";
+import { alignRoutedPoints, polylineToPath } from "./diagram/layout/geometry";
+import { packErdGrid } from "./diagram/layout/elkLayout";
+import { assignHandles } from "./diagram/layout/handleAssignment";
+import { routeEdges } from "./diagram/layout/orthogonalRouter";
+import { placeEdgeLabels } from "./diagram/layout/labelPlacement";
+import { repairNodeOverlaps } from "./diagram/layout/overlap";
+import { computeDisplayEdgeLayout } from "./diagram/layout/displayRouting";
+import type { LayoutEdgeRef, LayoutNodeBox, RoutedEdge } from "./diagram/layout/types";
 import {
   optimizeDiagramLayout,
   toLayoutEdgePatch,
@@ -39,7 +47,7 @@ import {
 } from "./diagram/layout/optimizeLayout";
 import type { Point } from "./diagram/layout/types";
 import { useAppTheme, DiagramThemeProvider, useDiagramTheme } from "../context/ThemeContext";
-import { getDiagramTheme, type DiagramThemeId } from "../styles/diagramThemes";
+import { getDiagramTheme, type DiagramThemeId, NEUTRAL_ENTITY, SEAM_ACCENT, departmentLabel } from "../styles/diagramThemes";
 
 import { API_BASE as API } from "../config/api";
 
@@ -191,9 +199,19 @@ function TableNode({ data }: { data: TableNodeData }) {
   const { isConnecting } = useContext(InlineEditCtx);
   const { theme, themeId } = useDiagramTheme();
   const isLookup = entity.kind === "lookup_table";
+  // Seam highlighting for multi-process ERDs: a connection point (connects non-empty)
+  // lights up gold; a domain-tagged ordinary table renders neutral so seams stand out;
+  // an untagged entity (e.g. existing demos) keeps the active theme's styling.
+  const isSeam = !!(entity.connects && entity.connects.length);
+  const hasDomain = !!entity.domain;
   const tokens = isLookup
     ? { border: "#d1d5db", header: "#f9fafb", text: "#1f2937", accent: "#6b7280" }
+    : isSeam
+    ? SEAM_ACCENT
+    : hasDomain
+    ? NEUTRAL_ENTITY
     : { border: theme.erd.entity.border, header: theme.erd.entity.header, text: theme.erd.entity.text, accent: theme.erd.entity.accent };
+  const seamLabel = isSeam ? (entity.connects ?? []).map(departmentLabel).join(" · ") : "";
   const isChalkboard = themeId === "chalkboard";
 
   return (
@@ -238,10 +256,32 @@ function TableNode({ data }: { data: TableNodeData }) {
         alignItems: "center",
         gap: 6,
       }}>
-        <span style={{ fontSize: 14 }}>{isLookup ? "📋" : "🗂"}</span>
+        <span style={{ fontSize: 14 }}>
+          {isSeam ? <Link2 size={14} /> : isLookup ? <Table2 size={14} /> : <Box size={14} />}
+        </span>
         <span style={{ fontWeight: 600, color: tokens.text, letterSpacing: "-0.01em", flex: 1 }}>
           {entity.display_name || entity.name}
         </span>
+        {isSeam && (
+          <span
+            title={`Connection point — bridges ${seamLabel}`}
+            style={{
+              fontSize: 10,
+              background: "#fff7ed",
+              color: "#7c2d12",
+              border: "1px solid #d97706",
+              borderRadius: 4,
+              padding: "1px 5px",
+              fontWeight: 600,
+              whiteSpace: "nowrap",
+              maxWidth: 180,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            <Link2 size={14} /> {seamLabel}
+          </span>
+        )}
         {entity.review_status === "needs_review" && (
           <span style={{
             fontSize: 10,
@@ -293,7 +333,7 @@ function TableNode({ data }: { data: TableNodeData }) {
   );
 }
 
-const nodeTypes: NodeTypes = { tableNode: TableNode };
+export const nodeTypes: NodeTypes = { tableNode: TableNode };
 
 type CardinalityEdgeData = {
   cardinality?: Cardinality;
@@ -379,13 +419,21 @@ function CardinalityEdge({
     targetY,
     targetPosition,
   });
+  // Stored orthogonal routes go stale when a connected node moves (live drag);
+  // alignRoutedPoints rejects them so the edge degrades to smooth-step until
+  // the route is recomputed on drop.
+  const aligned = useMemo(
+    () => alignRoutedPoints(data?.points, sourceX, sourceY, targetX, targetY),
+    [data?.points, sourceX, sourceY, targetX, targetY],
+  );
+  const path = aligned ? polylineToPath(aligned) : fallbackPath;
   const stroke = typeof style?.stroke === "string" ? style.stroke : "#6366f1";
 
   return (
     <>
       <BaseEdge
         id={id}
-        path={fallbackPath}
+        path={path}
         style={{ ...style, cursor: "pointer" }}
         interactionWidth={28}
       />
@@ -406,6 +454,7 @@ function CardinalityEdge({
       {label && (
         <DraggableEdgeLabel
           edgeId={id}
+          points={aligned ?? []}
           fallbackX={labelX}
           fallbackY={labelY}
           labelT={data?.label_t}
@@ -419,11 +468,32 @@ function CardinalityEdge({
   );
 }
 
-const edgeTypes: EdgeTypes = { cardinality: CardinalityEdge };
+export const edgeTypes: EdgeTypes = { cardinality: CardinalityEdge };
+
+// Relationships → layout edge refs (carrying any stored handles/route/label).
+function erdEdgeRefs(pen: PenFile): LayoutEdgeRef[] {
+  const edgeLayoutMap = new Map(pen.layout.erd.edges.map((edge) => [edge.id, edge]));
+  return pen.erd.relationships
+    .filter((rel) => rel.review_status !== "rejected")
+    .map((rel) => {
+      const edgeLayout = edgeLayoutMap.get(rel.id);
+      return {
+        id: rel.id,
+        source: rel.from.entity_id,
+        target: rel.to.entity_id,
+        label: rel.name,
+        sourceHandle: edgeLayout?.source_handle,
+        targetHandle: edgeLayout?.target_handle,
+        points: edgeLayout?.points,
+        label_t: edgeLayout?.label_t ?? undefined,
+        label_offset: edgeLayout?.label_offset ?? undefined,
+      };
+    });
+}
 
 // ── PenFile → React Flow nodes & edges ───────────────────────────────────────
 
-function penToFlow(pen: PenFile, themeId: DiagramThemeId = "technical"): { nodes: Node[]; edges: Edge[] } {
+export function penToFlow(pen: PenFile, themeId: DiagramThemeId = "technical"): { nodes: Node[]; edges: Edge[] } {
   const t = getDiagramTheme(themeId);
   const layoutMap: Record<string, { x: number; y: number; width: number; height: number }> = {};
   pen.layout.erd.nodes.forEach((n) => {
@@ -436,14 +506,55 @@ function penToFlow(pen: PenFile, themeId: DiagramThemeId = "technical"): { nodes
   });
   const edgeLayoutMap = new Map(pen.layout.erd.edges.map((edge) => [edge.id, edge]));
 
-  const nodes: Node[] = pen.erd.entities
-    .filter((e) => e.review_status !== "rejected")
-    .map((entity) => ({
+  const visibleEntities = pen.erd.entities.filter((e) => e.review_status !== "rejected");
+
+  // Display-only fallback: pack entities without stored layout into a grid
+  // below the existing diagram, so fresh generations never render stacked.
+  const unplaced = visibleEntities.filter((entity) => !layoutMap[entity.id]);
+  if (unplaced.length > 0) {
+    const boxes = unplaced.map((entity) => ({
       id: entity.id,
-      type: "tableNode",
-      position: layoutMap[entity.id] ?? { x: 100, y: 100 },
-      data: { entity } as TableNodeData,
+      kind: "erd_entity" as const,
+      x: 0,
+      y: 0,
+      width: 280,
+      height: 80 + entity.attributes.filter((a) => a.review_status !== "rejected").length * 24,
     }));
+    const columns = Math.max(1, Math.ceil(Math.sqrt(boxes.length * 1.35)));
+    const packed = packErdGrid(boxes, columns, 20);
+    const stored = Object.values(layoutMap);
+    const baseY = stored.length > 0
+      ? Math.max(...stored.map((n) => n.y + n.height)) + 80
+      : 80;
+    for (const box of packed) {
+      layoutMap[box.id] = {
+        x: box.x,
+        y: baseY + (box.y - 80),
+        width: box.width,
+        height: box.height,
+      };
+    }
+  }
+
+  const nodes: Node[] = visibleEntities.map((entity) => ({
+    id: entity.id,
+    type: "tableNode",
+    position: layoutMap[entity.id] ?? { x: 100, y: 100 },
+    data: { entity } as TableNodeData,
+  }));
+
+  const visibleRels = pen.erd.relationships.filter((r) => r.review_status !== "rejected");
+
+  // Compute orthogonal routes + collision-avoiding label positions for display.
+  // Edges with a full stored route keep it; the rest are routed against the
+  // stored node boxes. Nothing here is persisted — it just stops labels from
+  // sitting at smooth-step midpoints on top of (or behind) tables.
+  const nodeBoxes: LayoutNodeBox[] = visibleEntities
+    .filter((entity) => layoutMap[entity.id])
+    .map((entity) => ({ id: entity.id, kind: "erd_entity", ...layoutMap[entity.id] }));
+  const displayEdges = new Map(
+    computeDisplayEdgeLayout(nodeBoxes, erdEdgeRefs(pen)).map((edge) => [edge.id, edge]),
+  );
 
   const handleUseCounts = new Map<string, number>();
   const nextLane = (entityId: string, side: AttachmentSide, type: "source" | "target") => {
@@ -480,39 +591,47 @@ function penToFlow(pen: PenFile, themeId: DiagramThemeId = "technical"): { nodes
       : { sourceSide: "top", targetSide: "bottom" };
   };
 
-  const edges: Edge[] = pen.erd.relationships
-    .filter((r) => r.review_status !== "rejected")
-    .map((rel) => {
+  const edges: Edge[] = visibleRels.map((rel) => {
+    const display = displayEdges.get(rel.id);
+    const edgeLayout = edgeLayoutMap.get(rel.id);
+    const isChalkboard = themeId === "chalkboard";
+
+    // Fall back to the geometric side-picker only when display routing couldn't
+    // place the edge (e.g. an endpoint entity has no layout box).
+    let sourceHandle = display?.sourceHandle ?? edgeLayout?.source_handle;
+    let targetHandle = display?.targetHandle ?? edgeLayout?.target_handle;
+    if (!sourceHandle || !targetHandle) {
       const { sourceSide, targetSide } = pickSides(rel.from.entity_id, rel.to.entity_id);
       const sourceLane = nextLane(rel.from.entity_id, sourceSide, "source");
       const targetLane = nextLane(rel.to.entity_id, targetSide, "target");
-      const edgeLayout = edgeLayoutMap.get(rel.id);
-      const isChalkboard = themeId === "chalkboard";
+      sourceHandle = sourceHandle ?? handleId("source", sourceSide, sourceLane);
+      targetHandle = targetHandle ?? handleId("target", targetSide, targetLane);
+    }
 
-      return {
-        id: rel.id,
-        source: rel.from.entity_id,
-        target: rel.to.entity_id,
-        sourceHandle: edgeLayout?.source_handle ?? handleId("source", sourceSide, sourceLane),
-        targetHandle: edgeLayout?.target_handle ?? handleId("target", targetSide, targetLane),
-        type: "cardinality",
-        label: rel.name,
-        labelStyle: { fontSize: 11, fill: t.erd.relationship.labelText },
-        style: {
-          stroke: t.erd.relationship.stroke,
-          strokeWidth: 1.5,
-          strokeDasharray: isChalkboard ? "8 4" : undefined,
-        },
-        data: {
-          cardinality: rel.cardinality,
-          points: edgeLayout?.points,
-          label_t: edgeLayout?.label_t,
-          label_offset: edgeLayout?.label_offset,
-        },
-        reconnectable: true,
-        animated: false,
-      };
-    });
+    return {
+      id: rel.id,
+      source: rel.from.entity_id,
+      target: rel.to.entity_id,
+      sourceHandle,
+      targetHandle,
+      type: "cardinality",
+      label: rel.name,
+      labelStyle: { fontSize: 11, fill: t.erd.relationship.labelText },
+      style: {
+        stroke: t.erd.relationship.stroke,
+        strokeWidth: 1.5,
+        strokeDasharray: isChalkboard ? "8 4" : undefined,
+      },
+      data: {
+        cardinality: rel.cardinality,
+        points: display?.points ?? edgeLayout?.points,
+        label_t: display?.label_t ?? edgeLayout?.label_t,
+        label_offset: display?.label_offset ?? edgeLayout?.label_offset,
+      },
+      reconnectable: true,
+      animated: false,
+    };
+  });
 
   return { nodes, edges };
 }
@@ -847,6 +966,12 @@ export function ERDCanvas({ pen, projectId, onPenUpdate }: Props) {
   );
   const [nodes, setNodes, onNodesChange] = useNodesState(initialFlow.nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialFlow.edges);
+  // The controlled nodes state carries the measured sizes; the React Flow
+  // instance ref may not be set yet when the initial auto-arrange fires.
+  const nodesRef = useRef(nodes);
+  useEffect(() => {
+    nodesRef.current = nodes;
+  }, [nodes]);
 
   // Sync nodes/edges when pen prop changes
   useEffect(() => {
@@ -854,6 +979,50 @@ export function ERDCanvas({ pen, projectId, onPenUpdate }: Props) {
     setNodes(n);
     setEdges(e);
   }, [pen, setNodes, setEdges]);
+
+  // Refine edge routes/labels using MEASURED node sizes. penToFlow can only use
+  // stored/estimated sizes (often wrong by >40px on hand-authored layouts), so
+  // its routes get rejected as stale and fall back to smooth-step. Once React
+  // Flow has measured the DOM, recompute against real geometry. Display-only —
+  // edges with persisted routes pass through untouched, nothing is persisted.
+  const routedGeomRef = useRef<string>("");
+  useEffect(() => {
+    if (nodes.length === 0) return;
+    if (nodes.some((n) => n.dragging)) return; // re-route on drop, not per tick
+    if (!nodes.every((n) => (n.measured?.width ?? 0) > 0 && (n.measured?.height ?? 0) > 0)) return;
+    const signature = nodes
+      .map((n) => `${n.id}:${Math.round(n.position.x)}:${Math.round(n.position.y)}:${Math.round(n.measured?.width ?? 0)}:${Math.round(n.measured?.height ?? 0)}`)
+      .join("|");
+    if (signature === routedGeomRef.current) return;
+    routedGeomRef.current = signature;
+
+    const nodeBoxes: LayoutNodeBox[] = nodes.map((n) => ({
+      id: n.id,
+      kind: "erd_entity",
+      x: n.position.x,
+      y: n.position.y,
+      width: n.measured?.width ?? 280,
+      height: n.measured?.height ?? 180,
+    }));
+    const display = new Map(
+      computeDisplayEdgeLayout(nodeBoxes, erdEdgeRefs(penRef.current)).map((edge) => [edge.id, edge]),
+    );
+    setEdges((prev) => prev.map((edge) => {
+      const d = display.get(edge.id);
+      if (!d) return edge;
+      return {
+        ...edge,
+        sourceHandle: d.sourceHandle ?? edge.sourceHandle,
+        targetHandle: d.targetHandle ?? edge.targetHandle,
+        data: {
+          ...edge.data,
+          points: d.points ?? (edge.data as CardinalityEdgeData | undefined)?.points,
+          label_t: d.label_t ?? (edge.data as CardinalityEdgeData | undefined)?.label_t,
+          label_offset: d.label_offset ?? (edge.data as CardinalityEdgeData | undefined)?.label_offset,
+        },
+      };
+    }));
+  }, [nodes, setEdges]);
 
   // Dialog state
   const [entityDialogOpen, setEntityDialogOpen] = useState(false);
@@ -893,6 +1062,25 @@ export function ERDCanvas({ pen, projectId, onPenUpdate }: Props) {
     const cur = penRef.current;
     setSaving(true);
     try {
+      // Re-route the moved node's edges in the same patch so stored routes
+      // and label positions never go stale after a drag.
+      const measuredNodes = reactFlowRef.current?.getNodes() ?? nodesRef.current;
+      const graph = buildErdLayoutGraph(cur, measuredNodes);
+      const touched = graph.edges.filter(
+        (edge) => edge.source === node.id || edge.target === node.id,
+      );
+      const hasHandles = (
+        edge: LayoutEdgeRef,
+      ): edge is LayoutEdgeRef & { sourceHandle: string; targetHandle: string } =>
+        Boolean(edge.sourceHandle && edge.targetHandle);
+      // Keep stored handles (manual reconnects); assign only where missing.
+      const ready: RoutedEdge[] = touched
+        .filter(hasHandles)
+        .map((edge) => ({ ...edge, points: edge.points ?? [] }));
+      const assigned = assignHandles(graph.nodes, touched.filter((edge) => !hasHandles(edge)));
+      const routed = routeEdges(graph.nodes, [...ready, ...assigned]);
+      const labeled = placeEdgeLabels(graph.nodes, routed);
+
       const result = await patchLayout({
         scope: { diagram: "erd", level: "root" },
         baseRevision: cur.project.revision,
@@ -900,9 +1088,10 @@ export function ERDCanvas({ pen, projectId, onPenUpdate }: Props) {
           id: node.id,
           x: node.position.x,
           y: node.position.y,
-          width: node.width,
-          height: node.height,
+          width: node.measured?.width ?? node.width,
+          height: node.measured?.height ?? node.height,
         }],
+        edges: labeled.map(toLayoutEdgePatch),
       });
       onPenUpdateRef.current(result);
     } catch (err) {
@@ -912,26 +1101,100 @@ export function ERDCanvas({ pen, projectId, onPenUpdate }: Props) {
     }
   }, [patchLayout]);
 
-  const autoArrange = useCallback(async () => {
+  const runAutoArrange = useCallback(async () => {
     const cur = penRef.current;
+    const measuredNodes = nodesRef.current.length > 0
+      ? nodesRef.current
+      : reactFlowRef.current?.getNodes() ?? [];
+    const graph = buildErdLayoutGraph(cur, measuredNodes);
+    const result = await optimizeDiagramLayout(graph, { mode: "auto", gridSize: 20 });
+    const updated = await patchLayout({
+      scope: { diagram: "erd", level: "root" },
+      baseRevision: cur.project.revision,
+      nodes: result.nodes.map(toLayoutNodePatch),
+      edges: result.edges.map(toLayoutEdgePatch),
+    });
+    onPenUpdateRef.current(updated);
+  }, [patchLayout]);
+
+  const autoArrange = useCallback(async () => {
     setSaving(true);
     try {
-      const measuredNodes = reactFlowRef.current?.getNodes() ?? nodes;
-      const graph = buildErdLayoutGraph(cur, measuredNodes);
-      const result = await optimizeDiagramLayout(graph, { mode: "auto", gridSize: 20 });
-      const updated = await patchLayout({
-        scope: { diagram: "erd", level: "root" },
-        baseRevision: cur.project.revision,
-        nodes: result.nodes.map(toLayoutNodePatch),
-        edges: result.edges.map(toLayoutEdgePatch),
-      });
-      onPenUpdateRef.current(updated);
+      await runAutoArrange();
     } catch (err) {
       alert(`Failed to auto arrange ERD: ${err}`);
     } finally {
       setSaving(false);
     }
-  }, [nodes, patchLayout]);
+  }, [runAutoArrange]);
+
+  // Gently spread apart ONLY the tables that overlap at their real rendered
+  // size, preserving the rest of the layout (no full re-arrange/re-block).
+  // Returns true if it moved anything. Persists the nudge so it sticks.
+  const spreadOverlaps = useCallback(async (): Promise<boolean> => {
+    const measured = nodesRef.current;
+    if (measured.length < 2) return false;
+    const boxes: LayoutNodeBox[] = measured.map((n) => ({
+      id: n.id,
+      kind: "erd_entity",
+      x: n.position.x,
+      y: n.position.y,
+      width: n.measured?.width ?? (typeof n.width === "number" ? n.width : 280),
+      height: n.measured?.height ?? (typeof n.height === "number" ? n.height : 180),
+    }));
+    // Small gap → only genuinely overlapping tables get nudged just clear,
+    // so a single drag stays local instead of re-spacing the whole layout.
+    const repaired = repairNodeOverlaps(boxes, 20, 16);
+    const moved = repaired.filter((r, i) =>
+      Math.round(r.x) !== Math.round(boxes[i].x) || Math.round(r.y) !== Math.round(boxes[i].y));
+    if (moved.length === 0) return false;
+
+    const byId = new Map(repaired.map((r) => [r.id, r]));
+    setNodes((prev) => prev.map((n) => {
+      const r = byId.get(n.id);
+      return r ? { ...n, position: { x: r.x, y: r.y } } : n;
+    }));
+    const cur = penRef.current;
+    const updated = await patchLayout({
+      scope: { diagram: "erd", level: "root" },
+      baseRevision: cur.project.revision,
+      nodes: moved.map(toLayoutNodePatch),
+    });
+    onPenUpdateRef.current(updated);
+    return true;
+  }, [patchLayout, setNodes]);
+
+  // Keep the layout usable without forcing a rigid re-block:
+  //  • Fresh generation (no stored layout) → one full auto-arrange.
+  //  • Stored layout with overlapping tables → gently spread ONLY the overlapping
+  //    ones in place (preserve the arrangement). Re-checked whenever measured
+  //    geometry changes (drag drop, attribute edits); guarded against loops by a
+  //    geometry signature (only acts when geometry changed and an overlap exists).
+  const initialArrangeRef = useRef<string | null>(null);
+  const spreadGeomRef = useRef<string>("");
+  useEffect(() => {
+    const visible = pen.erd.entities.filter((e) => e.review_status !== "rejected");
+    if (visible.length === 0) return;
+    if (nodes.length === 0 || nodes.some((n) => n.dragging)) return;
+    if (!nodes.every((n) => (n.measured?.width ?? 0) > 0 && (n.measured?.height ?? 0) > 0)) return;
+
+    const storedIds = new Set(pen.layout.erd.nodes.map((n) => n.id));
+    const isFresh = !visible.some((e) => storedIds.has(e.id));
+    if (isFresh) {
+      const signature = `${projectId}:${visible.map((e) => e.id).sort().join("|")}`;
+      if (initialArrangeRef.current === signature) return;
+      initialArrangeRef.current = signature;
+      runAutoArrange().catch((err) => console.warn("Initial ERD auto-arrange skipped:", err));
+      return;
+    }
+
+    const signature = nodes
+      .map((n) => `${n.id}:${Math.round(n.position.x)}:${Math.round(n.position.y)}:${Math.round(n.measured?.width ?? 0)}:${Math.round(n.measured?.height ?? 0)}`)
+      .join("|");
+    if (spreadGeomRef.current === signature) return;
+    spreadGeomRef.current = signature;
+    spreadOverlaps().catch((err) => console.warn("ERD de-overlap skipped:", err));
+  }, [pen, nodes, projectId, runAutoArrange, spreadOverlaps]);
 
   const moveEdgeLabel = useCallback(async (edgeId: string, labelT: number, labelOffset: number) => {
     const cur = penRef.current;

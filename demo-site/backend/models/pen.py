@@ -60,6 +60,10 @@ class Entity(BaseModel):
     kind: Literal["strong_entity", "weak_entity", "lookup_table"] = "strong_entity"
     name: str          # snake_case table name
     display_name: str  # human-readable label
+    # business-process grouping + cross-process connection points (optional; used to
+    # color-code multi-process ERDs — domain-tagged tables render neutral, seams light up).
+    domain: str | None = None  # owning business process (labels/grouping only; not a color)
+    connects: list[str] = Field(default_factory=list)  # departments this entity bridges; non-empty => seam
     attributes: list[Attribute] = Field(default_factory=list)
     # evidence / metadata
     source_evidence: list[AttributeEvidence] = Field(default_factory=list)
@@ -166,6 +170,45 @@ class DataFlow(BaseModel):
     model_config = {"populate_by_name": True}
 
 
+class BusinessRule(BaseModel):
+    """A business invariant / lifecycle gate / validation that governs a context.
+    The behavioral counterpart to the ERD's structure. Traceable to the code that enforces it."""
+
+    id: str = Field(default_factory=lambda: f"rule_{uuid.uuid4().hex[:8]}")
+    context: str | None = None        # nexus file key, e.g. "07_quality_batch"
+    entity_id: str | None = None      # ERD Entity.id this rule governs (optional)
+    relationship_id: str | None = None  # ERD Relationship.id this rule governs (optional; enables cardinality verification)
+    process_id: str | None = None     # DFD Process.id this rule governs (optional)
+    title: str
+    statement: str                    # the rule, in plain language
+    category: Literal["invariant", "state_machine", "gate", "validation", "lifecycle"] = "invariant"
+    condition: str | None = None      # optional pseudo-code, e.g. "cn.finishedAt === null"
+    enforced_at: list[str] = Field(default_factory=list)  # code file:line pointers (traceability)
+    spec_source: str | None = None    # reference spec citation
+    verified_by: str | None = None    # e.g. "behavioral-parity.md: <row>"
+    severity: Literal["constraint", "warning", "best_practice"] = "constraint"
+    status: Literal["enforced", "gap", "deferred"] = "enforced"
+    review_status: Literal["accepted", "needs_review", "rejected"] = "accepted"
+
+
+class Connector(BaseModel):
+    """A cross-service seam or shared middleware: how the interconnected contexts talk.
+    trigger -> effect, with the payload contract and the code that wires it."""
+
+    id: str = Field(default_factory=lambda: f"conn_{uuid.uuid4().hex[:8]}")
+    name: str
+    kind: Literal["seam", "webhook", "fan_out", "middleware", "shared_service", "auth"] = "seam"
+    trigger: str | None = None        # what initiates it
+    effect: str | None = None         # what it causes downstream
+    from_context: str | None = None   # originating nexus context key
+    to_contexts: list[str] = Field(default_factory=list)  # downstream context keys
+    contract: str | None = None       # payload / key contract
+    enforced_at: list[str] = Field(default_factory=list)  # code file:line pointers
+    spec_source: str | None = None
+    status: Literal["wired", "deferred"] = "wired"
+    review_status: Literal["accepted", "needs_review", "rejected"] = "accepted"
+
+
 class DfdModel(BaseModel):
     level: int = 0  # 0 = context diagram, 1 = detailed
     notation: Literal["yourdon_coad"] = "yourdon_coad"
@@ -174,6 +217,10 @@ class DfdModel(BaseModel):
     processes: list[Process] = Field(default_factory=list)
     data_stores: list[DataStore] = Field(default_factory=list)
     data_flows: list[DataFlow] = Field(default_factory=list)
+    # Behavioral layer (optional, backward-compatible) — the business rules + cross-service
+    # connectors/middleware that the ERD/DFD structure can't express.
+    business_rules: list[BusinessRule] = Field(default_factory=list)
+    connectors: list[Connector] = Field(default_factory=list)
 
 
 # Allow Process to self-reference DfdModel

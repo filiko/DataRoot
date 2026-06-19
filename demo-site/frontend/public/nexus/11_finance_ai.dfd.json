@@ -1,0 +1,2073 @@
+{
+  "documentType": "dashbot.dfdmaker",
+  "schemaVersion": "0.1",
+  "pen_version": "0.1",
+  "project": {
+    "id": "proj_nexus_11_finance_ai",
+    "name": "Nexus · 11 Finance + AI",
+    "revision": 1
+  },
+  "sources": [],
+  "erd": {
+    "notation": "crows_foot",
+    "model_level": "physical",
+    "entities": [
+      {
+        "id": "ent_cn",
+        "kind": "strong_entity",
+        "name": "control_numbers",
+        "display_name": "Control Numbers",
+        "domain": "control-numbers",
+        "connects": [
+          "all"
+        ],
+        "attributes": [
+          {
+            "id": "a_cn_value",
+            "name": "value",
+            "display_name": "Value",
+            "pg_type": "text",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cn_type",
+            "name": "type",
+            "display_name": "Type",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": "type BETWEEN 1 AND 18",
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cn_finished",
+            "name": "finished_at",
+            "display_name": "Finished At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Traceability spine (full definition in 02_control_numbers). Every control-number-bearing entity here FKs to value.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_inv",
+        "kind": "strong_entity",
+        "name": "invoices",
+        "display_name": "Invoices",
+        "domain": "finance",
+        "connects": [
+          "sales"
+        ],
+        "attributes": [
+          {
+            "id": "a_inv_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "Real invoices id: auto-increment int (2017_03_07_173109 $table->increments('id')). DESIGN: retyped to uuid PK to match Nexus convention (legacy carried its own id + invoice_number, so no control_number FK)."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_inv_number",
+            "name": "invoice_number",
+            "display_name": "Invoice Number",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "invoices.invoice_number string unique (2017_03_07_173109 $table->string('invoice_number')->unique())."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_inv_customer",
+            "name": "customer_id",
+            "display_name": "Customer Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "invoices.customer_id unsigned int FK->customers (2017_03_07_173109; FK added 2018_08_29_123922 references('id')->on('customers')). Cross-domain → accounts (10) [legacy 'customers']; retyped to uuid. No in-file rel."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_inv_location",
+            "name": "location_id",
+            "display_name": "Location Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "invoices.location_id unsigned int FK->locations (2017_03_07_173109; FK added 2018_08_29_123922 references('id')->on('locations')). Cross-domain → facilities (01) [legacy 'locations']; retyped to uuid. No in-file rel."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_inv_locked",
+            "name": "is_locked",
+            "display_name": "Is Locked",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "invoices.is_locked bool default 0 (2017_03_21_113437 boolean('is_locked')->default(0))."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_inv_closed",
+            "name": "is_closed",
+            "display_name": "Is Closed",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "invoices.is_closed bool default false (2017_04_18_182923 boolean('is_closed')->default(false))."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_inv_discount",
+            "name": "discount",
+            "display_name": "Discount",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "invoices.discount double (2017_04_05_162400 $table->double('discount')). DESIGN: legacy double → numeric (house convention)."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_inv_locked_date",
+            "name": "locked_date",
+            "display_name": "Locked Date",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "invoices.locked_date nullable timestamp (2018_01_22_181639 timestamp('locked_date')->nullable()->default(null))."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_inv_closed_date",
+            "name": "closed_date",
+            "display_name": "Closed Date",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "invoices.closed_date nullable timestamp (2018_01_22_181639 timestamp('closed_date')->nullable()->default(null))."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_inv_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_inv_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Real PhytoVerify finance source — invoices header table (PhytoverifyOG 2017_03_07_173109_create_invoices_table.php + locked/closed/discount/date amendments). Bridges finance↔sales via customer_id → accounts (10) [legacy 'customers']; location_id → facilities (01) [legacy 'locations'] is cross-file so no in-file rel is drawn (same convention as finance_activities.product_id). DESIGN: int ids retyped to uuid.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_invl",
+        "kind": "strong_entity",
+        "name": "invoice_lines",
+        "display_name": "Invoice Lines",
+        "domain": "finance",
+        "connects": [
+          "refinement"
+        ],
+        "attributes": [
+          {
+            "id": "a_invl_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "Real invoice_lines id: auto-increment int (2017_03_07_173118 $table->increments('id')). DESIGN: retyped to uuid PK."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_invl_invoice",
+            "name": "invoice_id",
+            "display_name": "Invoice Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "invoice_lines.invoice_id unsigned int FK->invoices (2017_03_07_173118; FK added 2018_08_29_123210 references('id')->on('invoices')). In-file rel → invoices (cascade)."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_invl_package",
+            "name": "package_id",
+            "display_name": "Package Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "invoice_lines.package_id unsigned int FK->packages (2017_03_07_173118; FK added 2018_08_29_123210 references('id')->on('packages')). Cross-domain → packages (05); retyped to uuid. No in-file rel."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_invl_qty",
+            "name": "quantity",
+            "display_name": "Quantity",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "invoice_lines.quantity int (2017_03_07_173118 $table->integer('quantity'))."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_invl_cost",
+            "name": "unit_cost",
+            "display_name": "Unit Cost",
+            "pg_type": "numeric(5,2)",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "invoice_lines.unit_cost float(5,2) (2017_03_07_173118 $table->float('unit_cost',5,2)). DESIGN: retyped float→numeric(5,2) for exact money. This is the cost figure the Sage export consumes."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_invl_thc",
+            "name": "thc",
+            "display_name": "Thc",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "invoice_lines.thc float NOT NULL (2017_03_30_145155 $table->float('thc')). DESIGN: legacy float → numeric (house convention)."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_invl_cbd",
+            "name": "cbd",
+            "display_name": "Cbd",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "invoice_lines.cbd float NOT NULL (2017_03_30_145155 $table->float('cbd')). DESIGN: legacy float → numeric (house convention)."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_invl_pieces",
+            "name": "pieces",
+            "display_name": "Pieces",
+            "pg_type": "smallint",
+            "key_role": "none",
+            "nullable": false,
+            "default": "1",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "invoice_lines.pieces smallInteger default 1 (2017_03_30_182402 $table->smallInteger('pieces')->default(1))."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_invl_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_invl_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Real PhytoVerify finance source — invoice line items, the highest-value cost source for the Sage export (PhytoverifyOG 2017_03_07_173118_create_invoice_lines_table.php + thc/cbd/pieces amendments). invoice_id is an in-file FK → invoices (cascade). Bridges finance↔refinement via package_id → packages (05), cross-file so no in-file rel (same convention as finance_activities.product_id). DESIGN: int ids→uuid; unit_cost float(5,2)→numeric(5,2).",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_fa",
+        "kind": "strong_entity",
+        "name": "finance_activities",
+        "display_name": "Finance Activities",
+        "domain": "finance",
+        "connects": [
+          "refinement",
+          "product-master"
+        ],
+        "attributes": [
+          {
+            "id": "a_fa_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_fa_cn",
+            "name": "control_number",
+            "display_name": "Control Number",
+            "pg_type": "text",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ control_numbers.value"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_fa_product",
+            "name": "product_id",
+            "display_name": "Product Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: → products (08); cross-domain product tag (no source table)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_fa_stage",
+            "name": "stage",
+            "display_name": "Stage",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: production stage tag"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_fa_type",
+            "name": "activity_type",
+            "display_name": "Activity Type",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: harvest/refine/package/ship/adjust…"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_fa_qty",
+            "name": "quantity",
+            "display_name": "Quantity",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: synthesized measurement field; no source column to derive precision"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_fa_cost",
+            "name": "cost_amount",
+            "display_name": "Cost Amount",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: synthesized money field; no source column to derive numeric(p,s) precision"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_fa_export",
+            "name": "sage_export_id",
+            "display_name": "Sage Export Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: → sage_exports (design synthesis)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_fa_at",
+            "name": "recorded_at",
+            "display_name": "Recorded At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: synthesized audit timestamp"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_fa_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "DESIGN: The real legacy finance source is invoices/invoice_lines (PhytoVerify 2017_03_07_173109 / 2017_03_07_173118), now modeled above. finance_activities remains a DESIGN-flagged synthesis: a per-control-number activity ledger tagged by product/lot/stage for the Sage activity/cost export (Seam 8) — no such activity/accounting-ledger table exists in NexusPlatform schema.ts, the intel codebase, or the PhytoVerify migrations.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_sage",
+        "kind": "strong_entity",
+        "name": "sage_exports",
+        "display_name": "Sage Exports",
+        "domain": "finance",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_se_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_se_period",
+            "name": "period",
+            "display_name": "Period",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: e.g. 2026-06"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_se_path",
+            "name": "csv_path",
+            "display_name": "Csv Path",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: synthesized CSV path"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_se_rows",
+            "name": "row_count",
+            "display_name": "Row Count",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: synthesized row count"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_se_status",
+            "name": "status",
+            "display_name": "Status",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": "'pending'",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: synthesized export status"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_se_at",
+            "name": "exported_at",
+            "display_name": "Exported At",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: synthesized export time"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_se_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "DESIGN: No Sage export / accounting-CSV table exists in NexusPlatform schema.ts, the intel codebase, or PhytoVerify migrations (intel doc 05-ai-providers lists financial credentials as out-of-scope). Pure design synthesis: CSV activity export to Sage.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_ai",
+        "kind": "strong_entity",
+        "name": "ai_call_log",
+        "display_name": "AI Call Log",
+        "domain": "ai",
+        "connects": [
+          "sales"
+        ],
+        "attributes": [
+          {
+            "id": "a_ai_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ai_at",
+            "name": "occurred_at",
+            "display_name": "Occurred At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ai_provider",
+            "name": "provider",
+            "display_name": "Provider",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": "provider IN ('anthropic','groq','nvidia')",
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: 'nvidia' is an aspirational/never-emitted value — no server logAiCall path in nexus-intel ever writes provider:'nvidia' (it exists only as a frontend integrations-catalog label). 'anthropic' and 'groq' are the real emitted providers; the value is kept in the CHECK to avoid over-narrowing the fallback chain."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ai_model",
+            "name": "model",
+            "display_name": "Model",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ai_feature",
+            "name": "feature",
+            "display_name": "Feature",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "logAiCall source label (server.js routes/ai.js:145 source:'email_draft'; also hub/cache/emerald/photon/ai — all sales/CRM). DESIGN: sop-draft/capa/consumer-copy are aspirational future consumers, not present callers."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ai_user",
+            "name": "rep_email",
+            "display_name": "Rep Email",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "logAiCall row stores `email: aiEmail` (server.js:1465); routes/usage.js byUser buckets on e.email (line 57). The AI log has no user uuid — keyed by rep email."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ai_in",
+            "name": "input_tokens",
+            "display_name": "Input Tokens",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "logAiCall promptTokens (server.js:1466)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ai_out",
+            "name": "output_tokens",
+            "display_name": "Output Tokens",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "logAiCall completionTokens (server.js:1466)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ai_total",
+            "name": "total_tokens",
+            "display_name": "Total Tokens",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "logAiCall totalTokens (server.js:1467); routes/usage.js reads e.totalTokens (line 53)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ai_cost",
+            "name": "cost_usd",
+            "display_name": "Cost Usd",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "logAiCall costUsd — anthropic callCost (server.js:1467), 0 for groq (1490)/nvidia (1513); every row carries a numeric cost"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ai_cap",
+            "name": "spend_cap_remaining",
+            "display_name": "Spend Cap Remaining",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: not persisted per-call; spend cap is two scalar config values (anthropicSpendCap/anthropicSpendUsed in server-config.json, server.js:1444-1446)."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ai_pii",
+            "name": "pii_stripped",
+            "display_name": "Pii Stripped",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "true",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: per-row flag is a design artifact. stripCustomerPII runs unconditionally for every call (server.js:1378-1397, 1436) but the result is never written to the log row."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Shared AI service audit (provider fallback + PII strip + spend cap). Real nexus-intel AI features are sales/CRM only (email_draft/hub/cache/emerald/photon/ai). DESIGN: quality (SOP/CAPA) and consumer-profile (copy) are aspirational future consumers, not present callers.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_cap",
+        "kind": "strong_entity",
+        "name": "ai_spend_caps",
+        "display_name": "AI Spend Caps",
+        "domain": "ai",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_cap_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cap_scope",
+            "name": "scope",
+            "display_name": "Scope",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: global / per-feature / per-user. Real cap is a SINGLE global lifetime scalar (anthropicSpendUsed >= anthropicSpendCap, server.js:1444-1446) — no scope dimension."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cap_period",
+            "name": "period",
+            "display_name": "Period",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: real cap is lifetime, not periodic — period is a design synthesis."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cap_provider",
+            "name": "provider",
+            "display_name": "Provider",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": "'anthropic'",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: cap is provider-specific. Only Anthropic accrues cost (anthropicSpendCap/anthropicSpendUsed, server.js:1444-1446); groq/nvidia log costUsd:0 (server.js:1490,1513) and are uncapped."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cap_cap",
+            "name": "cap_usd",
+            "display_name": "Cap Usd",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": "5",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DEFAULT_ANTHROPIC_CAP=5.00 (server.js:1249)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cap_spent",
+            "name": "spent_usd",
+            "display_name": "Spent Usd",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "anthropicSpendUsed (server.js:1445-1446)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cap_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cap_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "DESIGN: the scope/period dimensional model is a synthesis. The real spend cap is a single global lifetime scalar for Anthropic only (DEFAULT_ANTHROPIC_CAP=5.00, server.js:1249); spend cap halts Anthropic calls when exhausted (Groq/NIM take over).",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_eh",
+        "kind": "strong_entity",
+        "name": "event_history_entries",
+        "display_name": "Event History Entries",
+        "domain": "ai",
+        "connects": [
+          "all"
+        ],
+        "attributes": [
+          {
+            "id": "a_eh_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: real table uses an auto-increment integer id (2016_09_19_030129_create_user_event_history_table.php $table->increments('id'))."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_eh_event",
+            "name": "event",
+            "display_name": "Event",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "Real event_history_entries.event string(128) (PhytoverifyOG 2016_09_19_030129_create_user_event_history_table.php)."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_eh_type",
+            "name": "event_type",
+            "display_name": "Event Type",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: CQRS event-store synthesis; not in the real table (only id/user_id/event/timestamps)."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_eh_aggtype",
+            "name": "aggregate_type",
+            "display_name": "Aggregate Type",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: CQRS aggregate kind (e.g. Batch/Harvest/Package); not in the real table."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_eh_aggid",
+            "name": "aggregate_id",
+            "display_name": "Aggregate Id",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: CQRS aggregate id / control number; not in the real table."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_eh_actor",
+            "name": "actor_id",
+            "display_name": "Actor Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: → users (01). Real table has user_id integer FK->users.id (2018_08_29_121342_add_missing_fk_event_history_entries.php), not a uuid."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_eh_data",
+            "name": "data",
+            "display_name": "Data",
+            "pg_type": "jsonb",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: CQRS event payload; not in the real table."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_eh_at",
+            "name": "occurred_at",
+            "display_name": "Occurred At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: real table uses Laravel timestamps (created_at/updated_at)."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Thin per-user action log. Real PhytoVerify table is id/user_id/event(128)/timestamps (2016_09_19_030129). DESIGN: the CQRS event-store fields (event_type/aggregate_*/data/uuid actor) are a redesign overlay; the real row-level change-audit store is `audits` below.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_audit",
+        "kind": "strong_entity",
+        "name": "audits",
+        "display_name": "Audits",
+        "domain": "ai",
+        "connects": [
+          "all"
+        ],
+        "attributes": [
+          {
+            "id": "a_aud_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "Real audits id: started uuid, later auto-increment int (2016_11_25_173022 uuid->primary; 2017_10_12_012525 increments)."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_aud_event",
+            "name": "event",
+            "display_name": "Event",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "audits.event (was `type`) — 2017_10_12_012525_update_audits_table.php renameColumn type->event."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_aud_atype",
+            "name": "auditable_type",
+            "display_name": "Auditable Type",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "polymorphic morphs auditable_type (2016_11_25_173022 $table->morphs('auditable'))."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_aud_aid",
+            "name": "auditable_id",
+            "display_name": "Auditable Id",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "polymorphic morphs auditable_id (2016_11_25_173022 $table->morphs('auditable'))."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_aud_old",
+            "name": "old_values",
+            "display_name": "Old Values",
+            "pg_type": "jsonb",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "audits.old_values (was `old` text) — 2017_10_12_012525 renameColumn old->old_values."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_aud_new",
+            "name": "new_values",
+            "display_name": "New Values",
+            "pg_type": "jsonb",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "audits.new_values (was `new` text) — 2017_10_12_012525 renameColumn new->new_values."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_aud_user",
+            "name": "user_id",
+            "display_name": "User Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "audits.user_id nullable unsigned int FK->users (2017_10_12_012525 unsignedInteger). DESIGN: retyped to uuid to match unified users PK (QMS user.py users.id uuid)."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_aud_url",
+            "name": "url",
+            "display_name": "Url",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "audits.url (was `route`) — 2017_10_12_012525 renameColumn route->url."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_aud_ip",
+            "name": "ip_address",
+            "display_name": "Ip Address",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "audits.ip_address varchar(45) (2016_11_25_173022 $table->ipAddress('ip_address',45))."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_aud_ua",
+            "name": "user_agent",
+            "display_name": "User Agent",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "audits.user_agent (2017_10_12_012525 $table->string('user_agent'))."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_aud_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_aud_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "laravel-auditing append-only row-level change-audit store — the platform's actual audit store (PhytoverifyOG 2016_11_25_173022_create_audits_table.php + 2017_10_12_012525_update_audits_table.php). Polymorphic over every auditable model.",
+        "confidence": 1,
+        "review_status": "accepted"
+      }
+    ],
+    "relationships": [
+      {
+        "id": "rel_fa_cn",
+        "name": "identified by",
+        "from": {
+          "entity_id": "ent_fa",
+          "attribute_id": "a_fa_cn"
+        },
+        "to": {
+          "entity_id": "ent_cn",
+          "attribute_id": "a_cn_value"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_rel_fa_cn",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_fa_export",
+        "name": "exported in",
+        "from": {
+          "entity_id": "ent_fa",
+          "attribute_id": "a_fa_export"
+        },
+        "to": {
+          "entity_id": "ent_sage",
+          "attribute_id": "a_se_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_fa_export",
+          "on_delete": "set_null",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_invl_inv",
+        "name": "billed on",
+        "from": {
+          "entity_id": "ent_invl",
+          "attribute_id": "a_invl_invoice"
+        },
+        "to": {
+          "entity_id": "ent_inv",
+          "attribute_id": "a_inv_id"
+        },
+        "cardinality": {
+          "from_min": 1,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_invl_inv",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "invoice_lines.invoice_id FK->invoices (PhytoverifyOG 2018_08_29_123210)."
+        ],
+        "confidence": 1,
+        "review_status": "accepted"
+      }
+    ]
+  },
+  "dfd": {
+    "level": 0,
+    "notation": "yourdon_coad",
+    "system_boundary": {
+      "id": "boundary_fin",
+      "name": "Finance + Shared AI"
+    },
+    "external_entities": [
+      {
+        "id": "ext_sage",
+        "name": "Sage",
+        "description": "Accounting (CSV import)",
+        "source": "manual",
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "ext_anthropic",
+        "name": "Anthropic / Groq / NVIDIA",
+        "description": "AI providers (fallback chain)",
+        "source": "manual",
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "processes": [
+      {
+        "id": "proc_export",
+        "number": "1.0",
+        "name": "Export Activity → Sage",
+        "description": "Aggregate tagged activity → CSV",
+        "user_modified": true,
+        "mapped_relationship_id": "rel_fa_export",
+        "source_evidence": [],
+        "source_facts": [],
+        "level_1_diagram": null
+      },
+      {
+        "id": "proc_ai",
+        "number": "2.0",
+        "name": "AI Call (fallback)",
+        "description": "Strip PII → Anthropic→Groq→NVIDIA; cap + log",
+        "user_modified": true,
+        "mapped_relationship_id": null,
+        "source_evidence": [],
+        "source_facts": [],
+        "level_1_diagram": null
+      }
+    ],
+    "data_stores": [
+      {
+        "id": "store_fa",
+        "name": "Finance Activities",
+        "description": "Tagged activity",
+        "mapped_erd_entity": "ent_fa",
+        "user_modified": false,
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "store_ai",
+        "name": "AI Call Log",
+        "description": "Audited AI calls",
+        "mapped_erd_entity": "ent_ai",
+        "user_modified": false,
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "data_flows": [
+      {
+        "id": "f1",
+        "from": "proc_export",
+        "to": "ext_sage",
+        "data_name": "Activity CSV",
+        "mapped_relationship_id": null,
+        "user_modified": false,
+        "mapped_erd_entities": [
+          "ent_sage"
+        ],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "f2",
+        "from": "proc_ai",
+        "to": "ext_anthropic",
+        "data_name": "PII-stripped prompt",
+        "mapped_relationship_id": null,
+        "user_modified": false,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "f3",
+        "from": "proc_ai",
+        "to": "store_ai",
+        "data_name": "Call record",
+        "mapped_relationship_id": null,
+        "user_modified": false,
+        "mapped_erd_entities": [
+          "ent_ai"
+        ],
+        "mapped_erd_attributes": [
+          "a_ai_cost"
+        ],
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "business_rules": [
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/finance/domain/revenue.ts:7,35"
+        ],
+        "to_contexts": [],
+        "id": "FIN-INV-01",
+        "title": "Revenue immutable after close",
+        "category": "invariant",
+        "statement": "A revenue record is immutable once isClosed=true.",
+        "spec_source": "06-production-and-costing.md",
+        "verified_by": "AGENTS.md §6"
+      },
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/finance/http.ts (/api/finance/export)"
+        ],
+        "to_contexts": [],
+        "id": "FIN-LC-01",
+        "title": "Accounting stays in Sage (CSV export boundary)",
+        "category": "lifecycle",
+        "statement": "Cost/accounting lives in Sage; Nexus only exports an activity CSV — it does not own the ledger.",
+        "spec_source": "project-brief.md; AGENTS.md §2"
+      }
+    ],
+    "connectors": [
+      {
+        "id": "conn_seam7_shared_ai",
+        "name": "Seam 7 — Shared AI service (PII-stripped, provider fallback)",
+        "kind": "shared_service",
+        "trigger": "Any context requests AI assistance (SOP/CAPA, sales copy, consumer copy)",
+        "effect": "callAiWithFallback strips customer PII + enforces spend cap (Anthropic -> Groq fallback)",
+        "from_context": "11_finance_ai",
+        "to_contexts": [
+          "07_quality_batch",
+          "09_consumer_profile",
+          "10_sales"
+        ],
+        "contract": "callAiWithFallback(prompt) with stripCustomerPII + spend-cap",
+        "enforced_at": [
+          "(not built — finance/ai/* scaffold only)"
+        ],
+        "spec_source": "40-unified-workflow-graph.md (Seam 7); 30-nexus-intel.md",
+        "status": "deferred",
+        "review_status": "needs_review"
+      }
+    ]
+  },
+  "layout": {
+    "erd": {
+      "nodes": [
+        {
+          "id": "ent_cn",
+          "x": 60,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_inv",
+          "x": 440,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_invl",
+          "x": 820,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_fa",
+          "x": 60,
+          "y": 380,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_sage",
+          "x": 440,
+          "y": 380,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_ai",
+          "x": 820,
+          "y": 380,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_cap",
+          "x": 60,
+          "y": 700,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_eh",
+          "x": 440,
+          "y": 700,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_audit",
+          "x": 820,
+          "y": 700,
+          "width": 300,
+          "height": 230
+        }
+      ],
+      "edges": []
+    },
+    "dfd": {
+      "nodes": [],
+      "edges": []
+    },
+    "dfd_level_1": {}
+  },
+  "styles": {
+    "theme": "minimal"
+  },
+  "postgres": {
+    "dialect": "postgresql",
+    "extensions": [
+      "pgcrypto"
+    ],
+    "schema_name": "public",
+    "default_primary_key": {
+      "type": "uuid",
+      "default": "gen_random_uuid()"
+    },
+    "add_audit_timestamps": false
+  },
+  "review": {
+    "proposals": [],
+    "warnings": [],
+    "dismissed_warnings": []
+  }
+}

@@ -346,4 +346,6 @@ def build_dfd_from_erd(
         processes=new_processes,
         data_stores=new_stores,
         data_flows=new_flows,
+        business_rules=existing.business_rules,
+        connectors=existing.connectors,
     )

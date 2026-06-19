@@ -1,0 +1,2164 @@
+{
+  "documentType": "dashbot.dfdmaker",
+  "schemaVersion": "0.1",
+  "pen_version": "0.1",
+  "project": {
+    "id": "proj_nexus_05_refinement",
+    "name": "Nexus · 05 Refinement & Packaging",
+    "revision": 1
+  },
+  "sources": [],
+  "erd": {
+    "notation": "crows_foot",
+    "model_level": "physical",
+    "entities": [
+      {
+        "id": "ent_cn",
+        "kind": "strong_entity",
+        "name": "control_numbers",
+        "display_name": "Control Numbers",
+        "domain": "control-numbers",
+        "connects": [
+          "all"
+        ],
+        "attributes": [
+          {
+            "id": "a_cn_value",
+            "name": "value",
+            "display_name": "Value",
+            "pg_type": "text",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cn_type",
+            "name": "type",
+            "display_name": "Type",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": "type BETWEEN 1 AND 18",
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cn_finished",
+            "name": "finished_at",
+            "display_name": "Finished At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Traceability spine (full definition in 02_control_numbers). Every control-number-bearing entity here FKs to value.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_pkgtype",
+        "kind": "lookup_table",
+        "name": "package_types",
+        "display_name": "Package Types",
+        "domain": "refinement",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_pt_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "integer",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pt_type",
+            "name": "type",
+            "display_name": "Type",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": false,
+            "default": "''",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "surviving package-type code e.g. FFF/TRM/EOH/WAX/GND/KIF; the original integer 'type' was dropped in 2018_10_09 and the string 'enum' value was copied here then 'enum' dropped"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pt_enum",
+            "name": "enum",
+            "display_name": "Enum",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: legacy duplicate of 'type'. 'enum' was DROPPED in 2018_10_09_020144 (its value copied into the surviving text 'type'); kept as a stable-contract id only, not in as-built final schema"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pt_name",
+            "name": "displayable_name",
+            "display_name": "Displayable Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "38 package-type codes.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_pkg",
+        "kind": "strong_entity",
+        "name": "packages",
+        "display_name": "Packages",
+        "domain": "refinement",
+        "connects": [
+          "cultivation",
+          "qa-lab",
+          "quality"
+        ],
+        "attributes": [
+          {
+            "id": "a_pk_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pk_cn",
+            "name": "control_number",
+            "display_name": "Control Number",
+            "pg_type": "text",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ control_numbers.value (type 18)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pk_type",
+            "name": "package_type_id",
+            "display_name": "Package Type Id",
+            "pg_type": "integer",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pk_product",
+            "name": "product_id",
+            "display_name": "Product Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ products (08_product_master); set at creation of new packages table, never dropped — the package's product/category origin handle. Cross-domain, no edge drawn"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pk_genocode",
+            "name": "genocode_library_id",
+            "display_name": "Genocode Library Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ genocode_library (03_genetics); strain specificity for business purposes; nullable, never dropped. Cross-domain, no edge drawn"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pk_harvest",
+            "name": "harvest_id",
+            "display_name": "Harvest Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: → harvests (04_cultivation_harvest); no harvest_id column exists on packages in any PhytoVerify migration — real origin is via product_id + control-number lineage. Cross-domain, no edge drawn"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pk_stage",
+            "name": "stage",
+            "display_name": "Stage",
+            "pg_type": "smallint",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "lifecycle stage enum code (smallInteger). e.g. AWAITING_GRIND…DISTILLED"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pk_terp",
+            "name": "primary_terpene",
+            "display_name": "Primary Terpene",
+            "pg_type": "smallint",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "terpene enum/lookup code (smallInteger, originally tinyInteger default 1, later nullable)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pk_thccbd",
+            "name": "thc_cbd_type",
+            "display_name": "Thc Cbd Type",
+            "pg_type": "smallint",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "THC vs CBD product type (tinyInteger default 2, made nullable in 2018_10_15)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pk_uw",
+            "name": "unit_weight",
+            "display_name": "Unit Weight",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "float(8,2) nullable; surviving measurement column"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pk_uv",
+            "name": "unit_volume",
+            "display_name": "Unit Volume",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "float(8,2) nullable; surviving measurement column"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pk_cpu",
+            "name": "count_per_unit",
+            "display_name": "Count Per Unit",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "surviving measurement column"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pk_open",
+            "name": "is_open",
+            "display_name": "Is Open",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "true",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "real lifecycle/open-status flag; created on new packages table, never dropped"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pk_weight",
+            "name": "weight_amount",
+            "display_name": "Weight Amount",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: abstraction over the as-built unit_weight/unit_volume measurement columns (see a_pk_uw/a_pk_uv); no column literally named weight_amount in source"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pk_unit",
+            "name": "unit",
+            "display_name": "Unit",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: abstraction for a measurement unit; no literal 'unit' column in as-built packages (source carries unit_weight/unit_volume/count_per_unit)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pk_finished",
+            "name": "is_finished",
+            "display_name": "Is Finished",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: not an as-built column; the real open/lifecycle flag is is_open (a_pk_open) and finish state is carried by control_numbers.finished_at. Retained as a stable-contract id only"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pk_metrc",
+            "name": "metrc_item_id",
+            "display_name": "Metrc Item Id",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: identifier only; METRC sync descoped"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pk_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pk_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Control# type 18. The physical lot — and the BATCH boundary: a finished package becomes the QMS batch (07_quality_batch), samples are drawn from it (06_qa_lab), and it originates from a harvest (04). The central cross-department connection point.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_pkgchild",
+        "kind": "strong_entity",
+        "name": "packages_children",
+        "display_name": "Packages Children (lineage)",
+        "domain": "refinement",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_pc_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pc_parent",
+            "name": "parent_package_id",
+            "display_name": "Parent Package Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pc_child",
+            "name": "child_control_number",
+            "display_name": "Child Control Number",
+            "pg_type": "text",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pc_in_amount",
+            "name": "parent_input_amount",
+            "display_name": "Parent Input Amount",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "float(8,2) nullable; surviving lineage measurement column (2018_12_05)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pc_out_amount",
+            "name": "child_output_amount",
+            "display_name": "Child Output Amount",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "float(8,2) nullable; surviving lineage measurement column (2018_12_05)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pc_isref",
+            "name": "is_refinement",
+            "display_name": "Is Refinement",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "distinguishes refinement-derived child packages from plain splits (2018_12_18)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pc_cpu",
+            "name": "count_per_unit",
+            "display_name": "Count Per Unit",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: DROPPED from packages_children in 2018_12_17 (replaced by parent_input_amount/child_output_amount); not in as-built final schema. Kept as stable-contract id only"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pc_uw",
+            "name": "unit_weight",
+            "display_name": "Unit Weight",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: DROPPED from packages_children in 2018_12_17; not in as-built final schema. Kept as stable-contract id only"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pc_uv",
+            "name": "unit_volume",
+            "display_name": "Unit Volume",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: DROPPED from packages_children in 2018_12_17; not in as-built final schema. Kept as stable-contract id only"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pc_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Parent→child package lineage; child is itself a control number.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_adjreason",
+        "kind": "lookup_table",
+        "name": "adjustment_reasons",
+        "display_name": "Adjustment Reasons",
+        "domain": "refinement",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_ar_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "integer",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ar_state",
+            "name": "state",
+            "display_name": "State",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ar_reason",
+            "name": "reason",
+            "display_name": "Reason",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ar_note",
+            "name": "requires_note",
+            "display_name": "Requires Note",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "true",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_pkgadj",
+        "kind": "strong_entity",
+        "name": "package_adjustments",
+        "display_name": "Package Adjustments",
+        "domain": "refinement",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_pa_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pa_pkg",
+            "name": "package_id",
+            "display_name": "Package Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pa_reason",
+            "name": "adjustment_reason_id",
+            "display_name": "Adjustment Reason Id",
+            "pg_type": "integer",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pa_amount",
+            "name": "adjustment_amount",
+            "display_name": "Adjustment Amount",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "float(8,2) nullable; surviving quantity column (2018_12_06, replaced number_of_units/unit_weight/unit_volume/count_per_unit)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pa_note",
+            "name": "note",
+            "display_name": "Note",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pa_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_pkgqc",
+        "kind": "strong_entity",
+        "name": "package_qc_fails",
+        "display_name": "Package QC Fails",
+        "domain": "refinement",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_qc_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_qc_pkg",
+            "name": "package_id",
+            "display_name": "Package Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_qc_qty",
+            "name": "quantity",
+            "display_name": "Quantity",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_qc_reason",
+            "name": "reason",
+            "display_name": "Reason",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_qc_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "DESIGN: forward-looking reconstruction for the unified schema. In source, the original package_qc_fails table + FK were renamed to legacy_package_qc_fails → legacy_packages during the 2018_10_05 legacy split; the new packages table never had a qc_fails table created against it. Here it is re-pointed at the new packages table.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_reftype",
+        "kind": "lookup_table",
+        "name": "refinement_types",
+        "display_name": "Refinement Types",
+        "domain": "refinement",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_rt_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "integer",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_rt_type",
+            "name": "type",
+            "display_name": "Type",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "Grind/CO2/Rosin/Winterization/Distillation/TerpSep/Compounding/PreRoll"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_ref",
+        "kind": "strong_entity",
+        "name": "refinements",
+        "display_name": "Refinements",
+        "domain": "refinement",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_r_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_r_type",
+            "name": "refinement_type_id",
+            "display_name": "Refinement Type Id",
+            "pg_type": "integer",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_r_pkg",
+            "name": "package_id",
+            "display_name": "Package Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "input package"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_r_facility",
+            "name": "facility_id",
+            "display_name": "Facility Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: → locations (01_identity); records which facility ran the refinement (real source: integer facility_id default 1, 2018_11_07, never dropped). Cross-domain edge, not drawn here"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_r_amount",
+            "name": "input_amount",
+            "display_name": "Input Amount",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_r_unit",
+            "name": "input_unit",
+            "display_name": "Input Unit",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: input_units was added 2018_11_12 then DROPPED 2018_12_06 (only input_amount survives); not in as-built final schema. Kept as stable-contract id only"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_r_finished",
+            "name": "is_finished",
+            "display_name": "Is Finished",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_r_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_r_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "A refinement process: input package → output packages.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_rto",
+        "kind": "lookup_table",
+        "name": "refinement_type_outputs",
+        "display_name": "Refinement Type Outputs (recipe matrix)",
+        "domain": "refinement",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_rto_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "integer",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_rto_type",
+            "name": "refinement_type_id",
+            "display_name": "Refinement Type Id",
+            "pg_type": "integer",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_rto_pkgtype",
+            "name": "package_type_id",
+            "display_name": "Package Type Id",
+            "pg_type": "integer",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Valid output package types per refinement type — the recipe matrix.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_refout",
+        "kind": "strong_entity",
+        "name": "refinement_outputs",
+        "display_name": "Refinement Outputs",
+        "domain": "refinement",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_ro_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ro_ref",
+            "name": "refinement_id",
+            "display_name": "Refinement Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ro_pkg",
+            "name": "package_id",
+            "display_name": "Package Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "output package"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ro_amount",
+            "name": "output_amount",
+            "display_name": "Output Amount",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": "0.00",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: maps to as-built column 'amount' (float(8,2) not null default 0.00, 2019_06_10); renamed output_amount for clarity"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ro_unit",
+            "name": "output_unit",
+            "display_name": "Output Unit",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: no source column — refinement_outputs has only id, refinement_id, package_id, amount, timestamps. Kept as stable-contract id only"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ro_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_refwaste",
+        "kind": "strong_entity",
+        "name": "refinement_waste",
+        "display_name": "Refinement Waste",
+        "domain": "refinement",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_rw_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_rw_ref",
+            "name": "refinement_id",
+            "display_name": "Refinement Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_rw_reason",
+            "name": "adjustment_reason_id",
+            "display_name": "Adjustment Reason Id",
+            "pg_type": "integer",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ adjustment_reasons.id (2019_06_05); refinement_waste records its waste reason via adjustment_reasons, not a free waste_type integer"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_rw_note",
+            "name": "adjustment_note",
+            "display_name": "Adjustment Note",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "nullable adjustment note (2019_06_07_180758 on refinement_waste)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_rw_amount",
+            "name": "amount",
+            "display_name": "Amount",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_rw_type",
+            "name": "waste_type",
+            "display_name": "Waste Type",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: NOT a refinement_waste column — waste_type belongs to harvest_waste (04_cultivation). refinement_waste (2019_06_05) has only id, refinement_id, adjustment_reason_id, amount, timestamps. Kept as stable-contract id only"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_rw_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      }
+    ],
+    "relationships": [
+      {
+        "id": "rel_pkg_cn",
+        "name": "identified by",
+        "from": {
+          "entity_id": "ent_pkg",
+          "attribute_id": "a_pk_cn"
+        },
+        "to": {
+          "entity_id": "ent_cn",
+          "attribute_id": "a_cn_value"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_rel_pkg_cn",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_pkgchild_cn",
+        "name": "identified by",
+        "from": {
+          "entity_id": "ent_pkgchild",
+          "attribute_id": "a_pc_child"
+        },
+        "to": {
+          "entity_id": "ent_cn",
+          "attribute_id": "a_cn_value"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_rel_pkgchild_cn",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_pkg_type",
+        "name": "of type",
+        "from": {
+          "entity_id": "ent_pkg",
+          "attribute_id": "a_pk_type"
+        },
+        "to": {
+          "entity_id": "ent_pkgtype",
+          "attribute_id": "a_pt_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_pkg_type",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_pc_parent",
+        "name": "child of",
+        "from": {
+          "entity_id": "ent_pkgchild",
+          "attribute_id": "a_pc_parent"
+        },
+        "to": {
+          "entity_id": "ent_pkg",
+          "attribute_id": "a_pk_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_pc_parent",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_pa_pkg",
+        "name": "adjusts",
+        "from": {
+          "entity_id": "ent_pkgadj",
+          "attribute_id": "a_pa_pkg"
+        },
+        "to": {
+          "entity_id": "ent_pkg",
+          "attribute_id": "a_pk_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_pa_pkg",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_pa_reason",
+        "name": "reason",
+        "from": {
+          "entity_id": "ent_pkgadj",
+          "attribute_id": "a_pa_reason"
+        },
+        "to": {
+          "entity_id": "ent_adjreason",
+          "attribute_id": "a_ar_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_pa_reason",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_qc_pkg",
+        "name": "qc-fails",
+        "from": {
+          "entity_id": "ent_pkgqc",
+          "attribute_id": "a_qc_pkg"
+        },
+        "to": {
+          "entity_id": "ent_pkg",
+          "attribute_id": "a_pk_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_qc_pkg",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "DESIGN: re-pointed at the new packages table; in source qc_fails FK targeted legacy_packages after the 2018_10_05 legacy split"
+        ],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_ref_type",
+        "name": "of type",
+        "from": {
+          "entity_id": "ent_ref",
+          "attribute_id": "a_r_type"
+        },
+        "to": {
+          "entity_id": "ent_reftype",
+          "attribute_id": "a_rt_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_ref_type",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_ref_pkg",
+        "name": "input",
+        "from": {
+          "entity_id": "ent_ref",
+          "attribute_id": "a_r_pkg"
+        },
+        "to": {
+          "entity_id": "ent_pkg",
+          "attribute_id": "a_pk_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_ref_input",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_rto_type",
+        "name": "for type",
+        "from": {
+          "entity_id": "ent_rto",
+          "attribute_id": "a_rto_type"
+        },
+        "to": {
+          "entity_id": "ent_reftype",
+          "attribute_id": "a_rt_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_rto_type",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_rto_pkgtype",
+        "name": "outputs type",
+        "from": {
+          "entity_id": "ent_rto",
+          "attribute_id": "a_rto_pkgtype"
+        },
+        "to": {
+          "entity_id": "ent_pkgtype",
+          "attribute_id": "a_pt_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_rto_pkgtype",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_ro_ref",
+        "name": "output of",
+        "from": {
+          "entity_id": "ent_refout",
+          "attribute_id": "a_ro_ref"
+        },
+        "to": {
+          "entity_id": "ent_ref",
+          "attribute_id": "a_r_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_ro_ref",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_ro_pkg",
+        "name": "produces",
+        "from": {
+          "entity_id": "ent_refout",
+          "attribute_id": "a_ro_pkg"
+        },
+        "to": {
+          "entity_id": "ent_pkg",
+          "attribute_id": "a_pk_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_ro_pkg",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_rw_ref",
+        "name": "waste of",
+        "from": {
+          "entity_id": "ent_refwaste",
+          "attribute_id": "a_rw_ref"
+        },
+        "to": {
+          "entity_id": "ent_ref",
+          "attribute_id": "a_r_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_rw_ref",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_rw_reason",
+        "name": "reason",
+        "from": {
+          "entity_id": "ent_refwaste",
+          "attribute_id": "a_rw_reason"
+        },
+        "to": {
+          "entity_id": "ent_adjreason",
+          "attribute_id": "a_ar_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_rw_reason",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      }
+    ]
+  },
+  "dfd": {
+    "level": 0,
+    "notation": "yourdon_coad",
+    "system_boundary": {
+      "id": "boundary_nexus",
+      "name": "Nexus · 05 Refinement & Packaging"
+    },
+    "external_entities": [],
+    "processes": [],
+    "data_stores": [],
+    "data_flows": [],
+    "business_rules": [
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/refinement/service/refinement-service.ts:139-141"
+        ],
+        "to_contexts": [],
+        "id": "REF-INV-01",
+        "title": "Output packages get PACKAGE (18) control numbers",
+        "category": "invariant",
+        "statement": "Each refinement output package obtains a ControlNumberType.PACKAGE (18) control number.",
+        "spec_source": "spec-workflow-refinement.md §24",
+        "verified_by": "docs/context/behavioral-parity.md (refinement)"
+      },
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/refinement/service/refinement-service.ts:8"
+        ],
+        "to_contexts": [],
+        "id": "REF-INV-02",
+        "title": "Refinement runs are append-only/immutable",
+        "category": "invariant",
+        "statement": "A refinement run is immutable once created — outputs and waste are append-only additions, never edits.",
+        "spec_source": "spec-workflow-refinement.md",
+        "verified_by": "docs/context/behavioral-parity.md (Run immutability)"
+      },
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/refinement/service/refinement-service.ts:116-213"
+        ],
+        "to_contexts": [],
+        "id": "REF-LC-01",
+        "title": "Input bulk package → outputs + parent→child lineage",
+        "category": "lifecycle",
+        "statement": "executeRefinement consumes a bulk input package and produces output packages, linking parent→child lineage rows; waste is tracked separately.",
+        "spec_source": "spec-workflow-refinement.md §16,63-86",
+        "verified_by": "docs/context/behavioral-parity.md (refinement lineage)"
+      },
+      {
+        "severity": "best_practice",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/refinement/service/refinement-service.ts"
+        ],
+        "to_contexts": [],
+        "id": "REF-VAL-01",
+        "title": "Yield is derived, not stored",
+        "category": "validation",
+        "statement": "Yield % = sum(output amounts) / input_amount, computed on read from stored amounts (not persisted).",
+        "spec_source": "spec-workflow-refinement.md §98",
+        "verified_by": "docs/context/behavioral-parity.md (yield derivable)"
+      }
+    ],
+    "connectors": [
+      {
+        "id": "conn_seam1_control_numbers",
+        "name": "Seam 1 — Control-Number authority",
+        "kind": "shared_service",
+        "trigger": "Any context mints a traceable record",
+        "effect": "A single immutable control number ({prefix}{YYMMDD}-{genocode}, 18 type codes) is issued and never edited/deleted",
+        "from_context": "02_control_numbers",
+        "to_contexts": [
+          "03_genetics",
+          "04_cultivation_harvest",
+          "05_refinement_packaging",
+          "06_qa_lab",
+          "07_quality_batch"
+        ],
+        "contract": "ControlNumberService.create(type, facilityPrefix, genocode, date) -> value",
+        "enforced_at": [
+          "backend/src/contexts/control-numbers/domain/control-number.ts:36-66",
+          "backend/src/contexts/control-numbers/service/control-number-service.ts:18-32"
+        ],
+        "spec_source": "40-unified-workflow-graph.md (Seam 1); spec-control-numbers.md",
+        "status": "wired",
+        "review_status": "accepted"
+      },
+      {
+        "id": "conn_seam2_reconciliation_gate",
+        "name": "Seam 2 — Batch release reconciliation gate",
+        "kind": "seam",
+        "trigger": "POST /api/quality/batches/:id/reconcile with a 6-dimension mismatch",
+        "effect": "Batch moves to `hold` AND an incident ticket is auto-created (severity high)",
+        "from_context": "05_refinement_packaging",
+        "to_contexts": [
+          "07_quality_batch"
+        ],
+        "contract": "{ controlNumber, chemistry, quantity, lineage, product, status } each {expected,actual} -> {batch, reconciliation:{passed,mismatches}, incident}",
+        "enforced_at": [
+          "backend/src/index.ts:1236-1261",
+          "backend/src/contexts/quality/domain/batch.ts:161-209"
+        ],
+        "spec_source": "04-batch-reconciliation.md §56-81",
+        "status": "wired",
+        "review_status": "accepted"
+      }
+    ]
+  },
+  "layout": {
+    "erd": {
+      "nodes": [
+        {
+          "id": "ent_cn",
+          "x": 60,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_pkgtype",
+          "x": 420,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_pkg",
+          "x": 780,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_pkgchild",
+          "x": 1140,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_adjreason",
+          "x": 60,
+          "y": 360,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_pkgadj",
+          "x": 420,
+          "y": 360,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_pkgqc",
+          "x": 780,
+          "y": 360,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_reftype",
+          "x": 1140,
+          "y": 360,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_ref",
+          "x": 60,
+          "y": 660,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_rto",
+          "x": 420,
+          "y": 660,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_refout",
+          "x": 780,
+          "y": 660,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_refwaste",
+          "x": 1140,
+          "y": 660,
+          "width": 300,
+          "height": 230
+        }
+      ],
+      "edges": []
+    },
+    "dfd": {
+      "nodes": [],
+      "edges": []
+    },
+    "dfd_level_1": {}
+  },
+  "styles": {
+    "theme": "minimal"
+  },
+  "postgres": {
+    "dialect": "postgresql",
+    "extensions": [
+      "pgcrypto"
+    ],
+    "schema_name": "public",
+    "default_primary_key": {
+      "type": "uuid",
+      "default": "gen_random_uuid()"
+    },
+    "add_audit_timestamps": false
+  },
+  "review": {
+    "proposals": [],
+    "warnings": [],
+    "dismissed_warnings": []
+  }
+}

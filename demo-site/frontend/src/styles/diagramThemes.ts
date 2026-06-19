@@ -79,3 +79,33 @@ export const DIAGRAM_THEMES: DiagramTheme[] = [
 export function getDiagramTheme(id: DiagramThemeId): DiagramTheme {
   return DIAGRAM_THEMES.find((t) => t.id === id) ?? DIAGRAM_THEMES[0];
 }
+
+// ─────────────────────────────────────────────
+// Seam highlighting (multi-process ERDs, e.g. Nexus)
+// ─────────────────────────────────────────────
+// Entities tagged with a business-process `domain` render in NEUTRAL_ENTITY so the
+// whole canvas reads as a uniform base; the few that are connection points between
+// departments (Entity.connects non-empty) render in SEAM_ACCENT and get a 🔗 badge.
+// Entities with neither field (e.g. existing demos) keep the active theme's styling.
+export const NEUTRAL_ENTITY = { border: "#d1d5db", header: "#f3f4f6", text: "#374151", accent: "#6b7280" };
+export const SEAM_ACCENT = { border: "#d97706", header: "#fde68a", text: "#7c2d12", accent: "#b45309" };
+
+export const DEPARTMENT_LABELS: Record<string, string> = {
+  "identity": "Identity",
+  "control-numbers": "Control #s",
+  "genetics": "Genetics",
+  "cultivation": "Cultivation",
+  "refinement": "Refinement",
+  "qa-lab": "QA / Lab",
+  "quality": "Quality",
+  "product-master": "Product Master",
+  "consumer-profile": "Consumer",
+  "sales": "Sales",
+  "finance": "Finance",
+  "ai": "AI",
+  "all": "All depts",
+};
+
+export function departmentLabel(key: string): string {
+  return DEPARTMENT_LABELS[key] ?? key;
+}

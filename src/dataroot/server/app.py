@@ -1,4 +1,4 @@
-"""FastAPI app for the DataRoot Miro board integration."""
+"""FastAPI app for DataRoot's in-app Ask API."""
 
 from __future__ import annotations
 
@@ -11,7 +11,6 @@ from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
 
 from dataroot.agent.tools import ToolExecutor
@@ -21,15 +20,6 @@ from dataroot.kb.local_store import LocalMarkdownStore
 from dataroot.link import link_workspace
 from dataroot.profile import profile_workspace
 from dataroot.query import _extract_provenance, answer_question, persist_answer_artifacts
-from dataroot.render.miro import (
-    MiroAPIError,
-    MiroClient,
-    clear_live_ask_section_to_miro,
-    extract_live_ask_question_text,
-    is_live_ask_question_input,
-    miro_access_token_from_env,
-    render_provenance_to_miro,
-)
 from dataroot.server.bootstrap import bootstrap_gitkb_runtime
 
 
@@ -38,7 +28,6 @@ class CompanyConfig:
     key: str
     label: str
     raw_path: Path
-    board_env: str
 
 
 @dataclass
@@ -50,44 +39,25 @@ class CompanyWorkspace:
     backend: str = "local"
 
 
-class AskRenderRequest(BaseModel):
+class AskRequest(BaseModel):
     company: str = Field(default="company_a")
     question: str
-    board_id: str | None = None
     use_agent: bool = False
-    include_proof: bool = False
 
 
-class BoardQuestionRequest(BaseModel):
-    company: str | None = None
-    board_id: str | None = None
-    include_proof: bool = False
-
-
-class LiveAskBoardInputRequest(BaseModel):
-    board_id: str | None = None
-    input_item_id: str
-    question: str = ""
-    include_proof: bool = False
-
-
-class AskRenderResponse(BaseModel):
+class AskResponse(BaseModel):
     answer: str
     question: str
-    board_url: str
     company: str
     inquiry: str
     provenance_trace: str
     node_count: int
     edge_count: int
     stages: list[str]
+    trace: dict[str, Any]
     answer_source: str
-    interpreter_source: str
-    planner_source: str
-    proof_included: bool
     cached_kb: bool
-    section_status: str
-    trigger_source: str
+    backend: str
 
 
 PROJECT_ROOT = Path(os.environ.get("DATAROOT_ROOT", Path.cwd())).resolve()
@@ -96,19 +66,16 @@ COMPANIES = {
         key="company_a",
         label="CropProtectorAI",
         raw_path=Path("ExampleData") / "CompanyA_AgriTrait" / "raw",
-        board_env="MIRO_COMPANY_A_ASK_BOARD_ID",
     ),
     "company_b": CompanyConfig(
         key="company_b",
         label="BioReactorAI",
         raw_path=Path("ExampleData") / "CompanyB_Fermentation" / "raw",
-        board_env="MIRO_COMPANY_B_ASK_BOARD_ID",
     ),
     "austin_permits": CompanyConfig(
         key="austin_permits",
         label="Austin Permits Explorer",
         raw_path=Path("ExampleData") / "AustinPermits" / "raw",
-        board_env="MIRO_AUSTIN_PERMITS_BOARD_ID",
     ),
 }
 COMPANY_ALIASES = {
@@ -131,15 +98,9 @@ COMPANY_ALIASES = {
     "texas": "austin_permits",
     "opendata": "austin_permits",
 }
-BOARD_ID_PLACEHOLDERS = {
-    "optionalexistingboardid",
-    "existingboardid",
-    "boardid",
-    "currentboardid",
-}
 
 
-app = FastAPI(title="DataRoot Miro Panel")
+app = FastAPI(title="DataRoot Ask API")
 _workspace_cache: dict[str, CompanyWorkspace] = {}
 _cache_lock = threading.Lock()
 LIVE_ASK_TOOL_NAMES = {
@@ -153,162 +114,57 @@ LIVE_ASK_TOOL_NAMES = {
 }
 
 
+@app.get("/")
+def index() -> dict[str, Any]:
+    return {
+        "service": "DataRoot Ask API",
+        "rendering": "in_app",
+        "workspaces": [{"key": company.key, "label": company.label} for company in COMPANIES.values()],
+    }
+
+
 @app.get("/health")
 def health() -> dict[str, Any]:
     return {
         "status": "ok",
+        "rendering": "in_app",
         "companies": [{"key": company.key, "label": company.label} for company in COMPANIES.values()],
     }
 
 
-@app.get("/miro/", response_class=HTMLResponse)
-def miro_board_only_page() -> HTMLResponse:
-    return HTMLResponse(_MIRO_BOARD_ONLY_HTML)
+@app.get("/api/workspaces")
+def list_workspaces() -> dict[str, Any]:
+    return {
+        "workspaces": [
+            {"key": company.key, "label": company.label, "raw_path": company.raw_path.as_posix()}
+            for company in COMPANIES.values()
+        ]
+    }
 
 
-@app.get("/miro/sdk", response_class=HTMLResponse)
-def miro_sdk_entrypoint() -> HTMLResponse:
-    return HTMLResponse(_MIRO_SDK_HTML)
-
-
-@app.post("/api/ask-render", response_model=AskRenderResponse)
-def ask_render(request: AskRenderRequest) -> AskRenderResponse:
+@app.post("/api/ask", response_model=AskResponse)
+def ask(request: AskRequest) -> AskResponse:
     question = request.question.strip()
     if not question:
         raise HTTPException(status_code=400, detail="question is required")
 
     company = _company_config(request.company)
-    load_config(PROJECT_ROOT)
-    board_id = _board_id_for(company, request.board_id)
-    if not board_id:
-        raise HTTPException(
-            status_code=400,
-            detail=f"board_id is required unless {company.board_env} or MIRO_BOARD_ID is set",
-        )
-
-    return _run_live_ask(
-        company=company,
-        board_id=board_id,
-        question=question,
-        include_proof=request.include_proof,
-        trigger_source="api_submit",
-    )
-
-
-@app.post("/api/ask-render-board-question", response_model=AskRenderResponse)
-def ask_render_board_question(request: BoardQuestionRequest) -> AskRenderResponse:
-    load_config(PROJECT_ROOT)
-    company = _company_config(request.company) if request.company else None
-    board_id = _board_id_for(company, request.board_id) if company else _board_id_for_any_company(request.board_id)
-    if not board_id:
-        raise HTTPException(
-            status_code=400,
-            detail="board_id is required unless MIRO_BOARD_ID is set",
-        )
-
-    if company:
-        question = _board_live_ask_question(company, board_id)
-    else:
-        company, question = _infer_board_live_ask_question(board_id)
-
-    return _run_live_ask(
-        company=company,
-        board_id=board_id,
-        question=question,
-        include_proof=request.include_proof,
-        trigger_source="board_question_submit",
-    )
-
-
-@app.post("/api/live-ask-board-input", response_model=AskRenderResponse)
-def live_ask_board_input(request: LiveAskBoardInputRequest) -> AskRenderResponse:
-    load_config(PROJECT_ROOT)
-    board_id = _board_id_for_any_company(request.board_id)
-    if not board_id:
-        raise HTTPException(status_code=400, detail="board_id is required unless MIRO_BOARD_ID is set")
-
-    company, section_title = _live_ask_section_for_input_item(board_id, request.input_item_id)
-    question = request.question.strip()
-    if not question:
-        try:
-            board_url = clear_live_ask_section_to_miro(board_id=board_id, section_title=section_title)
-        except RuntimeError as exc:
-            raise HTTPException(status_code=502, detail=str(exc)) from exc
-        return AskRenderResponse(
-            answer="",
-            question="",
-            board_url=board_url,
-            company=company.key,
-            inquiry="",
-            provenance_trace="",
-            node_count=0,
-            edge_count=0,
-            stages=[],
-            answer_source="cleared",
-            interpreter_source="cleared",
-            planner_source="cleared",
-            proof_included=False,
-            cached_kb=False,
-            section_status="cleared",
-            trigger_source="board_input_poll",
-        )
-
-    return _run_live_ask(
-        company=company,
-        board_id=board_id,
-        question=question,
-        include_proof=request.include_proof,
-        trigger_source="board_input_poll",
-    )
-
-
-def _run_live_ask(
-    *,
-    company: CompanyConfig,
-    board_id: str,
-    question: str,
-    include_proof: bool,
-    trigger_source: str,
-) -> AskRenderResponse:
     workspace = _workspace_for(company)
-    answer, trace, answer_source = _answer_live_ask(company, workspace, question)
+    answer, trace, answer_source = _answer_live_ask(company, workspace, question, use_agent=request.use_agent)
     artifacts = persist_answer_artifacts(workspace.store, question, answer)
-
-    render_metadata: dict[str, str] = {}
-    try:
-        board_url = render_provenance_to_miro(
-            trace,
-            store=workspace.store,
-            inquiry_slug=artifacts["inquiry"],
-            answer_text=answer,
-            board_id=board_id,
-            provenance_slug=artifacts["provenance_trace"],
-            context_label=company.label,
-            section_title=f"{company.label} - Live Ask",
-            update_existing_section=True,
-            include_proof=include_proof,
-            render_metadata=render_metadata,
-        )
-    except RuntimeError as exc:
-        raise HTTPException(status_code=502, detail=str(exc)) from exc
-
-    return AskRenderResponse(
+    return AskResponse(
         answer=_strip_provenance(answer),
         question=question,
-        board_url=board_url,
         company=company.key,
         inquiry=artifacts["inquiry"],
         provenance_trace=artifacts["provenance_trace"],
         node_count=len(trace.get("nodes", [])) if isinstance(trace, dict) else 0,
         edge_count=len(trace.get("edges", [])) if isinstance(trace, dict) else 0,
         stages=list(trace.get("stages", [])) if isinstance(trace, dict) else [],
+        trace=trace if isinstance(trace, dict) else {},
         answer_source=answer_source,
-        interpreter_source=render_metadata.get("interpreter_source") or "deterministic_fallback",
-        planner_source=render_metadata.get("planner_source") or "deterministic_fallback",
-        proof_included=include_proof,
         cached_kb=workspace.cached,
-        section_status=render_metadata.get("section_status") or "updated",
-        trigger_source=trigger_source,
+        backend=workspace.backend,
     )
 
 
@@ -362,6 +218,25 @@ def _workspace_for(company: CompanyConfig) -> CompanyWorkspace:
         return workspace
 
 
+def _answer_live_ask(
+    company: CompanyConfig,
+    workspace: CompanyWorkspace,
+    question: str,
+    *,
+    use_agent: bool,
+) -> tuple[str, dict, str]:
+    if use_agent:
+        try:
+            answer, trace = _answer_with_agent(company, workspace, question)
+            return answer, trace, "agent"
+        except HTTPException as exc:
+            if exc.status_code not in {502, 503}:
+                raise
+
+    answer, trace = _answer_with_deterministic_fallback(workspace, question)
+    return answer, trace, "deterministic_fallback"
+
+
 def _answer_with_agent(company: CompanyConfig, workspace: CompanyWorkspace, question: str) -> tuple[str, dict]:
     if not (os.environ.get("OPENAI_API_KEY") or os.environ.get("MINIMAX_API_KEY")):
         raise HTTPException(status_code=503, detail="OPENAI_API_KEY or MINIMAX_API_KEY is required for live ask.")
@@ -389,18 +264,6 @@ def _answer_with_agent(company: CompanyConfig, workspace: CompanyWorkspace, ques
 
     trace = _validated_agent_trace(answer)
     return answer, trace
-
-
-def _answer_live_ask(company: CompanyConfig, workspace: CompanyWorkspace, question: str) -> tuple[str, dict, str]:
-    try:
-        answer, trace = _answer_with_agent(company, workspace, question)
-        return answer, trace, "agent"
-    except HTTPException as exc:
-        if exc.status_code not in {502, 503}:
-            raise
-
-    answer, trace = _answer_with_deterministic_fallback(workspace, question)
-    return answer, trace, "deterministic_fallback"
 
 
 def _answer_with_deterministic_fallback(workspace: CompanyWorkspace, question: str) -> tuple[str, dict]:
@@ -431,11 +294,11 @@ def _query_agent_prompt(company: CompanyConfig) -> str:
     return "\n\n".join(
         [
             base_prompt,
-            "## Live Ask demo constraints",
+            "## Live Ask constraints",
             (
                 f"The selected company is {company.label} ({company.key}). "
                 f"Use only KB evidence from `{company.raw_path.as_posix()}` or documents that directly cite that company evidence. "
-                "Do not cite another demo company. Do not call logging or rendering tools. "
+                "Do not call logging or rendering tools. "
                 "Return a natural-language answer followed by exactly one valid `<provenance>` JSON block."
             ),
         ]
@@ -560,155 +423,12 @@ def _scope_slug(value: str) -> str:
     return value.strip("_")
 
 
-def _board_live_ask_question(company: CompanyConfig, board_id: str) -> str:
-    frames, items = _board_frames_and_items(board_id)
-    return _live_ask_question_from_items(company, frames, items)
-
-
-def _infer_board_live_ask_question(board_id: str) -> tuple[CompanyConfig, str]:
-    frames, items = _board_frames_and_items(board_id)
-    matches: list[tuple[CompanyConfig, str]] = []
-    for company in COMPANIES.values():
-        question = _live_ask_question_from_items(company, frames, items, missing_ok=True)
-        if question:
-            matches.append((company, question))
-
-    if not matches:
-        raise HTTPException(status_code=400, detail="Type a question in one Live Ask board text box before clicking the DataRoot app icon.")
-    if len(matches) > 1:
-        labels = ", ".join(company.label for company, _question in matches)
-        raise HTTPException(status_code=400, detail=f"Only one Live Ask question can be active at a time. Clear one of: {labels}.")
-    return matches[0]
-
-
-def _live_ask_section_for_input_item(board_id: str, input_item_id: str) -> tuple[CompanyConfig, str]:
-    cleaned_id = input_item_id.strip()
-    if not cleaned_id:
-        raise HTTPException(status_code=400, detail="input_item_id is required")
-
-    frames, items = _board_frames_and_items(board_id)
-    item = next((candidate for candidate in items if _server_item_id(candidate) == cleaned_id), None)
-    if not item:
-        raise HTTPException(status_code=400, detail="Live Ask input item was not found on this board.")
-
-    parent_id = _server_parent_id(item)
-    section = next((frame for frame in frames if _server_item_id(frame) == parent_id), None)
-    section_title = _server_item_title(section or {})
-    if not section_title.endswith(" - Live Ask"):
-        raise HTTPException(status_code=400, detail="Live Ask input item must belong to a Live Ask section.")
-
-    company = _company_for_live_ask_section_title(section_title)
-    if not company:
-        raise HTTPException(status_code=400, detail=f'Unknown Live Ask section: "{section_title}"')
-    return company, section_title
-
-
-def _board_frames_and_items(board_id: str) -> tuple[list[dict], list[dict]]:
-    token = miro_access_token_from_env()
-    if not token:
-        raise HTTPException(status_code=502, detail="MIRO_ACCESS_TOKEN is required to read the board question.")
-
-    client = MiroClient(token)
-    try:
-        return list(client.list_frames(board_id)), list(client.list_items(board_id))
-    except MiroAPIError as exc:
-        raise HTTPException(status_code=502, detail=str(exc)) from exc
-
-
-def _live_ask_question_from_items(
-    company: CompanyConfig,
-    frames: list[dict],
-    items: list[dict],
-    *,
-    missing_ok: bool = False,
-) -> str:
-    section_title = f"{company.label} - Live Ask"
-    section = _find_board_frame(frames, section_title)
-    if not section:
-        if missing_ok:
-            return ""
-        raise HTTPException(status_code=400, detail=f'Live Ask section not found: "{section_title}"')
-
-    section_id = _server_item_id(section)
-    children = [item for item in items if _server_parent_id(item) == section_id]
-    inputs = [item for item in children if is_live_ask_question_input(item)]
-    if not inputs:
-        if missing_ok:
-            return ""
-        raise HTTPException(
-            status_code=400,
-            detail="Live Ask question input not found. Refresh the demo board before submitting.",
-        )
-
-    for item in inputs:
-        question = extract_live_ask_question_text(item).strip()
-        if question:
-            return question
-
-    if missing_ok:
-        return ""
-    raise HTTPException(status_code=400, detail="Type a question in the Live Ask board text box before submitting.")
-
-
-def _find_board_frame(frames: list[dict], title: str) -> dict | None:
-    matches = [frame for frame in frames if _server_item_title(frame) == title]
-    matches.sort(key=lambda frame: str(_server_item_id(frame)))
-    return matches[0] if matches else None
-
-
-def _server_item_id(item: dict) -> str:
-    value = item.get("id") or (item.get("data") or {}).get("id")
-    return str(value) if value else ""
-
-
-def _server_item_title(item: dict) -> str:
-    data = item.get("data") or {}
-    return str(item.get("title") or data.get("title") or "").strip()
-
-
-def _server_parent_id(item: dict) -> str:
-    parent = item.get("parent") or {}
-    value = parent.get("id") or item.get("parentId") or item.get("parent_id")
-    return str(value) if value else ""
-
-
-def _company_for_live_ask_section_title(title: str) -> CompanyConfig | None:
-    for company in COMPANIES.values():
-        if title == f"{company.label} - Live Ask":
-            return company
-    return None
-
-
 def _company_config(value: str) -> CompanyConfig:
     normalized = _normalize_key(value)
     key = normalized if normalized in COMPANIES else COMPANY_ALIASES.get(normalized)
     if not key:
         raise HTTPException(status_code=400, detail=f"unknown company: {value}")
     return COMPANIES[key]
-
-
-def _board_id_for(company: CompanyConfig, explicit: str | None) -> str | None:
-    return (
-        _usable_board_id(explicit)
-        or _usable_board_id(os.environ.get(company.board_env))
-        or _usable_board_id(os.environ.get("MIRO_BOARD_ID"))
-    )
-
-
-def _board_id_for_any_company(explicit: str | None) -> str | None:
-    return _usable_board_id(explicit) or _usable_board_id(os.environ.get("MIRO_BOARD_ID"))
-
-
-def _usable_board_id(value: str | None) -> str | None:
-    if not value:
-        return None
-    cleaned = value.strip()
-    if not cleaned:
-        return None
-    normalized = _normalize_key(cleaned)
-    if normalized in BOARD_ID_PLACEHOLDERS or normalized.startswith("optional"):
-        return None
-    return cleaned
 
 
 def _use_gitkb_server_store() -> bool:
@@ -726,251 +446,3 @@ def _normalize_key(value: str) -> str:
 
 def _strip_provenance(answer: str) -> str:
     return re.sub(r"\n?<provenance>\s*.*?\s*</provenance>\s*", "", answer, flags=re.DOTALL).strip()
-
-
-_MIRO_BOARD_ONLY_HTML = """<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DataRoot</title>
-</head>
-<body>
-  <main>
-    <h1>DataRoot runs from the Miro board.</h1>
-    <p>Type into the Live Ask text box on the board, then click the DataRoot app icon.</p>
-  </main>
-</body>
-</html>
-"""
-
-
-_MIRO_PANEL_HTML = _MIRO_BOARD_ONLY_HTML
-
-
-_MIRO_SDK_HTML = """<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DataRoot Miro SDK</title>
-  <script src="https://miro.com/app/static/sdk/v2/miro.js"></script>
-</head>
-<body>
-  <script>
-    const LIVE_ASK_INPUT_LABEL = "Type your question here:";
-    const LIVE_ASK_POLL_MS = 5000;
-    const LIVE_ASK_PLACEHOLDERS = new Set([
-      "",
-      "type your question here",
-      "type your question here:",
-      "ask your question",
-      "enter your question"
-    ]);
-    let liveAskRunning = false;
-    let liveAskPrimed = false;
-    let lastSubmittedLiveAskKey = "";
-    const observedLiveAskInputs = new Map();
-
-    async function notify(message) {
-      try {
-        if (miro.board.notifications && miro.board.notifications.show) {
-          await miro.board.notifications.show(message);
-        }
-      } catch (error) {
-        console.warn(error);
-      }
-    }
-
-    function itemId(item) {
-      return String((item && (item.id || (item.data && item.data.id))) || "");
-    }
-
-    function itemContent(item) {
-      return String((item && (item.content || (item.data && item.data.content))) || "");
-    }
-
-    function htmlToText(value) {
-      const node = document.createElement("div");
-      node.innerHTML = value || "";
-      return (node.textContent || node.innerText || "").replace(/\\s+/g, " ").trim();
-    }
-
-    function plainItemText(item) {
-      return htmlToText(itemContent(item));
-    }
-
-    function isLiveAskInput(item) {
-      return plainItemText(item).toLowerCase().includes(LIVE_ASK_INPUT_LABEL.toLowerCase());
-    }
-
-    function extractLiveAskQuestion(item) {
-      let text = plainItemText(item);
-      const labelIndex = text.toLowerCase().indexOf(LIVE_ASK_INPUT_LABEL.toLowerCase());
-      if (labelIndex >= 0) {
-        text = text.slice(labelIndex + LIVE_ASK_INPUT_LABEL.length);
-      }
-      const question = text.replace(/^[\\s:-]+|[\\s:-]+$/g, "");
-      return LIVE_ASK_PLACEHOLDERS.has(question.toLowerCase()) ? "" : question;
-    }
-
-    function liveAskSubmitKey(inputItemId, question) {
-      return `${inputItemId}\\n${question}`;
-    }
-
-    async function submitLiveAskInput(item, question) {
-      if (liveAskRunning) {
-        return;
-      }
-      const inputItemId = itemId(item);
-      if (!inputItemId) {
-        return;
-      }
-      liveAskRunning = true;
-      const emptyQuestion = question.trim() === "";
-      await notify(emptyQuestion ? "DataRoot is clearing the Live Ask section." : "DataRoot is answering the Live Ask question.");
-      try {
-        const info = await miro.board.getInfo();
-        const response = await fetch("/api/live-ask-board-input", {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({board_id: info.id, input_item_id: inputItemId, question})
-        });
-        const responseText = await response.text();
-        let payload = {};
-        try {
-          payload = responseText ? JSON.parse(responseText) : {};
-        } catch (error) {
-          payload = {detail: responseText};
-        }
-        if (!response.ok) {
-          throw new Error(payload.detail || "DataRoot live ask failed.");
-        }
-        lastSubmittedLiveAskKey = liveAskSubmitKey(inputItemId, question);
-        await notify(emptyQuestion ? "DataRoot cleared the Live Ask section." : "DataRoot updated the Live Ask section.");
-      } catch (error) {
-        await notify(error.message || "DataRoot live ask failed.");
-        throw error;
-      } finally {
-        liveAskRunning = false;
-      }
-    }
-
-    async function pollLiveAskInputs() {
-      if (liveAskRunning) {
-        return;
-      }
-      let inputs = [];
-      try {
-        const textItems = await miro.board.get({type: ["text"]});
-        inputs = textItems.filter((item) => isLiveAskInput(item) || observedLiveAskInputs.has(itemId(item)));
-      } catch (error) {
-        console.warn("DataRoot Live Ask poll failed", error);
-        return;
-      }
-
-      const now = Date.now();
-      if (!liveAskPrimed) {
-        for (const item of inputs) {
-          observedLiveAskInputs.set(itemId(item), {question: extractLiveAskQuestion(item), stableSince: now});
-        }
-        liveAskPrimed = true;
-        return;
-      }
-
-      for (const item of inputs) {
-        const inputItemId = itemId(item);
-        if (!inputItemId) {
-          continue;
-        }
-        const question = extractLiveAskQuestion(item);
-        const observed = observedLiveAskInputs.get(inputItemId);
-        if (!observed || observed.question !== question) {
-          observedLiveAskInputs.set(inputItemId, {question, stableSince: now});
-          continue;
-        }
-        if (now - observed.stableSince < LIVE_ASK_POLL_MS) {
-          continue;
-        }
-        if (lastSubmittedLiveAskKey === liveAskSubmitKey(inputItemId, question)) {
-          continue;
-        }
-        await submitLiveAskInput(item, question);
-        break;
-      }
-    }
-
-    async function runDataRootLiveAsk() {
-      if (liveAskRunning) {
-        await notify("DataRoot Live Ask is already running.");
-        return;
-      }
-      liveAskRunning = true;
-      await notify("DataRoot is reading the Live Ask question from the board.");
-      try {
-        const info = await miro.board.getInfo();
-        const response = await fetch("/api/ask-render-board-question", {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({board_id: info.id})
-        });
-        const responseText = await response.text();
-        let payload = {};
-        try {
-          payload = responseText ? JSON.parse(responseText) : {};
-        } catch (error) {
-          payload = {detail: responseText};
-        }
-        if (!response.ok) {
-          throw new Error(payload.detail || "DataRoot live ask failed.");
-        }
-        await notify("DataRoot updated the Live Ask section.");
-      } catch (error) {
-        await notify(error.message || "DataRoot live ask failed.");
-        throw error;
-      } finally {
-        liveAskRunning = false;
-      }
-    }
-
-    async function registerDataRootActions() {
-      await miro.board.ui.on("icon:click", runDataRootLiveAsk);
-
-      try {
-        await miro.board.ui.on("custom:run-live-ask", runDataRootLiveAsk);
-        if (miro.board.experimental && miro.board.experimental.action) {
-          await miro.board.experimental.action.register({
-            event: "run-live-ask",
-            ui: {
-              label: {en: "Run DataRoot"},
-              icon: "chat-two",
-              description: "Run Live Ask from the board question."
-            },
-            scope: "local",
-            selection: "single",
-            predicate: {
-              $or: [
-                {type: "shape"},
-                {type: "text"},
-                {type: "sticky_note"}
-              ]
-            },
-            contexts: {item: {}}
-          });
-        }
-      } catch (error) {
-        console.warn("DataRoot custom action unavailable", error);
-      }
-    }
-
-    async function startDataRootLiveAskWatcher() {
-      await registerDataRootActions();
-      await pollLiveAskInputs();
-      setInterval(pollLiveAskInputs, LIVE_ASK_POLL_MS);
-    }
-
-    startDataRootLiveAskWatcher();
-  </script>
-</body>
-</html>
-"""

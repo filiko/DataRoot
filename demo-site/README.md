@@ -1,63 +1,66 @@
-# DataRoot — Demo Site
+# DataRoot Demo Site
 
-The DataRoot pitch demo: a rebranded copy of the DFDMaker app. The landing page
-and an **Ask | Edit** workspace tell the DataRoot story — scattered files become
-a traversable, cited knowledge base.
+The active DataRoot demo site is a Nexus-first ERD/DFD application built from
+the best DFDMaker editor/generator pieces plus DataRoot's behavioral metadata
+layer.
 
-- **Ask** — customer-facing, fully scripted Q&A with cited source trails. No
-  backend or LLM call.
-- **Edit** — the full ERD/DFD editor, loaded with a real City of Austin permits
-  schema (permits, plan_reviews, code_complaints, code_tasks).
+## What Is Here
 
-Built by copying `DFDMaker/frontend` + `DFDMaker/backend` here, then adding the
-Ask view and rebranding. The original DFDMaker repo is untouched.
+- `backend/`: FastAPI backend for project import/save, diagram rules, typed ops,
+  repo analysis, exports, and Ask.
+- `frontend/`: React/Vite editor with ERD, DFD, Business Rules, Connectors,
+  Schema, and Export tabs.
+- `frontend/public/nexus/`: Nexus Ag master map and 11 module-specific
+  `.dfd.json` examples.
+- `frontend/public/*.dfd.json`: Austin, store, DataRoot schema, and candidate
+  exercise fixtures.
 
 ## Ports
 
-Ports encode the product name on a phone keypad:
-
-| Service  | Port | Key  |
-|----------|------|------|
-| Backend  | 3282 | DATA |
+| Service | Port | Key |
+| --- | ---: | --- |
+| Backend | 3282 | DATA |
 | Frontend | 7668 | ROOT |
 
-## Run the demo
+## Run Locally
 
-Two processes. Start the backend first.
+Start the backend first:
 
-### 1. Backend (port 3282)
-
-```powershell
+```bash
 cd demo-site/backend
-$env:AUTH_DISABLED = "1"          # no-login demo mode (auto dev user)
-$env:SECRET_KEY = "demo-secret"
-python -m uvicorn main:app --host 127.0.0.1 --port 3282
+AUTH_DISABLED=1 SECRET_KEY=demo-secret python -m uvicorn main:app --host 127.0.0.1 --port 3282
 ```
 
-`AUTH_DISABLED=1` makes `/auth/me` return a local dev user, so the demo skips
-login entirely. Backend deps: `pip install -r requirements.txt` if needed.
+Then start the frontend:
 
-### 2. Frontend (port 7668)
-
-```powershell
+```bash
 cd demo-site/frontend
-npm install        # first run only (node_modules is gitignored)
-npm run dev        # → http://localhost:7668
+npm install
+npm run dev
 ```
 
-## Demo flow
+Open:
 
-1. Open `http://localhost:7668` — DataRoot landing page (chalkboard theme).
-2. Click **Run the demo →** — loads the Austin Permits knowledge base.
-3. Workspace opens on the **Ask** tab — pick a scripted question, see the answer
-   and its cited source trail.
-4. Click **See these tables in Edit** (or the **Edit** tab) — the full ERD of
-   the linked permit tables. DFD / Schema / Export tabs all work.
+- `http://localhost:7668/nexusag` for the Nexus Ag master and module carousel.
+- `http://localhost:7668/demo` for the smaller demo fixture switcher.
+- `http://localhost:7668` for the landing page.
+
+## Nexus Acceptance Flow
+
+1. Load `/nexusag`.
+2. Confirm the master map opens first.
+3. Switch through Identity, Control Numbers, Genetics, Cultivation/Harvest,
+   Refinement/Packaging, QA/Lab, Quality/Batch, Product Master, Consumer
+   Profile, Sales/CRM, and Finance/AI.
+4. For modules with metadata, verify Business Rules and Connectors tabs show
+   their records after backend import/save.
+5. Verify ERD/DFD layout changes persist and SQL/Mermaid/DBML exports still
+   ignore behavioral metadata.
 
 ## Notes
 
-- The Edit project is served from `austin_permits.dfd.json` via the
-  `/schema/example` endpoint. The backend's `apply_rules_gate` auto-generates the
-  DFD and review proposals from the ERD on load.
-- Ask content is scripted in `frontend/src/components/datademo/demoData.ts`.
-- The chalkboard (dark forest green) theme is the DataRoot brand default.
+- The backend `apply_rules_gate` preserves `dfd.business_rules` and
+  `dfd.connectors` when regenerating derived DFD objects.
+- Nexus entity `domain` and `connects` fields drive neutral domain rendering
+  and highlighted connection-point styling in the ERD canvas.
+- External board rendering is not part of this demo app.

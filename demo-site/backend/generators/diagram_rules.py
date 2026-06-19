@@ -33,6 +33,7 @@ from generators.sync_engine import (
     FLOW_MISSING_FROM_NODE, FLOW_MISSING_TO_NODE,
     FLOW_MANUAL_STORE_TO_STORE, DIRECT_M2M_NO_JOIN,
 )
+from generators.business_rule_verification import verify_business_rules
 
 
 # ─────────────────────────────────────────────
@@ -193,6 +194,106 @@ def _detect_erd_04_orphan_fk(pen: PenFile, idx: _GraphIndex) -> list[RuleViolati
                     auto_regenerable=False,
                     context={"entity_id": ent.id, "attr_id": attr.id},
                 ))
+    return out
+
+
+def _detect_erd_05_dangling_endpoint(pen: PenFile, idx: _GraphIndex) -> list[RuleViolation]:
+    """Referential integrity (of the model): every relationship endpoint must
+    resolve to a real entity and to a real attribute on that entity."""
+    out: list[RuleViolation] = []
+    ent_index = {e.id: e for e in pen.erd.entities}
+    attrs_by_entity = {e.id: {a.id for a in e.attributes} for e in pen.erd.entities}
+    for rel in pen.erd.relationships:
+        if rel.review_status == "rejected":
+            continue
+        problems: list[str] = []
+        for side, ep in (("source", rel.from_), ("target", rel.to)):
+            ent = ent_index.get(ep.entity_id)
+            if ent is None:
+                problems.append(f"{side} references a missing entity")
+            elif ep.attribute_id not in attrs_by_entity.get(ep.entity_id, set()):
+                problems.append(
+                    f"{side} references an attribute not found on '{ent.display_name or ent.name}'"
+                )
+        if problems:
+            out.append(RuleViolation(
+                rule_id="ERD-05",
+                severity="warning",
+                node_kind="relationship",
+                node_id=rel.id,
+                node_name=rel.name,
+                message=(
+                    f"Relationship '{rel.name or rel.id}' has a broken endpoint "
+                    f"(referential integrity): {'; '.join(problems)}."
+                ),
+                auto_regenerable=False,
+                context={"relationship_id": rel.id},
+            ))
+    return out
+
+
+def _detect_erd_06_mandatory_nullable_fk(pen: PenFile, idx: _GraphIndex) -> list[RuleViolation]:
+    """Cardinality/optionality coherence: a mandatory many-to-one reference
+    (each row must point to one parent) must have a NOT NULL foreign key.
+    A nullable FK contradicts the stated cardinality."""
+    out: list[RuleViolation] = []
+    ent_index = {e.id: e for e in pen.erd.entities}
+    attr_index = {a.id: (e, a) for e in pen.erd.entities for a in e.attributes}
+    for rel in pen.erd.relationships:
+        if rel.review_status == "rejected":
+            continue
+        card = rel.cardinality
+        # Scope: classic many-to-one where the FK lives on the "from" (many) side.
+        if card.from_max != "many" or card.to_max != 1 or card.to_min < 1:
+            continue
+        pair = attr_index.get(rel.from_.attribute_id)
+        if pair is None:
+            continue
+        from_ent, fk = pair
+        if fk.key_role != "foreign" or not fk.nullable:
+            continue
+        to_ent = ent_index.get(rel.to.entity_id)
+        to_name = (to_ent.display_name or to_ent.name) if to_ent else rel.to.entity_id
+        out.append(RuleViolation(
+            rule_id="ERD-06",
+            severity="warning",
+            node_kind="attribute",
+            node_id=fk.id,
+            node_name=fk.name,
+            message=(
+                f"'{from_ent.name}.{fk.name}' is a mandatory reference to '{to_name}' "
+                f"(cardinality requires exactly one), but the foreign key is nullable. "
+                f"Make it NOT NULL, or mark the relationship optional."
+            ),
+            auto_regenerable=False,
+            context={"relationship_id": rel.id, "entity_id": from_ent.id, "attr_id": fk.id},
+        ))
+    return out
+
+
+def _detect_erd_07_entity_integrity(pen: PenFile, idx: _GraphIndex) -> list[RuleViolation]:
+    """Entity integrity (Ch 9): every entity needs a primary key so its rows
+    are uniquely identifiable."""
+    out: list[RuleViolation] = []
+    for ent in pen.erd.entities:
+        if ent.review_status == "rejected":
+            continue
+        has_pk = any(attr.key_role == "primary" for attr in ent.attributes)
+        if not has_pk:
+            out.append(RuleViolation(
+                rule_id="ERD-07",
+                severity="warning",
+                node_kind="entity",
+                node_id=ent.id,
+                node_name=ent.display_name or ent.name,
+                message=(
+                    f"Entity '{ent.display_name or ent.name}' has no primary key "
+                    f"(entity integrity). Add a primary-key attribute so each row is "
+                    f"uniquely identifiable."
+                ),
+                auto_regenerable=False,
+                context={"entity_id": ent.id},
+            ))
     return out
 
 
@@ -473,6 +574,9 @@ _ALL_DETECTORS = [
     _detect_erd_01_orphan_entity,
     _detect_erd_03_self_m2m,
     _detect_erd_04_orphan_fk,
+    _detect_erd_05_dangling_endpoint,
+    _detect_erd_06_mandatory_nullable_fk,
+    _detect_erd_07_entity_integrity,
     _detect_dfd_01_floating_store,
     _detect_dfd_02_black_hole,
     _detect_dfd_03_miracle,
@@ -578,6 +682,9 @@ def apply_rules_gate(pen: PenFile) -> PenFile:
         warning for warning in warnings
         if _warning_key(warning) not in dismissed
     ]
+    # Annotate cardinality-bearing business rules with enforced/gap status
+    # (rule↔ERD verification, V1). Non-cardinality rules are left untouched.
+    verify_business_rules(pen)
     return pen
 
 

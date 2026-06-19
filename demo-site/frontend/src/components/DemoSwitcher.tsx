@@ -5,6 +5,8 @@ interface Props {
   demos: DemoProject[];
   onSwitch: (demo: DemoProject) => void;
   loading?: boolean;
+  label?: string;   // bar label (default "Demo")
+  bottom?: number;  // distance from bottom (default 20) — lets bars stack
 }
 
 const BG    = "#1d2b1d";
@@ -13,21 +15,22 @@ const GOLD  = "#d7b46a";
 const DIM   = "rgba(239,232,213,0.45)";
 const EDGE  = "rgba(239,232,213,0.22)";
 
-export function DemoSwitcher({ activeDemoId, demos, onSwitch, loading }: Props) {
+export function DemoSwitcher({ activeDemoId, demos, onSwitch, loading, label = "Demo", bottom = 20 }: Props) {
   return (
     <div style={{
       position: "absolute",
-      bottom: 20,
+      bottom,
       left: "50%",
       transform: "translateX(-50%)",
       zIndex: 20,
       display: "flex",
       alignItems: "center",
       gap: 0,
+      maxWidth: "92vw",
+      overflowX: "auto",
       background: BG,
       border: `1px solid ${EDGE}`,
       borderRadius: 8,
-      overflow: "hidden",
       boxShadow: "0 4px 24px rgba(0,0,0,0.35)",
       opacity: loading ? 0.7 : 1,
       pointerEvents: loading ? "none" : "auto",
@@ -42,8 +45,11 @@ export function DemoSwitcher({ activeDemoId, demos, onSwitch, loading }: Props) 
         color: DIM,
         borderRight: `1px solid ${EDGE}`,
         whiteSpace: "nowrap",
+        position: "sticky",
+        left: 0,
+        background: BG,
       }}>
-        Demo
+        {label}
       </span>
       {demos.map((demo, i) => {
         const active = demo.id === activeDemoId;

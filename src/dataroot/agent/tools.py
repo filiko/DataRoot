@@ -54,8 +54,6 @@ class ToolExecutor:
             )
         if tool_name == "log_inquiry":
             return self._log_inquiry(tool_args)
-        if tool_name == "render_provenance":
-            return self._render_provenance(tool_args)
         raise ValueError(f"Unknown tool: {tool_name}")
 
     def _kb_update(self, tool_args: dict[str, Any]) -> dict[str, str]:
@@ -100,19 +98,6 @@ class ToolExecutor:
         )
         self.store.write(record, commit_message=f"Log inquiry {timestamp}")
         return {"slug": slug, "status": "logged"}
-
-    def _render_provenance(self, tool_args: dict[str, Any]) -> dict[str, str]:
-        mode = tool_args.get("mode")
-        trace = tool_args.get("trace") or tool_args.get("provenance_trace") or {}
-        if mode != "miro":
-            return {"mode": str(mode), "status": "not_rendered"}
-
-        from dataroot.render.miro import render_provenance_to_miro
-
-        answer_text = str(tool_args.get("answer") or "").strip() or None
-        url = render_provenance_to_miro(trace, store=self.store, answer_text=answer_text)
-        return {"mode": "miro", "status": "rendered", "url": url}
-
 
 def _slug(value: str) -> str:
     return value.replace("\\", "/").strip("/")

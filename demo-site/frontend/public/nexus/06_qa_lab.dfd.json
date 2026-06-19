@@ -1,0 +1,2201 @@
+{
+  "documentType": "dashbot.dfdmaker",
+  "schemaVersion": "0.1",
+  "pen_version": "0.1",
+  "project": {
+    "id": "proj_nexus_06_qa_lab",
+    "name": "Nexus · 06 QA / Lab",
+    "revision": 1
+  },
+  "sources": [],
+  "erd": {
+    "notation": "crows_foot",
+    "model_level": "physical",
+    "entities": [
+      {
+        "id": "ent_cn",
+        "kind": "strong_entity",
+        "name": "control_numbers",
+        "display_name": "Control Numbers",
+        "domain": "control-numbers",
+        "connects": [
+          "all"
+        ],
+        "attributes": [
+          {
+            "id": "a_cn_value",
+            "name": "value",
+            "display_name": "Value",
+            "pg_type": "text",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cn_type",
+            "name": "type",
+            "display_name": "Type",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": "type BETWEEN 1 AND 18",
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cn_finished",
+            "name": "finished_at",
+            "display_name": "Finished At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Traceability spine (full definition in 02_control_numbers). Every control-number-bearing entity here FKs to value.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_stype",
+        "kind": "lookup_table",
+        "name": "sample_types",
+        "display_name": "Sample Types",
+        "domain": "qa-lab",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_st_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "integer",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_st_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_species",
+        "kind": "lookup_table",
+        "name": "species",
+        "display_name": "Species",
+        "domain": "qa-lab",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_sp_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "integer",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_sp_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_sub",
+        "kind": "lookup_table",
+        "name": "submitters",
+        "display_name": "Submitters",
+        "domain": "qa-lab",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_su_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "integer",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_su_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "DESIGN: re-introduce submitter as a lookup. Legacy DROPPED the submitters table and samples.submitter_id in 2016_11_21_200733_drop_submitter_table.php; this entity and its FK from samples are a unified-design re-introduction, not as-built.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_tr",
+        "kind": "strong_entity",
+        "name": "test_runs",
+        "display_name": "Test Runs (SAMP-N)",
+        "domain": "qa-lab",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_tr_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_tr_cn",
+            "name": "control_number",
+            "display_name": "Control Number",
+            "pg_type": "text",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ control_numbers.value (type 16)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_tr_fac",
+            "name": "facility_prefix",
+            "display_name": "Facility Prefix",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: denormalized tenant convenience column. Legacy test_runs never carried facility_prefix; migration 2018_04_26 added facility_id (FK->locations) which 2018_05_10 DROPPED in favor of control_number_id. Tenant/facility is derived from the control_number (control_numbers.facility_prefix); kept here nullable only as a read convenience and is redundant with the cn FK."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_tr_phase",
+            "name": "phase",
+            "display_name": "Phase",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "1",
+            "check_constraint": "phase IN (1,2,3,4,5)",
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "submissions(1)→test_prep(2)→active(3)→awaiting_results(4)→finished(5)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_tr_dil1",
+            "name": "dilution_factor_1",
+            "display_name": "Dilution Factor 1",
+            "pg_type": "numeric(5,2)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2018_05_08_173845_add_three_dilution_factors_columns_to_test_runs.php — float(5,2) default 1"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_tr_dil2",
+            "name": "dilution_factor_2",
+            "display_name": "Dilution Factor 2",
+            "pg_type": "numeric(5,2)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2018_05_08_173845_add_three_dilution_factors_columns_to_test_runs.php — float(5,2) default 6"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_tr_dil3",
+            "name": "dilution_factor_3",
+            "display_name": "Dilution Factor 3",
+            "pg_type": "numeric(5,2)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2018_05_08_173845_add_three_dilution_factors_columns_to_test_runs.php — float(5,2) default 96"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_tr_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_tr_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Control# type 16. Groups samples into a run.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_sample",
+        "kind": "strong_entity",
+        "name": "samples",
+        "display_name": "Samples",
+        "domain": "qa-lab",
+        "connects": [
+          "identity",
+          "quality",
+          "consumer-profile",
+          "sales"
+        ],
+        "attributes": [
+          {
+            "id": "a_s_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_tr",
+            "name": "test_run_id",
+            "display_name": "Test Run Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_origin",
+            "name": "origin_control_number",
+            "display_name": "Origin Control Number",
+            "pg_type": "text",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "the sampled material (a package, etc.) — control_number_sample"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_test",
+            "name": "test_id",
+            "display_name": "Test Id",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_variety",
+            "name": "variety_name",
+            "display_name": "Variety Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_species",
+            "name": "species_id",
+            "display_name": "Species Id",
+            "pg_type": "integer",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_type",
+            "name": "sample_type_id",
+            "display_name": "Sample Type Id",
+            "pg_type": "integer",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_submitter",
+            "name": "submitter_id",
+            "display_name": "Submitter Id",
+            "pg_type": "integer",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: FK to the re-introduced submitters lookup; legacy dropped submitter_id in 2016_11_21_200733_drop_submitter_table.php."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_test_fac",
+            "name": "test_facility_id",
+            "display_name": "Test Facility Id",
+            "pg_type": "text",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "lab location where the sample was tested — 2018_05_28_153406_add_test_lab_location_to_samples_table.php (integer unsigned FK->locations onDelete set null). Unified to a text facility control_number/key (facilities, 01_identity)."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_user",
+            "name": "user_id",
+            "display_name": "User Id",
+            "pg_type": "text",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "user who created/owns the submission — 2016_07_31_223750_add_user_id_to_sample_table.php (unsignedInteger). Cross-department link to users/employees (01_identity)."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_subclass",
+            "name": "sub_class",
+            "display_name": "Sub Class",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2015_11_24_041858_create_samples_table.php sub_class string(8); nullable per 2018_03_26_183012"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_superclass",
+            "name": "super_class",
+            "display_name": "Super Class",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2015_11_24_041858_create_samples_table.php super_class string(8); nullable per 2018_03_26_183012"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_mass",
+            "name": "submission_mass",
+            "display_name": "Submission Mass",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_gross",
+            "name": "gross_mass",
+            "display_name": "Gross Mass",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2018_03_27_194052 weight double(8,2), renamed to gross_mass in 2018_05_11_184839"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_tare",
+            "name": "tare_mass",
+            "display_name": "Tare Mass",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2018_05_11_184839 tare_mass double(8,2) default 0 (retyped float in 2018_05_17); net submitted mass = gross_mass - tare_mass"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_extvol",
+            "name": "extraction_volume",
+            "display_name": "Extraction Volume",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2018_05_08_172208_add_extraction_volume_to_samples_table.php float(5,2) default 0 — solvent volume used in prep, to back-calculate concentrations"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_moist",
+            "name": "moisture_content",
+            "display_name": "Moisture Content",
+            "pg_type": "numeric(5,4)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2015_11_24_041858_create_samples_table.php moisture_content decimal(5,4)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_archtype",
+            "name": "is_archtype",
+            "display_name": "Is Archtype",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2016_07_06_100115_add_is_archtype_flag_to_sample_table.php boolean default false — flags the archetype/reference sample for its variety"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_photo",
+            "name": "photo_url",
+            "display_name": "Photo Url",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2015_11_24_060402_add_photo_column_to_samples_table.php photo_url string(256); used on COA/profile"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_info",
+            "name": "sample_info",
+            "display_name": "Sample Info",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2016_03_07_035947_add_sample_info_column_to_samples_table.php sample_info string(256) — free-text notes"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_uploaded",
+            "name": "has_uploaded_results",
+            "display_name": "Has Uploaded Results",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_harvest",
+            "name": "harvest_date",
+            "display_name": "Harvest Date",
+            "pg_type": "date",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_subdate",
+            "name": "submission_date",
+            "display_name": "Submission Date",
+            "pg_type": "date",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_testdate",
+            "name": "test_date",
+            "display_name": "Test Date",
+            "pg_type": "date",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "A sample + its results are the single lab feed that fans out: batch release reads the COA (07_quality_batch), consumer profile renders ratios/terpene bars (09), sales uses strain data (10). test_facility_id/user_id link to facilities/users (01_identity).",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_cann",
+        "kind": "strong_entity",
+        "name": "cannabinoids",
+        "display_name": "Cannabinoids",
+        "domain": "qa-lab",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_c_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_sample",
+            "name": "sample_id",
+            "display_name": "Sample Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_thca",
+            "name": "thca",
+            "display_name": "Thca",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_cbda",
+            "name": "cbda",
+            "display_name": "Cbda",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_cbga",
+            "name": "cbga",
+            "display_name": "Cbga",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_cbca",
+            "name": "cbca",
+            "display_name": "Cbca",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_thcva",
+            "name": "thcva",
+            "display_name": "Thcva",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_cbdva",
+            "name": "cbdva",
+            "display_name": "Cbdva",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_cbgva",
+            "name": "cbgva",
+            "display_name": "Cbgva",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_thc",
+            "name": "thc",
+            "display_name": "Thc",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_cbd",
+            "name": "cbd",
+            "display_name": "Cbd",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_cbg",
+            "name": "cbg",
+            "display_name": "Cbg",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_cbc",
+            "name": "cbc",
+            "display_name": "Cbc",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_thcv",
+            "name": "thcv",
+            "display_name": "Thcv",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_cbdv",
+            "name": "cbdv",
+            "display_name": "Cbdv",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_cbgv",
+            "name": "cbgv",
+            "display_name": "Cbgv",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_cbn",
+            "name": "cbn",
+            "display_name": "Cbn",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_d8",
+            "name": "d8_thc",
+            "display_name": "D8 Thc",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_total",
+            "name": "total_cannabinoids",
+            "display_name": "Total Cannabinoids",
+            "pg_type": "numeric(6,4)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "2015_11_24_041924_create_cannabinoids_table.php total_cannabinoids decimal(6,4)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Wide per-sample chemistry (1:1). Full legacy panel is the concrete 16-analyte set (thca,cbda,cbga,cbca,thcva,cbdva,cbgva,thc,cbd,cbg,cbc,thcv,cbdv,cbgv,cbn,d8_thc) + total_cannabinoids, per 2015_11_24_041924_create_cannabinoids_table.php.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_terp",
+        "kind": "strong_entity",
+        "name": "terpenes",
+        "display_name": "Terpenes",
+        "domain": "qa-lab",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_t_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_t_sample",
+            "name": "sample_id",
+            "display_name": "Sample Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_t_apinene",
+            "name": "alpha_pinene",
+            "display_name": "Alpha Pinene",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_t_bpinene",
+            "name": "beta_pinene",
+            "display_name": "Beta Pinene",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_t_myrcene",
+            "name": "myrcene",
+            "display_name": "Myrcene",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_t_limonene",
+            "name": "limonene",
+            "display_name": "Limonene",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_t_terpinolene",
+            "name": "terpinolene",
+            "display_name": "Terpinolene",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_t_linalool",
+            "name": "linalool",
+            "display_name": "Linalool",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_t_caryophyllene",
+            "name": "beta_caryophyllene",
+            "display_name": "Beta Caryophyllene",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_t_humulene",
+            "name": "alpha_humulene",
+            "display_name": "Alpha Humulene",
+            "pg_type": "numeric(7,5)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_t_total",
+            "name": "total_terpenes",
+            "display_name": "Total Terpenes",
+            "pg_type": "numeric(6,4)",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: representative subset shown. Legacy panel is ~55 analyte columns (36 in 2015_11_24_041910_create_terpenes_table.php + 19 added in 2018_05_11_195605_add_missing_terpenes_to_sample_terpene_table.php), each decimal(7,5); total_terpenes is decimal(6,4). Kept wide-table here for diagram clarity rather than EAV."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_t_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "DESIGN: wide per-sample terpene panel (1:1). Representative compounds shown; the real legacy panel is ~55 analyte columns (36 created + 19 added) + total_terpenes. Wide table kept over an EAV/analyte-row design for diagram readability.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_lims",
+        "kind": "strong_entity",
+        "name": "lims_pending_coas",
+        "display_name": "LIMS Pending COAs",
+        "domain": "qa-lab",
+        "connects": [
+          "quality",
+          "identity"
+        ],
+        "attributes": [
+          {
+            "id": "a_l_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_l_sample",
+            "name": "lims_sample_id",
+            "display_name": "Lims Sample Id",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "qms-platform/backend/app/models/lims.py LIMSPendingCOA.lims_sample_id String(255) unique"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_l_order",
+            "name": "lims_order_id",
+            "display_name": "Lims Order Id",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "lims.py lims_order_id String(255)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_l_org",
+            "name": "org_type",
+            "display_name": "Org Type",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": "org_type IN ('tbf','dft')",
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "lims.py org_type enum LIMSOrgType {tbf,dft}; METRC-descoped — kept as nullable text label only"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_l_product",
+            "name": "product_name",
+            "display_name": "Product Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "lims.py product_name String(500)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_l_batchref",
+            "name": "batch_ref",
+            "display_name": "Batch Ref",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "lims.py batch_ref String(255)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_l_coaurl",
+            "name": "coa_url",
+            "display_name": "Coa Url",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "lims.py coa_url String(2000)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_l_coas3",
+            "name": "coa_s3_path",
+            "display_name": "Coa S3 Path",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "lims.py coa_s3_path String(500)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_l_raw",
+            "name": "raw_payload",
+            "display_name": "Raw Payload",
+            "pg_type": "jsonb",
+            "key_role": "none",
+            "nullable": false,
+            "default": "'{}'::jsonb",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "lims.py raw_payload JSONB not null — full external-lab webhook payload"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_l_status",
+            "name": "status",
+            "display_name": "Status",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": "'pending'",
+            "check_constraint": "status IN ('pending','accepted','rejected')",
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "lims.py status enum LIMSCOAStatus {pending,accepted,rejected}"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_l_batch",
+            "name": "accepted_batch_id",
+            "display_name": "Accepted Batch Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "lims.py accepted_batch_id FK->batches.id — links accepted COA to its batch (07_quality_batch)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_l_decided_by",
+            "name": "decided_by_id",
+            "display_name": "Decided By Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "lims.py decided_by_id FK->users.id — reviewer who accepted/rejected (01_identity)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_l_fetched",
+            "name": "fetched_at",
+            "display_name": "Fetched At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "lims.py fetched_at DateTime"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_l_decided",
+            "name": "decided_at",
+            "display_name": "Decided At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "lims.py decided_at DateTime"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "DESIGN: modern QMS landing/staging table for the external-lab (LIMS/Confident Labs) COA webhook the DFD models (ext_lab -> proc_ingest). Per qms-platform/backend/app/models/lims.py LIMSPendingCOA. accepted_batch_id links to batches (07_quality_batch); decided_by_id links to users (01_identity).",
+        "confidence": 1,
+        "review_status": "accepted"
+      }
+    ],
+    "relationships": [
+      {
+        "id": "rel_tr_cn",
+        "name": "identified by",
+        "from": {
+          "entity_id": "ent_tr",
+          "attribute_id": "a_tr_cn"
+        },
+        "to": {
+          "entity_id": "ent_cn",
+          "attribute_id": "a_cn_value"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_rel_tr_cn",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_s_origin",
+        "name": "sampled from",
+        "from": {
+          "entity_id": "ent_sample",
+          "attribute_id": "a_s_origin"
+        },
+        "to": {
+          "entity_id": "ent_cn",
+          "attribute_id": "a_cn_value"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_sample_origin",
+          "on_delete": "set_null",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "DESIGN: on_delete set_null (don't delete a sample when its source-material CN is removed). As-built origin_control_number_id was onDelete CASCADE (2018_03_19_163819). In TARGET a control_number is immutable/never deleted so on_delete is largely moot."
+        ],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_s_tr",
+        "name": "in run",
+        "from": {
+          "entity_id": "ent_sample",
+          "attribute_id": "a_s_tr"
+        },
+        "to": {
+          "entity_id": "ent_tr",
+          "attribute_id": "a_tr_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_sample_test_run",
+          "on_delete": "set_null",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_s_species",
+        "name": "species",
+        "from": {
+          "entity_id": "ent_sample",
+          "attribute_id": "a_s_species"
+        },
+        "to": {
+          "entity_id": "ent_species",
+          "attribute_id": "a_sp_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_sample_species",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_s_type",
+        "name": "type",
+        "from": {
+          "entity_id": "ent_sample",
+          "attribute_id": "a_s_type"
+        },
+        "to": {
+          "entity_id": "ent_stype",
+          "attribute_id": "a_st_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_sample_type",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_s_sub",
+        "name": "submitter",
+        "from": {
+          "entity_id": "ent_sample",
+          "attribute_id": "a_s_submitter"
+        },
+        "to": {
+          "entity_id": "ent_sub",
+          "attribute_id": "a_su_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_sample_submitter",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_cann_s",
+        "name": "chemistry of",
+        "from": {
+          "entity_id": "ent_cann",
+          "attribute_id": "a_c_sample"
+        },
+        "to": {
+          "entity_id": "ent_sample",
+          "attribute_id": "a_s_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": 1,
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_cannabinoids_sample",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_terp_s",
+        "name": "terpenes of",
+        "from": {
+          "entity_id": "ent_terp",
+          "attribute_id": "a_t_sample"
+        },
+        "to": {
+          "entity_id": "ent_sample",
+          "attribute_id": "a_s_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": 1,
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_terpenes_sample",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      }
+    ]
+  },
+  "dfd": {
+    "level": 0,
+    "notation": "yourdon_coad",
+    "system_boundary": {
+      "id": "boundary_qa",
+      "name": "QA / Lab"
+    },
+    "external_entities": [
+      {
+        "id": "ext_lab",
+        "name": "LIMS (Confident Labs)",
+        "description": "External lab; returns COA chemistry via webhook",
+        "source": "manual",
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "processes": [
+      {
+        "id": "proc_sample",
+        "number": "1.0",
+        "name": "Create Sample / Test Run",
+        "description": "Draw a sample from material; group into a SAMP-N run",
+        "user_modified": true,
+        "mapped_relationship_id": "rel_s_origin",
+        "source_evidence": [],
+        "source_facts": [],
+        "level_1_diagram": null
+      },
+      {
+        "id": "proc_ingest",
+        "number": "2.0",
+        "name": "Ingest Lab Results",
+        "description": "Single LIMS writer → cannabinoids/terpenes; fans out to batch/profile/sales",
+        "user_modified": true,
+        "mapped_relationship_id": "rel_cann_s",
+        "source_evidence": [],
+        "source_facts": [],
+        "level_1_diagram": null
+      }
+    ],
+    "data_stores": [
+      {
+        "id": "store_s",
+        "name": "Samples",
+        "description": "Samples + result flags",
+        "mapped_erd_entity": "ent_sample",
+        "user_modified": false,
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "store_c",
+        "name": "Cannabinoids",
+        "description": "Per-sample chemistry",
+        "mapped_erd_entity": "ent_cann",
+        "user_modified": false,
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "store_t",
+        "name": "Terpenes",
+        "description": "Per-sample terpenes",
+        "mapped_erd_entity": "ent_terp",
+        "user_modified": false,
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "data_flows": [
+      {
+        "id": "q1",
+        "from": "proc_sample",
+        "to": "store_s",
+        "data_name": "Sample",
+        "mapped_relationship_id": null,
+        "user_modified": false,
+        "mapped_erd_entities": [
+          "ent_sample"
+        ],
+        "mapped_erd_attributes": [
+          "a_s_test"
+        ],
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "q2",
+        "from": "ext_lab",
+        "to": "proc_ingest",
+        "data_name": "COA results",
+        "mapped_relationship_id": null,
+        "user_modified": false,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "q3",
+        "from": "proc_ingest",
+        "to": "store_c",
+        "data_name": "Cannabinoids",
+        "mapped_relationship_id": "rel_cann_s",
+        "user_modified": false,
+        "mapped_erd_entities": [
+          "ent_cann"
+        ],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "q4",
+        "from": "proc_ingest",
+        "to": "store_t",
+        "data_name": "Terpenes",
+        "mapped_relationship_id": "rel_terp_s",
+        "user_modified": false,
+        "mapped_erd_entities": [
+          "ent_terp"
+        ],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "business_rules": [
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/qa-lab/domain/test-run.ts:51-91"
+        ],
+        "to_contexts": [],
+        "id": "QA-SM-01",
+        "title": "Test-run phase ordering (forward-only)",
+        "category": "state_machine",
+        "statement": "SUBMISSIONS→TEST_PREP→ACTIVE→AWAITING_RESULTS→FINISHED; cannot move backward; cannot re-finish.",
+        "spec_source": "spec-workflow-qa.md",
+        "verified_by": "docs/context/behavioral-parity.md (qa-lab 16/0)"
+      },
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "shared/src/qa-lab.ts:214-303"
+        ],
+        "to_contexts": [],
+        "id": "QA-VAL-01",
+        "title": "Chemistry values are strings (DECIMAL)",
+        "category": "validation",
+        "statement": "Cannabinoid/terpene results are decimal strings (e.g. \"15.5\"), never numbers — passing numbers throws.",
+        "spec_source": "spec-workflow-qa.md",
+        "verified_by": "AGENTS.md §9 (gotchas)"
+      },
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "shared/src/qa-lab.ts:214-287"
+        ],
+        "to_contexts": [],
+        "id": "QA-VAL-02",
+        "title": "16-analyte cannabinoid + 8-analyte terpene panels",
+        "category": "validation",
+        "statement": "Cannabinoid panel = 16 analytes (acid+neutral forms); terpene panel = representative 8-analyte subset.",
+        "spec_source": "spec-workflow-qa.md",
+        "verified_by": "docs/context/behavioral-parity.md (qa-lab panels)"
+      },
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "db/migrations/0006_qa_lab.sql"
+        ],
+        "to_contexts": [],
+        "id": "QA-INV-01",
+        "title": "Results are append-only",
+        "category": "invariant",
+        "statement": "Cannabinoid/terpene result rows are immutable (1:1 per sample, no updates); DB triggers enforce.",
+        "spec_source": "spec-workflow-qa.md",
+        "verified_by": "docs/context/behavioral-parity.md (qa-lab immutability)"
+      }
+    ],
+    "connectors": [
+      {
+        "id": "conn_seam1_control_numbers",
+        "name": "Seam 1 — Control-Number authority",
+        "kind": "shared_service",
+        "trigger": "Any context mints a traceable record",
+        "effect": "A single immutable control number ({prefix}{YYMMDD}-{genocode}, 18 type codes) is issued and never edited/deleted",
+        "from_context": "02_control_numbers",
+        "to_contexts": [
+          "03_genetics",
+          "04_cultivation_harvest",
+          "05_refinement_packaging",
+          "06_qa_lab",
+          "07_quality_batch"
+        ],
+        "contract": "ControlNumberService.create(type, facilityPrefix, genocode, date) -> value",
+        "enforced_at": [
+          "backend/src/contexts/control-numbers/domain/control-number.ts:36-66",
+          "backend/src/contexts/control-numbers/service/control-number-service.ts:18-32"
+        ],
+        "spec_source": "40-unified-workflow-graph.md (Seam 1); spec-control-numbers.md",
+        "status": "wired",
+        "review_status": "accepted"
+      },
+      {
+        "id": "conn_seam3_lims_fanout",
+        "name": "Seam 3 — LIMS webhook fan-out",
+        "kind": "fan_out",
+        "trigger": "POST /api/qa-lab/lims-webhook (single lab writer)",
+        "effect": "Creates a test-run + records cannabinoid/terpene results AND seeds a consumer-profile (PhytoFacts) from the same payload",
+        "from_context": "06_qa_lab",
+        "to_contexts": [
+          "06_qa_lab",
+          "09_consumer_profile"
+        ],
+        "contract": "{ facilityPrefix, genocode, sample.testId, cannabinoids, terpenes } -> { labResults, consumerProfile }",
+        "enforced_at": [
+          "backend/src/index.ts:891-931"
+        ],
+        "spec_source": "40-unified-workflow-graph.md (Seam 3); spec-workflow-qa.md §4",
+        "status": "wired",
+        "review_status": "accepted"
+      }
+    ]
+  },
+  "layout": {
+    "erd": {
+      "nodes": [
+        {
+          "id": "ent_cn",
+          "x": 60,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_stype",
+          "x": 440,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_species",
+          "x": 820,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_sub",
+          "x": 60,
+          "y": 400,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_tr",
+          "x": 440,
+          "y": 400,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_sample",
+          "x": 820,
+          "y": 400,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_cann",
+          "x": 60,
+          "y": 740,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_terp",
+          "x": 440,
+          "y": 740,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_lims",
+          "x": 820,
+          "y": 740,
+          "width": 300,
+          "height": 230
+        }
+      ],
+      "edges": []
+    },
+    "dfd": {
+      "nodes": [],
+      "edges": []
+    },
+    "dfd_level_1": {}
+  },
+  "styles": {
+    "theme": "minimal"
+  },
+  "postgres": {
+    "dialect": "postgresql",
+    "extensions": [
+      "pgcrypto"
+    ],
+    "schema_name": "public",
+    "default_primary_key": {
+      "type": "uuid",
+      "default": "gen_random_uuid()"
+    },
+    "add_audit_timestamps": false
+  },
+  "review": {
+    "proposals": [],
+    "warnings": [],
+    "dismissed_warnings": []
+  }
+}

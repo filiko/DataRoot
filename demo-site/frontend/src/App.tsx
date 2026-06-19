@@ -4,13 +4,15 @@ import { ERDCanvas } from "./components/ERDCanvas";
 import { DFDCanvas } from "./components/DFDCanvas";
 import { ExportPanel } from "./components/ExportPanel";
 import { SchemaInspector } from "./components/SchemaInspector";
+import { BusinessRulesPanel } from "./components/BusinessRulesPanel";
+import { ConnectorsPanel } from "./components/ConnectorsPanel";
 import { LoginPage, type SessionUser } from "./components/LoginPage";
 import { LandingPage } from "./components/LandingPage";
 import { ProjectList } from "./components/ProjectList";
 import { ShareDialog } from "./components/ShareDialog";
 import { WarningsBanner } from "./components/WarningsBanner";
 import type { PenFile } from "./types/pen";
-import { GitBranch, Download, List, Boxes, Wand2, FileDown, Share2, ArrowLeft, Palette } from "lucide-react";
+import { GitBranch, Download, List, Boxes, Wand2, FileDown, Share2, ArrowLeft, Palette, BookOpen, Link2 } from "lucide-react";
 import { useLayoutPatch } from "./hooks/useLayoutPatch";
 import { useProjectPolling } from "./hooks/useProjectPolling";
 import { buildDfdLayoutGraph, buildErdLayoutGraph } from "./components/diagram/layout/graphModel";
@@ -25,8 +27,10 @@ import { API } from "./config/api";
 import { useAppTheme, APP_THEMES } from "./context/ThemeContext";
 import { getDiagramTheme } from "./styles/diagramThemes";
 import { DemoSwitcher } from "./components/DemoSwitcher";
-import { loadDemoProject, DEMO_PROJECTS, type DemoProject } from "./components/datademo/loadDemo";
+import { NexusCarousel } from "./components/NexusCarousel";
+import { loadDemoProject, DEMO_PROJECTS, NEXUS_PROJECTS, type DemoProject } from "./components/datademo/loadDemo";
 import { DocsPage } from "./components/DocsPage";
+import { ReferencePage } from "./components/ReferencePage";
 
 function ThemeSwitcher() {
   const { theme, setTheme } = useAppTheme();
@@ -111,7 +115,7 @@ function ThemeSwitcher() {
     </div>
   );
 }
-type ActiveTab = "erd" | "dfd" | "inspector" | "export";
+type ActiveTab = "erd" | "dfd" | "rules" | "connectors" | "inspector" | "export";
 
 function readInviteFromUrl(): string | null {
   const m = window.location.pathname.match(/^\/invite\/([^/]+)/);
@@ -147,7 +151,9 @@ export default function App() {
   const diagramRef = useRef<HTMLDivElement>(null);
   const { patchLayout } = useLayoutPatch(projectId ?? "");
   const isDocsRoute = window.location.pathname === "/docs" || window.location.pathname.startsWith("/docs/");
+  const isReferenceRoute = window.location.pathname === "/reference";
   const isDemoRoute = window.location.pathname === "/demo";
+  const isNexusRoute = window.location.pathname === "/nexusag";
 
   // ── Auth bootstrap ────────────────────────────────────────────────────────
   useEffect(() => {
@@ -172,6 +178,18 @@ export default function App() {
       setPen(p);
       setActiveTab("erd");
       setActiveDemoId(DEMO_PROJECTS[0].id);
+    }).catch(() => {});
+  }, [authChecked]);
+
+  // ── Auto-load the Nexus master when visiting /nexusag ────────────────────
+  useEffect(() => {
+    if (!isNexusRoute || !authChecked || pen) return;
+    loadDemoProject(NEXUS_PROJECTS[0]).then(({ projectId: id, pen: p }) => {
+      if (!user) setUser({ id: "guest", username: "nexus" });
+      setProjectId(id);
+      setPen(p);
+      setActiveTab("erd");
+      setActiveDemoId(NEXUS_PROJECTS[0].id);
     }).catch(() => {});
   }, [authChecked]);
 
@@ -319,9 +337,20 @@ export default function App() {
     }
   };
 
+  // Business Rules / Connectors are only meaningful when the project actually
+  // has them (repo-analysis projects and Nexus fixtures) — hide the tabs
+  // otherwise so empty projects aren't cluttered with dead tabs.
+  const hasBusinessRules = (pen?.dfd?.business_rules?.length ?? 0) > 0;
+  const hasConnectors = (pen?.dfd?.connectors?.length ?? 0) > 0;
   const tabs: { id: ActiveTab; icon: React.ReactNode; label: string }[] = [
     { id: "erd", icon: <GitBranch className="w-4 h-4" />, label: "ERD" },
     { id: "dfd", icon: <Boxes className="w-4 h-4" />, label: "DFD" },
+    ...(hasBusinessRules
+      ? [{ id: "rules" as ActiveTab, icon: <BookOpen className="w-4 h-4" />, label: "Business Rules" }]
+      : []),
+    ...(hasConnectors
+      ? [{ id: "connectors" as ActiveTab, icon: <Link2 className="w-4 h-4" />, label: "Connectors" }]
+      : []),
     { id: "inspector", icon: <List className="w-4 h-4" />, label: "Schema" },
     { id: "export", icon: <Download className="w-4 h-4" />, label: "Export" },
   ];
@@ -331,7 +360,12 @@ export default function App() {
     return <DocsPage />;
   }
 
-  if (!authChecked || (isDemoRoute && !pen)) {
+  // Public textbook-reference verification gallery (no auth, like /docs).
+  if (isReferenceRoute) {
+    return <ReferencePage />;
+  }
+
+  if (!authChecked || ((isDemoRoute || isNexusRoute) && !pen)) {
     return (
       <div className="min-h-screen flex items-center justify-center text-sm text-gray-500">
         Loading…
@@ -508,12 +542,31 @@ export default function App() {
               <DFDCanvas pen={pen} projectId={projectId} onPenUpdate={handlePenUpdate} />
             )}
             {activeDemoId !== null && (activeTab === "erd" || activeTab === "dfd") && (
-              <DemoSwitcher
-                activeDemoId={activeDemoId}
-                demos={DEMO_PROJECTS}
-                onSwitch={handleSwitchDemo}
-                loading={demoSwitching}
-              />
+              isNexusRoute ? (
+                <NexusCarousel
+                  activeDemoId={activeDemoId}
+                  demos={NEXUS_PROJECTS}
+                  onSwitch={handleSwitchDemo}
+                  loading={demoSwitching}
+                />
+              ) : (
+                <DemoSwitcher
+                  activeDemoId={activeDemoId}
+                  demos={DEMO_PROJECTS}
+                  onSwitch={handleSwitchDemo}
+                  loading={demoSwitching}
+                />
+              )
+            )}
+            {activeTab === "rules" && (
+              <div className="h-full bg-white overflow-auto">
+                <BusinessRulesPanel pen={pen} />
+              </div>
+            )}
+            {activeTab === "connectors" && (
+              <div className="h-full bg-white overflow-auto">
+                <ConnectorsPanel pen={pen} />
+              </div>
             )}
             {activeTab === "inspector" && (
               <div className="h-full bg-white">

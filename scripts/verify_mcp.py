@@ -106,7 +106,7 @@ async def main() -> int:
     tools = await _list_tools(server)
     expected = {
         "list_datasets", "summarize_workspace", "kb_search", "kb_list",
-        "kb_show", "query_table", "kb_graph", "ask_and_render",
+        "kb_show", "query_table", "kb_graph", "ask",
     }
     names = {tool.name for tool in tools}
     ok = names == expected and len(tools) == 8

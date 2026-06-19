@@ -10,6 +10,5 @@ source .env
 set +a
 export PATH="$HOME/.local/bin:$PATH"
 export PYTHONPATH=src
-export MIRO_BOARD_ID="${MIRO_BOARD_ID:-uXjVHVqV-rs=}"
 export DATAROOT_LINK_ADDRESS_JOIN=1
 exec python -m dataroot.mcp

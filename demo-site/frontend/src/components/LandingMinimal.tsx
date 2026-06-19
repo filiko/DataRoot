@@ -330,9 +330,11 @@ export function LandingMinimal({
           </button>
           {[
             { label: "Load example",   action: () => apiCall(API_ROUTES.example(),       (d) => onLoadExample(d.project_id, d.pen)) },
+            { label: "System Map (SaaS)", action: () => apiCall(API_ROUTES.systemMap(),  (d) => onLoadExample(d.project_id, d.pen)) },
             { label: "Nexus — Codex",  action: () => apiCall(API_ROUTES.nexusExercise(), (d) => onLoadNexusExercise(d.project_id, d.pen)) },
             { label: "Nexus — Claude", action: () => apiCall(API_ROUTES.claudeEval(),    (d) => onLoadClaudeEval(d.project_id, d.pen)) },
             { label: "Blank canvas",   action: () => apiCall(API_ROUTES.blank(),         (d) => onStartBlank(d.project_id, d.pen)) },
+            { label: "Reference / Verify", action: () => { window.location.href = "/reference"; } },
           ].map((b) => (
             <button key={b.label} onClick={b.action} disabled={loading}
               className="text-sm border border-gray-200 px-4 py-2 text-gray-600 hover:border-gray-900 hover:text-gray-900 transition-colors disabled:opacity-40 font-mono"

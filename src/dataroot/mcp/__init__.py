@@ -1,9 +1,8 @@
 """DataRoot stdio MCP server.
 
-Exposes the Live Ask pipeline (`profile` -> `link` -> `answer_question` ->
-`render_provenance_to_miro`) as eight bounded MCP tools. Default workspace
-is the Austin Permits Texas Open Data slice; ``company_a`` and ``company_b``
-work the same way.
+Exposes the Live Ask pipeline (`profile` -> `link` -> `answer_question`) as
+eight bounded MCP tools. Default workspace is the Austin Permits Texas Open
+Data slice; ``company_a`` and ``company_b`` work the same way.
 
 Public entry points:
 

@@ -216,22 +216,6 @@ TOOLS: dict[RoleName, list[dict]] = {
                 },
             },
         },
-        {
-            "type": "function",
-            "function": {
-                "name": "render_provenance",
-                "description": "Render a provenance trace to Miro or HTML.",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "trace": {"type": "object", "description": "Provenance trace object"},
-                        "mode": {"type": "string", "enum": ["miro", "html"], "description": "Render mode"},
-                        "answer": {"type": "string", "description": "Optional answer text to show in the final answer card"},
-                    },
-                    "required": ["trace", "mode"],
-                },
-            },
-        },
     ],
 }
 

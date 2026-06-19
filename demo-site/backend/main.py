@@ -234,6 +234,64 @@ def create_claude_eval_schema(
     return {"project_id": pen.project.id, "pen": pen.model_dump(by_alias=True)}
 
 
+@app.post("/schema/system-map")
+def create_system_map_schema(
+    user: Annotated[User, Depends(current_user)],
+    db: Annotated[Session, Depends(get_session)],
+):
+    """Project the generic SaaS A/B/C System Map into a PenFile: ERD entities per
+    data object, cross-system seams in the Connectors panel, and business rules
+    with their cross-system grounding status. Demonstrates the System Map →
+    diagram projection (docs/business-rule-verification.md, data-access-map.md)."""
+    from dataroot.systemmap import generic_saas_abc_map
+    from generators.system_map_to_pen import system_map_to_pen
+
+    pen = system_map_to_pen(generic_saas_abc_map(), project_name="SaaS A/B/C System Map")
+    apply_rules_gate(pen)
+    ProjectStore.create(pen, user, db)
+    return {"project_id": pen.project.id, "pen": pen.model_dump(by_alias=True)}
+
+
+@app.get("/reference/exercises")
+def list_reference_exercises():
+    """Public, read-only textbook reference gallery for diagram verification.
+
+    For each Watt Appendix B exercise we return the citation + verbatim rules +
+    the textbook's PUBLISHED answer key (independent ground truth), the PenFile we
+    render (laid out for the canvas), and our verification verdicts. Ephemeral —
+    not persisted, no auth — so it can sit beside /docs as a public reference.
+    See docs/verification-conformance.md.
+    """
+    from evals.watt_corpus import EXERCISES
+    from generators.diagram_rules import detect_violations
+    from generators.pen_builder import _auto_layout
+
+    out: list[dict] = []
+    for ex in EXERCISES:
+        pen = ex.build()
+        apply_rules_gate(pen)                       # derived DFD + V1 rule statuses
+        pen.layout.erd = _auto_layout(pen.erd.entities)  # deterministic positions
+        rules = [
+            {"statement": r.statement, "status": r.status, "verified_by": r.verified_by}
+            for r in pen.dfd.business_rules
+        ]
+        violations = [
+            {"rule_id": v.rule_id, "message": v.message, "node_name": v.node_name}
+            for v in detect_violations(pen) if v.rule_id.startswith("ERD-")
+        ]
+        out.append({
+            "key": ex.key,
+            "title": ex.title,
+            "source": ex.source,
+            "paragraph": ex.paragraph,
+            "reference_answer_key": ex.reference_answer_key,
+            "pen": pen.model_dump(by_alias=True),
+            "rules": rules,
+            "violations": violations,
+        })
+    return out
+
+
 class RepoAnalysisRequest(BaseModel):
     repo_path: str | None = None
     repo: str | None = None

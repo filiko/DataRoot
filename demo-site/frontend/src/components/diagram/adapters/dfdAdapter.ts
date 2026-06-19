@@ -14,6 +14,14 @@ import {
   type AttachmentSide,
 } from "../attachmentHandleUtils";
 import { getDiagramTheme, type DiagramThemeId } from "../../../styles/diagramThemes";
+import { computeDisplayEdgeLayout } from "../layout/displayRouting";
+import type { LayoutEdgeRef, LayoutNodeBox } from "../layout/types";
+
+const DFD_KIND: Record<DfdNodeKind, LayoutNodeBox["kind"]> = {
+  external: "dfd_external",
+  process: "dfd_process",
+  store: "dfd_store",
+};
 
 export type DfdNodeKind = "external" | "process" | "store";
 
@@ -141,22 +149,59 @@ export function dfdToEdges(
   };
   const theme = getDiagramTheme(themeId);
 
-  return dfd.data_flows.map((flow) => {
-    const sourceNode = nodeMap.get(flow.from);
-    const targetNode = nodeMap.get(flow.to);
-    const sides = sourceNode && targetNode
-      ? pickSides(sourceNode, targetNode)
-      : { sourceSide: "right" as AttachmentSide, targetSide: "left" as AttachmentSide };
-    const sourceLane = nextLane(flow.from, sides.sourceSide, "source");
-    const targetLane = nextLane(flow.to, sides.targetSide, "target");
+  // Compute orthogonal routes + collision-avoiding label positions for display
+  // (nothing persisted) so flows whose layout was never saved don't fall back
+  // to smooth-step midpoint labels sitting on top of / behind the nodes.
+  const nodeBoxes: LayoutNodeBox[] = nodes.map((node) => ({
+    id: node.id,
+    kind: DFD_KIND[(node.data as DfdNodeData).kind],
+    x: node.position.x,
+    y: node.position.y,
+    width: node.width ?? 230,
+    height: node.height ?? 92,
+  }));
+  const edgeRefs: LayoutEdgeRef[] = dfd.data_flows.map((flow) => {
     const edgeLayout = edgeLayoutMap.get(flow.id);
+    return {
+      id: flow.id,
+      source: flow.from,
+      target: flow.to,
+      label: flow.data_name,
+      sourceHandle: edgeLayout?.source_handle,
+      targetHandle: edgeLayout?.target_handle,
+      points: edgeLayout?.points,
+      label_t: edgeLayout?.label_t ?? undefined,
+      label_offset: edgeLayout?.label_offset ?? undefined,
+    };
+  });
+  const displayEdges = new Map(
+    computeDisplayEdgeLayout(nodeBoxes, edgeRefs).map((edge) => [edge.id, edge]),
+  );
+
+  return dfd.data_flows.map((flow) => {
+    const display = displayEdges.get(flow.id);
+    const edgeLayout = edgeLayoutMap.get(flow.id);
+
+    let sourceHandle = display?.sourceHandle ?? edgeLayout?.source_handle;
+    let targetHandle = display?.targetHandle ?? edgeLayout?.target_handle;
+    if (!sourceHandle || !targetHandle) {
+      const sourceNode = nodeMap.get(flow.from);
+      const targetNode = nodeMap.get(flow.to);
+      const sides = sourceNode && targetNode
+        ? pickSides(sourceNode, targetNode)
+        : { sourceSide: "right" as AttachmentSide, targetSide: "left" as AttachmentSide };
+      const sourceLane = nextLane(flow.from, sides.sourceSide, "source");
+      const targetLane = nextLane(flow.to, sides.targetSide, "target");
+      sourceHandle = sourceHandle ?? handleId("source", sides.sourceSide, sourceLane);
+      targetHandle = targetHandle ?? handleId("target", sides.targetSide, targetLane);
+    }
 
     return {
       id: flow.id,
       source: flow.from,
       target: flow.to,
-      sourceHandle: edgeLayout?.source_handle ?? handleId("source", sides.sourceSide, sourceLane),
-      targetHandle: edgeLayout?.target_handle ?? handleId("target", sides.targetSide, targetLane),
+      sourceHandle,
+      targetHandle,
       label: flow.data_name,
       type: "dfdFlow",
       markerEnd: { type: MarkerType.ArrowClosed, width: 18, height: 18, color: theme.dfd.edge.stroke },
@@ -167,9 +212,9 @@ export function dfdToEdges(
       },
       labelStyle: { color: theme.dfd.edge.labelText, fontSize: 11, fontWeight: 600 },
       data: {
-        points: edgeLayout?.points,
-        label_t: edgeLayout?.label_t,
-        label_offset: edgeLayout?.label_offset,
+        points: display?.points ?? edgeLayout?.points,
+        label_t: display?.label_t ?? edgeLayout?.label_t,
+        label_offset: display?.label_offset ?? edgeLayout?.label_offset,
       },
       reconnectable: true,
     };

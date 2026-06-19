@@ -74,6 +74,43 @@ An attribute has `key_role: foreign` but no `Relationship` references it
 from either endpoint. The FK constraint will not be emitted by the SQL
 exporter; the user should either add a relationship or change the key role.
 
+### ERD-05 — Broken relationship endpoint (referential integrity)
+- **severity:** warn
+- **strategy:** warn
+- **scope:** ERD
+- **detector:** `_detect_erd_05_dangling_endpoint`
+
+A `Relationship`'s `from`/`to` endpoint references a missing entity, or an
+`attribute_id` that does not exist on the named entity. This is referential
+integrity *of the model itself* — the relationship cannot be rendered or
+exported correctly. (Part of the business-rule verification layer; see
+[`docs/business-rule-verification.md`](../../../docs/business-rule-verification.md).)
+
+### ERD-06 — Mandatory reference with nullable foreign key
+- **severity:** warn
+- **strategy:** warn
+- **scope:** ERD
+- **detector:** `_detect_erd_06_mandatory_nullable_fk`
+
+For a many-to-one relationship whose referenced (`to`) side is mandatory
+(`to_min ≥ 1`, `to_max = 1`), the foreign key on the `from` side
+(`key_role: foreign`) must be NOT NULL. A nullable FK contradicts the stated
+cardinality — the model claims every row must reference a parent, but the
+column allows none. This is the structural half of "business rules determine
+cardinality" (Watt Ch 9). Fix: make the FK NOT NULL, or set the relationship
+optional (`to_min = 0`).
+
+### ERD-07 — Entity without a primary key (entity integrity)
+- **severity:** warn
+- **strategy:** warn
+- **scope:** ERD
+- **detector:** `_detect_erd_07_entity_integrity`
+
+An `Entity` has no attribute with `key_role: primary`. Entity integrity (Ch 9)
+requires every entity's rows to be uniquely identifiable. The SQL exporter can
+still add a surrogate key, but the modelled intent is missing — surface it so
+the user confirms the identifier.
+
 ---
 
 ## DFD rules

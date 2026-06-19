@@ -40,7 +40,10 @@ export function anchorForHandle(node: LayoutNodeBox, handle: string | undefined,
   const parsed = parseHandleId(handle);
   const side = parsed?.side ?? (fallbackKind === "source" ? "right" : "left");
   const lane = parsed?.lane ?? 1;
-  const lanePosition = LANE_POSITIONS[lane] ?? 0.5;
+  // Rendered handles shift source/target lanes by ∓4% (see handleStyle in
+  // ERDCanvas/AttachmentHandles); mirror it so routed endpoints land on them.
+  const laneShift = (parsed?.kind ?? fallbackKind) === "source" ? -0.04 : 0.04;
+  const lanePosition = (LANE_POSITIONS[lane] ?? 0.5) + laneShift;
 
   if (side === "left") return { x: node.x, y: node.y + node.height * lanePosition };
   if (side === "right") return { x: node.x + node.width, y: node.y + node.height * lanePosition };

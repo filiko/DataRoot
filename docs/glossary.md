@@ -10,25 +10,27 @@ Key terms and definitions used throughout the DataRoot project.
 
 ← Back to [README.md](../README.md)
 
+**System Map**: DataRoot's source-agnostic inventory of an enterprise data ecosystem — `EnterpriseSystem` → `AccessSurface` → `DataObject` → `DataField`, plus `BusinessRule`, `Connector`, `DataFlow`, and typed `Evidence`. The canonical core artifact; the PenFile ERD/DFD and GitKB docs are projections of it. Full builder spec: [`docs/data-access-map.md`](data-access-map.md).
+
+**Business-rule verification**: deciding, with evidence, whether a stated business rule actually holds — traced across three layers: the English rule, the ERD structure that encodes it (cardinality/keys/referential integrity), and the real systems/surfaces where the data is entered/extracted (the System Map). A rule is `enforced`, a `gap`, `deferred`, or `unverifiable` per layer. Steering doc: [`docs/business-rule-verification.md`](business-rule-verification.md).
+
 **GitKB**: distributed knowledge graph protocol with sparse sync, FTS5 + vector search, and tree-sitter code intelligence. DataRoot persists every workspace document through GitKB's CLI. See https://gitkb.com/ and the [GitKB releases](https://github.com/gitkb/gitkb-releases).
 
 **KBStore**: DataRoot's abstraction over the document store. Two implementations: `GitKBStore` (wraps the `git-kb` CLI; production path) and `LocalMarkdownStore` (pure Markdown; used in tests only).
 
-**MCP (Model Context Protocol)**: standardized stdio JSON-RPC protocol for exposing tools to an AI agent. DataRoot has two unrelated relationships with MCP servers — see the next two entries.
+**MCP (Model Context Protocol)**: standardized stdio JSON-RPC protocol for exposing tools to an AI agent. DataRoot exposes its own bounded MCP server and calls GitKB through the `git-kb` CLI.
 
-**DataRoot MCP server**: the stdio MCP server *DataRoot itself ships* at `src/dataroot/mcp/server.py`. Exposes eight bounded tools (`list_datasets`, `summarize_workspace`, `kb_search`, `kb_list`, `kb_show`, `query_table`, `kb_graph`, `ask_and_render`) over JSON-RPC. Launched by `dataroot mcp` or `python -m dataroot.mcp`. The full reference is in [`docs/mcp-server.md`](mcp-server.md). The bundled WSL launcher used by Codex is `scripts/start-mcp.sh`. The in-process verifier is `scripts/verify_mcp.py`.
+**DataRoot MCP server**: the stdio MCP server *DataRoot itself ships* at `src/dataroot/mcp/server.py`. Exposes eight bounded tools (`list_datasets`, `summarize_workspace`, `kb_search`, `kb_list`, `kb_show`, `query_table`, `kb_graph`, `ask`) over JSON-RPC. Launched by `dataroot mcp` or `python -m dataroot.mcp`. The full reference is in [`docs/mcp-server.md`](mcp-server.md). The bundled WSL launcher used by Codex is `scripts/start-mcp.sh`. The in-process verifier is `scripts/verify_mcp.py`.
 
 **GitKB MCP server**: GitKB's own MCP server (separate project — not DataRoot's). DataRoot does **not** call GitKB's MCP server; it shells out to the `git-kb` CLI directly.
 
-**Miro MCP server**: Miro publishes an MCP server for board access. DataRoot does **not** use it; the board renderer calls Miro REST v2 directly for deterministic positioning. See [`docs/miro-renderer.md`](miro-renderer.md) §6.
-
 **Hard cap**: an upper bound the DataRoot MCP server enforces on every tool's result size — 50 search hits, 100 list records, 200 table rows, depth 3 for graph traversal. Caller-supplied limits above the cap are clamped silently and the actual cap is reported in the response.
 
-**Live Ask**: DataRoot's end-to-end "user types a question, agent answers and renders to Miro" loop. Implemented by `query.answer_question` → `interpret_data_tidbits` → `miro_plan` → `render_provenance_to_miro`. Reachable via the FastAPI panel (`/api/ask-render`) or via the MCP server's `ask_and_render` tool.
+**Live Ask**: DataRoot's end-to-end "user types a question, agent answers, and provenance is persisted" loop. Implemented by `query.answer_question` plus `persist_answer_artifacts`. Reachable via the FastAPI endpoint (`/api/ask`) or via the MCP server's `ask` tool.
 
-**Workspace**: one named entry in `src/dataroot/server/app.py:COMPANIES`. Each workspace points at a folder of raw data and gets its own Live Ask section on Miro. Three are registered today: `austin_permits` (Texas Open Data Track), `company_a` (CropProtectorAI biotech demo), `company_b` (BioReactorAI biotech demo). Aliases like `"austin"`, `"texas"`, `"cropprotectorai"` resolve to these keys.
+**Workspace**: one named entry in `src/dataroot/server/app.py:COMPANIES`. Each workspace points at a folder of raw data. Three are registered today: `austin_permits` (Texas Open Data Track), `company_a` (CropProtectorAI biotech demo), `company_b` (BioReactorAI biotech demo). Aliases like `"austin"`, `"texas"`, `"cropprotectorai"` resolve to these keys.
 
-**Provenance trace**: the structured record of what artifacts informed an agent's answer. JSON object with `nodes`, `edges`, `stages`, `provenance_summary`, persisted under `provenance_traces/<timestamp>` and rendered as the Miro evidence graph.
+**Provenance trace**: the structured record of what artifacts informed an agent's answer. JSON object with `nodes`, `edges`, `stages`, `provenance_summary`, persisted under `provenance_traces/<timestamp>` and returned to the UI/API caller.
 
 **Lineage edge**: an inferred relationship between two artifacts (e.g., harvest log row references cultivar ID, or two permit rows share an `address_key`).
 

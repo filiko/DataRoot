@@ -1,0 +1,1491 @@
+{
+  "documentType": "dashbot.dfdmaker",
+  "schemaVersion": "0.1",
+  "pen_version": "0.1",
+  "project": {
+    "id": "proj_nexus_09_consumer_profile",
+    "name": "Nexus · 09 Consumer Profile",
+    "revision": 1
+  },
+  "sources": [],
+  "erd": {
+    "notation": "crows_foot",
+    "model_level": "physical",
+    "entities": [
+      {
+        "id": "ent_cp",
+        "kind": "strong_entity",
+        "name": "consumer_profiles",
+        "display_name": "Consumer Profiles",
+        "domain": "consumer-profile",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_cp_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_uid",
+            "name": "uid",
+            "display_name": "Uid",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "public share id (/phytofacts/:uid)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_sample",
+            "name": "sample_id",
+            "display_name": "Sample Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "-> samples.id (phytofacts-backendOG/functions/db/models/samples.js sample row)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_product",
+            "name": "product_id",
+            "display_name": "Product Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "-> products.id (08_product_master); the product shell the profile describes"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_geno",
+            "name": "genocode_library_id",
+            "display_name": "Genocode Library Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "-> genocode_library.id (03_genetics); strain identity shown on profile"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_variety",
+            "name": "variety_name",
+            "display_name": "Variety Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "samples.variety_name (phytofacts-backendOG/functions/db/models/samples.js:43-49)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_ratio",
+            "name": "top_two_cannabinoid_ratio",
+            "display_name": "Top Two Cannabinoid Ratio",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: COMPUTED by ported TopTwoCannabinoidRatioExtractor — not stored upstream; single ratio string under-captures the structured top-two (see primary/secondary_cannabinoid). Src TopTwoCannabinoidRatioExtractor.php:9-21"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_primary_cann",
+            "name": "primary_cannabinoid",
+            "display_name": "Primary Cannabinoid",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: COMPUTED top cannabinoid name+value (report_viewer_setup.js:148-157 loadTopCannabinoids primaryCannabinoidName/Value) — not stored upstream"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_secondary_cann",
+            "name": "secondary_cannabinoid",
+            "display_name": "Secondary Cannabinoid",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: COMPUTED 2nd cannabinoid name+value (report_viewer_setup.js:148-157 loadTopCannabinoids secondaryCannabinoidName/Value) — not stored upstream"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_c1",
+            "name": "top_terpene_color1",
+            "display_name": "Top Terpene Color1",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_c2",
+            "name": "top_terpene_color2",
+            "display_name": "Top Terpene Color2",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_c3",
+            "name": "top_terpene_color3",
+            "display_name": "Top Terpene Color3",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "three-bar identity colors (computed)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_entourage",
+            "name": "entourage_summary",
+            "display_name": "Entourage Summary",
+            "pg_type": "jsonb",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "EntourageCalculator output"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_aroma_flavor",
+            "name": "aroma_flavor_summary",
+            "display_name": "Aroma Flavor Summary",
+            "pg_type": "jsonb",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: COMPUTED by ported OrganolepticCalculator (AromaCalculator/FlavorCalculator) — not stored upstream, mirrors entourage_summary. 10 dims (sweet/fruity/citrusy/floral/herbal/piney/earthy/camphor/spicy/tropical) + top-two flavors. Src report_viewer_setup.js:70-101,122-135"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_pdf",
+            "name": "pdf_path",
+            "display_name": "Pdf Path",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "generated PDF artifact path /lims/pdf/:uid (DevelopmentGuide/11-phytofacts.md:57,60)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_pdf_ver",
+            "name": "pdf_app_version",
+            "display_name": "Pdf App Version",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "samples.pdf_app_version (phytofacts-backendOG/functions/db/models/samples.js:97-100); version of report engine that produced the cached PDF"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_qr",
+            "name": "qr_url",
+            "display_name": "Qr Url",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "samples.qr_url (phytofacts-backendOG/functions/db/models/samples.js:101-104)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_watermark",
+            "name": "watermark_type",
+            "display_name": "Watermark Type",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: derived QR_TYPE (NORMAL/FAIL/RND/PREVIEW) from upstream sample test statuses (report_viewer_setup.js:302-325 loadWatermarkType reads microbial/pesticide/heavy_metals_test_status); drives whether/how the published profile is shown"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_photo",
+            "name": "photo_url",
+            "display_name": "Photo Url",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: denormalized snapshot of samples.photo_url (samples.js:50; SampleDao.php:41-58 image=photo_url) — consumer-visible sample photo on profile header"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_business",
+            "name": "business_name",
+            "display_name": "Business Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: denormalized snapshot of samples.business_name (samples.js; SampleDao.php:41-58) — profile header provenance"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_license",
+            "name": "license",
+            "display_name": "License",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: denormalized snapshot of samples.license (samples.js; SampleDao.php:41-58) — profile header provenance"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_date_issued",
+            "name": "date_issued",
+            "display_name": "Date Issued",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: denormalized snapshot of samples.date_issued (samples.js; SampleDao.php:41-58 dateIssued) — profile header provenance"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_sample_info",
+            "name": "sample_info",
+            "display_name": "Sample Info",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: denormalized snapshot of samples.sample_info (samples.js:39; SampleDao.php:41-58 sampleInfo) — profile header field"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_species",
+            "name": "species_name",
+            "display_name": "Species Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: read-through snapshot of native species (samples.species_id -> species.name, samples.js:54-66; SampleDao.php:50-51). Native classification, METRC descoped. Profile header"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_pub",
+            "name": "is_published",
+            "display_name": "Is Published",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: publish lifecycle flag; publish decision is driven by upstream test statuses (see watermark_type / report_viewer_setup.js:302-325 QR_TYPE gating)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cp_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Read-mostly PhytoFacts profile. Ratio/bar-colors/entourage are COMPUTED by the ported calculators from the native lab feed (06) + product/strain master (08/03) — no duplicate chemistry is persisted here.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_class",
+        "kind": "strong_entity",
+        "name": "chemotype_classifications",
+        "display_name": "Chemotype Classifications",
+        "domain": "consumer-profile",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_cl_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cl_sample",
+            "name": "sample_id",
+            "display_name": "Sample Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "-> samples.id; sub_class/super_class are sample columns in source (samples.js:67-74), denormalized into this DESIGN-split entity"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cl_sub",
+            "name": "sub_class",
+            "display_name": "Sub Class",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "samples.sub_class VARCHAR(8) (phytofacts-report-viewer migration 2019_05_07_184214_create_samples_table.php:30; samples.js:67-74 STRING). text is fine for target; source width is 8 (genocode classing string)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cl_super",
+            "name": "super_class",
+            "display_name": "Super Class",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "samples.super_class VARCHAR(8) (phytofacts-report-viewer migration 2019_05_07_184214_create_samples_table.php:31; samples.js:67-74 STRING). text is fine for target; source width is 8"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cl_terp",
+            "name": "terpene_class",
+            "display_name": "Terpene Class",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: derived intermediate classing string, not persisted upstream (genocodeGen.js:419-435 getTerpenoidClassing concatenated into sub_class)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cl_cann",
+            "name": "cannabinoid_class",
+            "display_name": "Cannabinoid Class",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: derived intermediate classing string, not persisted upstream (genocodeGen.js:419-435 getCannabinoidClassing concatenated into sub_class)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cl_computed",
+            "name": "computed_at",
+            "display_name": "Computed At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "samples.updated_at set NOW() on reclassification (updateSampleClasses.js:29-33 sets sub_class/super_class + updated_at)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Ported genocodeGen sub/super-class + terpenoid/cannabinoid classing IP. DESIGN: split out of the samples row — denormalizes samples.sub_class/super_class (samples.js:67-74; updateSampleClasses.js:29-33) into a dedicated entity.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_repgen",
+        "kind": "strong_entity",
+        "name": "report_generations",
+        "display_name": "Report Generations",
+        "domain": "consumer-profile",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_rg_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_rg_sample",
+            "name": "sample_id",
+            "display_name": "Sample Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "-> samples.id (reportgenerations.js:52-57 ReportGenerations.belongsTo samples)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_rg_count",
+            "name": "count",
+            "display_name": "Count",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": true,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "report_generations.count (reportgenerations.js: count INTEGER default 0)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_rg_mobile",
+            "name": "mobile_count",
+            "display_name": "Mobile Count",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "report_generations.mobile_count (reportgenerations.js: INTEGER not null default 0)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_rg_month",
+            "name": "month",
+            "display_name": "Month",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": "month BETWEEN 1 AND 12",
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "report_generations.month (reportgenerations.js: INTEGER not null, min 1 max 12)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_rg_year",
+            "name": "year",
+            "display_name": "Year",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "report_generations.year (reportgenerations.js: INTEGER not null)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_rg_isnew",
+            "name": "is_new",
+            "display_name": "Is New",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "report_generations.is_new (reportgenerations.js: BOOLEAN not null default false)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_rg_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_rg_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Per-sample consumer view/download counter for published profiles. Source: phytofacts-backendOG/functions/db/models/reportgenerations.js.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_sample_src",
+        "kind": "strong_entity",
+        "name": "samples",
+        "display_name": "Samples (read source)",
+        "domain": "qa-lab",
+        "connects": [
+          "quality",
+          "consumer-profile",
+          "sales"
+        ],
+        "attributes": [
+          {
+            "id": "a_s_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_test",
+            "name": "test_id",
+            "display_name": "Test Id",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_variety",
+            "name": "variety_name",
+            "display_name": "Variety Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_subclass",
+            "name": "sub_class",
+            "display_name": "Sub Class",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "samples.sub_class (samples.js:67-74) — read-through origin of the DESIGN-split chemotype_classifications.sub_class/super_class"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Defined in 06_qa_lab. The single lab feed the consumer profile reads chemistry from.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_product_src",
+        "kind": "strong_entity",
+        "name": "products",
+        "display_name": "Products (read source)",
+        "domain": "product-master",
+        "connects": [
+          "genetics",
+          "quality",
+          "sales",
+          "consumer-profile"
+        ],
+        "attributes": [
+          {
+            "id": "a_p_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_p_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Defined in 08_product_master. The product shell the profile describes.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_geno_src",
+        "kind": "strong_entity",
+        "name": "genocode_library",
+        "display_name": "Genocode Library (read source)",
+        "domain": "genetics",
+        "connects": [
+          "product-master",
+          "consumer-profile",
+          "sales"
+        ],
+        "attributes": [
+          {
+            "id": "a_g_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_g_geno",
+            "name": "genocode",
+            "display_name": "Genocode",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_g_name",
+            "name": "common_name",
+            "display_name": "Common Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Defined in 03_genetics. Strain identity shown on the profile.",
+        "confidence": 1,
+        "review_status": "accepted"
+      }
+    ],
+    "relationships": [
+      {
+        "id": "rel_cp_sample",
+        "name": "profiles",
+        "from": {
+          "entity_id": "ent_cp",
+          "attribute_id": "a_cp_sample"
+        },
+        "to": {
+          "entity_id": "ent_sample_src",
+          "attribute_id": "a_s_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_cp_sample",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_cp_product",
+        "name": "for product",
+        "from": {
+          "entity_id": "ent_cp",
+          "attribute_id": "a_cp_product"
+        },
+        "to": {
+          "entity_id": "ent_product_src",
+          "attribute_id": "a_p_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_cp_product",
+          "on_delete": "set_null",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_cp_geno",
+        "name": "strain",
+        "from": {
+          "entity_id": "ent_cp",
+          "attribute_id": "a_cp_geno"
+        },
+        "to": {
+          "entity_id": "ent_geno_src",
+          "attribute_id": "a_g_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_cp_geno",
+          "on_delete": "set_null",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_class_sample",
+        "name": "classifies",
+        "from": {
+          "entity_id": "ent_class",
+          "attribute_id": "a_cl_sample"
+        },
+        "to": {
+          "entity_id": "ent_sample_src",
+          "attribute_id": "a_s_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_class_sample",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_repgen_sample",
+        "name": "view counts",
+        "from": {
+          "entity_id": "ent_repgen",
+          "attribute_id": "a_rg_sample"
+        },
+        "to": {
+          "entity_id": "ent_sample_src",
+          "attribute_id": "a_s_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_repgen_sample",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "reportgenerations.js:52-57 ReportGenerations.belongsTo samples via sample_id; closes the loop between a published profile (keyed by sample) and its view/download analytics"
+        ],
+        "confidence": 1,
+        "review_status": "accepted"
+      }
+    ]
+  },
+  "dfd": {
+    "level": 0,
+    "notation": "yourdon_coad",
+    "system_boundary": {
+      "id": "boundary_cp",
+      "name": "Consumer Profile (PhytoFacts)"
+    },
+    "external_entities": [
+      {
+        "id": "ext_consumer",
+        "name": "Consumer",
+        "description": "Scans QR / opens public profile",
+        "source": "manual",
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "processes": [
+      {
+        "id": "proc_calc",
+        "number": "1.0",
+        "name": "Compute Profile",
+        "description": "Ratio + terpene bar colors + entourage from native chemistry",
+        "user_modified": true,
+        "mapped_relationship_id": "rel_cp_sample",
+        "source_evidence": [],
+        "source_facts": [],
+        "level_1_diagram": null
+      },
+      {
+        "id": "proc_render",
+        "number": "2.0",
+        "name": "Render / Publish",
+        "description": "Render PhytoFacts; publish public profile + PDF",
+        "user_modified": true,
+        "mapped_relationship_id": null,
+        "source_evidence": [],
+        "source_facts": [],
+        "level_1_diagram": null
+      }
+    ],
+    "data_stores": [
+      {
+        "id": "store_cp",
+        "name": "Consumer Profiles",
+        "description": "Generated artifacts",
+        "mapped_erd_entity": "ent_cp",
+        "user_modified": false,
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "data_flows": [
+      {
+        "id": "c1",
+        "from": "proc_calc",
+        "to": "store_cp",
+        "data_name": "Computed profile",
+        "mapped_relationship_id": null,
+        "user_modified": false,
+        "mapped_erd_entities": [
+          "ent_cp"
+        ],
+        "mapped_erd_attributes": [
+          "a_cp_ratio",
+          "a_cp_c1"
+        ],
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "c2",
+        "from": "store_cp",
+        "to": "proc_render",
+        "data_name": "Profile",
+        "mapped_relationship_id": null,
+        "user_modified": false,
+        "mapped_erd_entities": [
+          "ent_cp"
+        ],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "c3",
+        "from": "proc_render",
+        "to": "ext_consumer",
+        "data_name": "PhytoFacts page / PDF",
+        "mapped_relationship_id": null,
+        "user_modified": false,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "business_rules": [
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/consumer-profile/domain/consumer-profile.ts:5,56"
+        ],
+        "to_contexts": [],
+        "id": "CP-INV-01",
+        "title": "Consumer profiles immutable (archive-only)",
+        "category": "invariant",
+        "statement": "A generated PhytoFacts profile is immutable after creation — never edited, only archived.",
+        "spec_source": "11-phytofacts.md",
+        "verified_by": "AGENTS.md §6"
+      },
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/consumer-profile/domain/calculators.ts"
+        ],
+        "to_contexts": [],
+        "id": "CP-VAL-01",
+        "title": "PhytoFacts calculators",
+        "category": "validation",
+        "statement": "Four pure calculators derive the profile: top-two cannabinoid ratio, top-three terpene colors, entourage summary, organoleptic descriptors.",
+        "spec_source": "11-phytofacts.md",
+        "verified_by": "/api/consumer-profile/compute"
+      }
+    ],
+    "connectors": [
+      {
+        "id": "conn_seam3_lims_fanout",
+        "name": "Seam 3 — LIMS webhook fan-out",
+        "kind": "fan_out",
+        "trigger": "POST /api/qa-lab/lims-webhook (single lab writer)",
+        "effect": "Creates a test-run + records cannabinoid/terpene results AND seeds a consumer-profile (PhytoFacts) from the same payload",
+        "from_context": "06_qa_lab",
+        "to_contexts": [
+          "06_qa_lab",
+          "09_consumer_profile"
+        ],
+        "contract": "{ facilityPrefix, genocode, sample.testId, cannabinoids, terpenes } -> { labResults, consumerProfile }",
+        "enforced_at": [
+          "backend/src/index.ts:891-931"
+        ],
+        "spec_source": "40-unified-workflow-graph.md (Seam 3); spec-workflow-qa.md §4",
+        "status": "wired",
+        "review_status": "accepted"
+      },
+      {
+        "id": "conn_seam4_genocode_authority",
+        "name": "Seam 4 — Genocode / product master authority",
+        "kind": "shared_service",
+        "trigger": "Product + strain references resolved",
+        "effect": "Genocode is the authority; product-master unifies the legacy batch.Product + SpecProduct models",
+        "from_context": "08_product_master",
+        "to_contexts": [
+          "03_genetics",
+          "07_quality_batch",
+          "09_consumer_profile"
+        ],
+        "contract": "genocode -> product_id mapping (canonical)",
+        "enforced_at": [
+          "backend/src/contexts/product-master/service/product-master-service.ts"
+        ],
+        "spec_source": "40-unified-workflow-graph.md (Seam 4)",
+        "status": "deferred",
+        "review_status": "needs_review"
+      },
+      {
+        "id": "conn_seam7_shared_ai",
+        "name": "Seam 7 — Shared AI service (PII-stripped, provider fallback)",
+        "kind": "shared_service",
+        "trigger": "Any context requests AI assistance (SOP/CAPA, sales copy, consumer copy)",
+        "effect": "callAiWithFallback strips customer PII + enforces spend cap (Anthropic -> Groq fallback)",
+        "from_context": "11_finance_ai",
+        "to_contexts": [
+          "07_quality_batch",
+          "09_consumer_profile",
+          "10_sales"
+        ],
+        "contract": "callAiWithFallback(prompt) with stripCustomerPII + spend-cap",
+        "enforced_at": [
+          "(not built — finance/ai/* scaffold only)"
+        ],
+        "spec_source": "40-unified-workflow-graph.md (Seam 7); 30-nexus-intel.md",
+        "status": "deferred",
+        "review_status": "needs_review"
+      }
+    ]
+  },
+  "layout": {
+    "erd": {
+      "nodes": [
+        {
+          "id": "ent_cp",
+          "x": 60,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_class",
+          "x": 440,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_repgen",
+          "x": 820,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_sample_src",
+          "x": 60,
+          "y": 380,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_product_src",
+          "x": 440,
+          "y": 380,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_geno_src",
+          "x": 820,
+          "y": 380,
+          "width": 300,
+          "height": 230
+        }
+      ],
+      "edges": []
+    },
+    "dfd": {
+      "nodes": [],
+      "edges": []
+    },
+    "dfd_level_1": {}
+  },
+  "styles": {
+    "theme": "minimal"
+  },
+  "postgres": {
+    "dialect": "postgresql",
+    "extensions": [
+      "pgcrypto"
+    ],
+    "schema_name": "public",
+    "default_primary_key": {
+      "type": "uuid",
+      "default": "gen_random_uuid()"
+    },
+    "add_audit_timestamps": false
+  },
+  "review": {
+    "proposals": [],
+    "warnings": [],
+    "dismissed_warnings": []
+  }
+}

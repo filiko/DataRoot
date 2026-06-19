@@ -31,6 +31,8 @@ export interface Entity {
   kind: EntityKind;
   name: string;
   display_name: string;
+  domain?: string;        // owning business process (labels/grouping only; not a color)
+  connects?: string[];    // departments this entity bridges; non-empty => seam (connection point)
   attributes: Attribute[];
   source_evidence: AttributeEvidence[];
   proposal_reason?: string;
@@ -125,6 +127,44 @@ export interface SystemBoundary {
   name: string;
 }
 
+export type RuleCategory = "invariant" | "state_machine" | "gate" | "validation" | "lifecycle";
+export type RuleSeverity = "constraint" | "warning" | "best_practice";
+
+export interface BusinessRule {
+  id: string;
+  context?: string;
+  entity_id?: string;
+  relationship_id?: string;
+  process_id?: string;
+  title: string;
+  statement: string;
+  category: RuleCategory;
+  condition?: string;
+  enforced_at: string[];
+  spec_source?: string;
+  verified_by?: string;
+  severity: RuleSeverity;
+  status: "enforced" | "gap" | "deferred";
+  review_status: ReviewStatus;
+}
+
+export type ConnectorKind = "seam" | "webhook" | "fan_out" | "middleware" | "shared_service" | "auth";
+
+export interface Connector {
+  id: string;
+  name: string;
+  kind: ConnectorKind;
+  trigger?: string;
+  effect?: string;
+  from_context?: string;
+  to_contexts: string[];
+  contract?: string;
+  enforced_at: string[];
+  spec_source?: string;
+  status: "wired" | "deferred";
+  review_status: ReviewStatus;
+}
+
 export interface DfdModel {
   level: number;
   notation: "yourdon_coad";
@@ -133,6 +173,8 @@ export interface DfdModel {
   processes: Process[];
   data_stores: DataStore[];
   data_flows: DataFlow[];
+  business_rules?: BusinessRule[];
+  connectors?: Connector[];
 }
 
 export interface LayoutNode {

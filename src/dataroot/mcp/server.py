@@ -1,9 +1,8 @@
 """DataRoot stdio MCP server.
 
 Wraps the existing ``ToolExecutor`` (``src/dataroot/agent/tools.py``) with a
-small, bounded tool set the Brainforge / Vicinity Texas Open Data Track asks
-for: discovery, bounded query, summaries, and a one-shot ``ask_and_render``
-that produces a Miro provenance board for any free-form question.
+small, bounded tool set for discovery, bounded query, summaries, and a one-shot
+``ask`` tool that returns a cited answer plus persisted provenance records.
 
 Design rules:
 
@@ -146,9 +145,8 @@ def _summarize(workspace: _WorkspaceHandle) -> dict[str, Any]:
     }
 
 
-def _ask_and_render(workspace: _WorkspaceHandle, question: str, *, board_id: str | None, include_proof: bool) -> dict[str, Any]:
+def _ask(workspace: _WorkspaceHandle, question: str, *, use_agent: bool) -> dict[str, Any]:
     from dataroot.query import _extract_provenance, persist_answer_artifacts
-    from dataroot.render.miro import render_provenance_to_miro
     from dataroot.server.app import COMPANIES, CompanyWorkspace, _answer_live_ask, _strip_provenance
 
     company = COMPANIES[workspace.key]
@@ -159,39 +157,22 @@ def _ask_and_render(workspace: _WorkspaceHandle, question: str, *, board_id: str
         cached=workspace.cached,
         backend=workspace.backend,
     )
-    answer, trace, answer_source = _answer_live_ask(company, app_workspace, question)
+    answer, trace, answer_source = _answer_live_ask(company, app_workspace, question, use_agent=use_agent)
     if not _valid_trace_payload(trace):
         trace = _extract_provenance(answer)
     artifacts = persist_answer_artifacts(workspace.store, question, answer)
-    render_metadata: dict[str, str] = {}
-    board_url = render_provenance_to_miro(
-        trace,
-        store=workspace.store,
-        inquiry_slug=artifacts["inquiry"],
-        answer_text=answer,
-        board_id=board_id,
-        provenance_slug=artifacts["provenance_trace"],
-        context_label=workspace.label,
-        section_title=f"{workspace.label} - Live Ask",
-        update_existing_section=True,
-        include_proof=include_proof,
-        render_metadata=render_metadata,
-    )
     return {
         "workspace": workspace.key,
         "question": question,
         "answer": _strip_provenance(answer),
-        "board_url": board_url,
         "inquiry": artifacts["inquiry"],
         "provenance_trace": artifacts["provenance_trace"],
         "node_count": len(trace.get("nodes", [])) if isinstance(trace, dict) else 0,
         "edge_count": len(trace.get("edges", [])) if isinstance(trace, dict) else 0,
         "stages": list(trace.get("stages", [])) if isinstance(trace, dict) else [],
+        "trace": trace if isinstance(trace, dict) else {},
         "answer_source": answer_source,
-        "interpreter_source": render_metadata.get("interpreter_source", "deterministic_fallback"),
-        "planner_source": render_metadata.get("planner_source", "deterministic_fallback"),
-        "section_status": render_metadata.get("section_status", "updated"),
-        "include_proof": include_proof,
+        "use_agent": use_agent,
     }
 
 
@@ -305,15 +286,14 @@ def _tool_descriptors() -> list[types.Tool]:
             },
         ),
         types.Tool(
-            name="ask_and_render",
-            description="Answer a free-form question against a workspace and render the provenance graph to a Miro board. Returns the board URL.",
+            name="ask",
+            description="Answer a free-form question against a workspace and return a cited answer plus provenance records.",
             inputSchema={
                 "type": "object",
                 "properties": {
                     "workspace": workspace_arg,
                     "question": {"type": "string", "description": "Free-form question about the workspace."},
-                    "board_id": {"type": "string", "description": "Optional existing Miro board ID."},
-                    "include_proof": {"type": "boolean", "description": "Include the precise-proof frame on the board."},
+                    "use_agent": {"type": "boolean", "description": "Use the LLM tool-calling path when model credentials are configured."},
                 },
                 "required": ["question"],
                 "additionalProperties": False,
@@ -331,7 +311,7 @@ _KNOWN_TOOLS = frozenset(
         "kb_show",
         "query_table",
         "kb_graph",
-        "ask_and_render",
+        "ask",
     }
 )
 
@@ -396,12 +376,11 @@ def _dispatch(name: str, args: dict[str, Any]) -> dict[str, Any]:
         )
         return {"workspace": workspace.key, "depth": depth, "cap": GRAPH_DEPTH_MAX, "graph": graph}
 
-    if name == "ask_and_render":
-        return _ask_and_render(
+    if name == "ask":
+        return _ask(
             workspace,
             question=args["question"],
-            board_id=args.get("board_id"),
-            include_proof=bool(args.get("include_proof")),
+            use_agent=bool(args.get("use_agent")),
         )
 
     raise ValueError(f"unknown tool: {name}")

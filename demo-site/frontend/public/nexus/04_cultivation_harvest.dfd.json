@@ -1,0 +1,1460 @@
+{
+  "documentType": "dashbot.dfdmaker",
+  "schemaVersion": "0.1",
+  "pen_version": "0.1",
+  "project": {
+    "id": "proj_nexus_04_cultivation",
+    "name": "Nexus · 04 Cultivation & Harvest",
+    "revision": 1
+  },
+  "sources": [],
+  "erd": {
+    "notation": "crows_foot",
+    "model_level": "physical",
+    "entities": [
+      {
+        "id": "ent_cn",
+        "kind": "strong_entity",
+        "name": "control_numbers",
+        "display_name": "Control Numbers",
+        "domain": "control-numbers",
+        "connects": [
+          "all"
+        ],
+        "attributes": [
+          {
+            "id": "a_cn_value",
+            "name": "value",
+            "display_name": "Value",
+            "pg_type": "text",
+            "key_role": "primary",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cn_type",
+            "name": "type",
+            "display_name": "Type",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": "type BETWEEN 1 AND 18",
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_cn_finished",
+            "name": "finished_at",
+            "display_name": "Finished At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Traceability spine (full definition in 02_control_numbers). Every control-number-bearing entity here FKs to value.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_pl",
+        "kind": "strong_entity",
+        "name": "plant_lots",
+        "display_name": "Plant Lots",
+        "domain": "cultivation",
+        "connects": [
+          "genetics",
+          "identity"
+        ],
+        "attributes": [
+          {
+            "id": "a_pl_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pl_cn",
+            "name": "control_number",
+            "display_name": "Control Number",
+            "pg_type": "text",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ control_numbers.value (type 1)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pl_geno",
+            "name": "genocode",
+            "display_name": "Genocode",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: legacy cultivar_id (string) was replaced by clone_lot_type_id FK→genocode_library in 2017_02_04_145807_add_clone_type_id_to_plant_lots_table.php; here the structured genocode_library reference is collapsed into a free-text genocode (genocode_library not in 04)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pl_clone",
+            "name": "clone_lot_id",
+            "display_name": "Clone Lot Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ clone_lots (03_genetics); origin if from clone — cross-domain, no edge drawn"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pl_phase",
+            "name": "current_phase",
+            "display_name": "Current Phase",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "1",
+            "check_constraint": "current_phase IN (1,2,3,4)",
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: narrowed to 1-4 (veg→flower→harvesting→drying, handoff to harvests at drying). Source enum PlantLotWorkflowStepTypes.php allows 1-8 (5 BaggingAndTagging,6 Curing,7 Processing,8 PostProcessing) which move onto harvests phase"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pl_veg",
+            "name": "vegetative_date",
+            "display_name": "Vegetative Date",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pl_flower",
+            "name": "flower_date",
+            "display_name": "Flower Date",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pl_dry",
+            "name": "dry_date",
+            "display_name": "Dry Date",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: legacy dry_date was added (2018_08_31_161731) then DROPPED (2018_10_03_184709_drop_dry_and_finished_date_from_plant_lots_table.php); re-introduced as a denormalization of the harvest drying_date"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pl_harvest",
+            "name": "harvest_date",
+            "display_name": "Harvest Date",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "legacy harvest_date (2016_10_31, converted to timestamp 2018_09_04_193435); survives in final schema (not dropped, unlike dry/finished)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pl_finished",
+            "name": "finished_date",
+            "display_name": "Finished Date",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: legacy finished_date was added (2018_09_21_152610) then DROPPED (2018_10_03_184709); in legacy lot completion moved onto control_numbers.is_finished/finished_at (2018_09_24_181357). Kept here as a lot-level convenience denormalization"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pl_flowered_loc",
+            "name": "flowered_at_facility_id",
+            "display_name": "Flowered At Facility Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ facilities/locations (01_identity); facility where lot flowered (2018_05_24_185207_add_flowered_at_location_id_to_plant_lot_table.php, FK->locations onDelete cascade). locations is unified into facilities in 01_identity (out-of-domain); modeled as a nullable FK column, no in-diagram relationship."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pl_harvest_user",
+            "name": "harvest_user_id",
+            "display_name": "Harvest User Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ users (01_identity); who harvested the lot (2016_10_31; FK added 2018_08_30_210739_change_data_plant_lots.php) — cross-domain, no edge drawn"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pl_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_pl_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Control# type 1. Originates from a clone lot or selected seed-lot plants (03_genetics) — the genetics→cultivation connection point. Also references facilities (01_identity) via flowered_at_facility_id — the cultivation→identity facility seam. Workflow flattened to current_phase + date stamps.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_plant",
+        "kind": "strong_entity",
+        "name": "plants",
+        "display_name": "Plants",
+        "domain": "cultivation",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_p_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_p_cn",
+            "name": "control_number",
+            "display_name": "Control Number",
+            "pg_type": "text",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ control_numbers.value (type 2)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_p_lot",
+            "name": "plant_lot_id",
+            "display_name": "Plant Lot Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_p_wet",
+            "name": "wet_weight",
+            "display_name": "Wet Weight",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_p_fit",
+            "name": "is_fit",
+            "display_name": "Is Fit",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "true",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_p_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: target audit-column convention. Legacy plants (2016_10_06_184829_create_plants_table.php) never received timestamps; net-new here."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_p_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: target audit-column convention. Legacy plants never received timestamps; net-new here."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Control# type 2. Individual plant within a lot.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_plt",
+        "kind": "strong_entity",
+        "name": "plant_lot_transfers",
+        "display_name": "Plant Lot Transfers",
+        "domain": "cultivation",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_plt_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_plt_lot",
+            "name": "plant_lot_id",
+            "display_name": "Plant Lot Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_plt_type",
+            "name": "transfer_type",
+            "display_name": "Transfer Type",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "1",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: legacy source column was plant_lot_transfer_type_id FK->plant_lot_transfer_types (2016_10_06_185010_create_plant_lot_transfers_table.php); that lookup table was dropped (2017_01_22_164623_drop_plant_lot_transfer_types_table.php) so modeled as an enum integer."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_plt_creator",
+            "name": "creator_id",
+            "display_name": "Creator Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ users (01_identity); cross-domain, no edge drawn"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_plt_fit",
+            "name": "is_fit_for_growth",
+            "display_name": "Is Fit For Growth",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "true",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_plt_loc",
+            "name": "location",
+            "display_name": "Location",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_plt_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "DESIGN: re-introduced movement / fitness-for-growth log per lot. The legacy plant_lot_transfers table was DROPPED (2018_09_04_174334_drop_plant_lot_transfers_table.php) and never re-created, so this resurrects an audit-grade movement log; the legacy per-plant fitness pivot (plant_lot_transfer_plant_fitness) is not modeled.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_hv",
+        "kind": "strong_entity",
+        "name": "harvests",
+        "display_name": "Harvests",
+        "domain": "cultivation",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_hv_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_hv_cn",
+            "name": "control_number",
+            "display_name": "Control Number",
+            "pg_type": "text",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ control_numbers.value (type 17)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_hv_lot",
+            "name": "plant_lot_id",
+            "display_name": "Plant Lot Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_hv_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: legacy harvests.name (2018_08_13_145011_create_harvest_entity.php) was DROPPED in the same migration that made harvests controllable (2018_09_28_195730_make_harvests_controllable.php dropColumn('name') + adds control_number_id) — the control number replaced the human name. Re-introduced as a nullable optional label; not not-null so it does not contradict the as-built schema."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_hv_phase",
+            "name": "current_phase",
+            "display_name": "Current Phase",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "10",
+            "check_constraint": "current_phase IN (10,20,30,40)",
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "drying(10)→curing(20)→processing(30)→finished(40)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_hv_wet",
+            "name": "total_wet_weight",
+            "display_name": "Total Wet Weight",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_hv_dry",
+            "name": "total_dry_weight",
+            "display_name": "Total Dry Weight",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_hv_drying",
+            "name": "drying_date",
+            "display_name": "Drying Date",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_hv_curing",
+            "name": "curing_date",
+            "display_name": "Curing Date",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_hv_processing",
+            "name": "processing_date",
+            "display_name": "Processing Date",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_hv_btx",
+            "name": "btx_id",
+            "display_name": "Btx Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: legacy FK was plant_components (2018_09_25_194656_add_btx_btf_fk_to_harvest_batches.php btx_id ->references('id')->on('plant_components')), re-targeted to packages (05) under unification since plant_components unifies into packages. pg_type uuid matches the unified packages PK; cross-domain, no edge drawn."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_hv_btf",
+            "name": "btf_id",
+            "display_name": "Btf Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: legacy FK was plant_components (2018_09_25_194656_add_btx_btf_fk_to_harvest_batches.php btf_id ->references('id')->on('plant_components')), re-targeted to packages (05) under unification; cross-domain, no edge drawn."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_hv_metrc",
+            "name": "metrc_id",
+            "display_name": "Metrc Id",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "identifier only; METRC sync descoped"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_hv_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_hv_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Control# type 17 ({plantLotCN}-HVST). Phase state machine drying→curing→processing→finished. Feeds refinement/packaging (05) where packages reference the harvest.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_hw",
+        "kind": "strong_entity",
+        "name": "harvest_waste",
+        "display_name": "Harvest Waste",
+        "domain": "cultivation",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_hw_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_hw_hv",
+            "name": "harvest_id",
+            "display_name": "Harvest Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_hw_amount",
+            "name": "amount",
+            "display_name": "Amount",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_hw_type",
+            "name": "waste_type",
+            "display_name": "Waste Type",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": false,
+            "default": "0",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "misc(1)/harvest(2)/moisture-loss(3)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_hw_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      }
+    ],
+    "relationships": [
+      {
+        "id": "rel_pl_cn",
+        "name": "identified by",
+        "from": {
+          "entity_id": "ent_pl",
+          "attribute_id": "a_pl_cn"
+        },
+        "to": {
+          "entity_id": "ent_cn",
+          "attribute_id": "a_cn_value"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_rel_pl_cn",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_plant_cn",
+        "name": "identified by",
+        "from": {
+          "entity_id": "ent_plant",
+          "attribute_id": "a_p_cn"
+        },
+        "to": {
+          "entity_id": "ent_cn",
+          "attribute_id": "a_cn_value"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_rel_plant_cn",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_hv_cn",
+        "name": "identified by",
+        "from": {
+          "entity_id": "ent_hv",
+          "attribute_id": "a_hv_cn"
+        },
+        "to": {
+          "entity_id": "ent_cn",
+          "attribute_id": "a_cn_value"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_rel_hv_cn",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_plant_lot",
+        "name": "in lot",
+        "from": {
+          "entity_id": "ent_plant",
+          "attribute_id": "a_p_lot"
+        },
+        "to": {
+          "entity_id": "ent_pl",
+          "attribute_id": "a_pl_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_plant_lot",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_plt_lot",
+        "name": "moves",
+        "from": {
+          "entity_id": "ent_plt",
+          "attribute_id": "a_plt_lot"
+        },
+        "to": {
+          "entity_id": "ent_pl",
+          "attribute_id": "a_pl_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_plt_lot",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_hv_lot",
+        "name": "from lot",
+        "from": {
+          "entity_id": "ent_hv",
+          "attribute_id": "a_hv_lot"
+        },
+        "to": {
+          "entity_id": "ent_pl",
+          "attribute_id": "a_pl_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_harvest_lot",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_hw_hv",
+        "name": "waste of",
+        "from": {
+          "entity_id": "ent_hw",
+          "attribute_id": "a_hw_hv"
+        },
+        "to": {
+          "entity_id": "ent_hv",
+          "attribute_id": "a_hv_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_harvest_waste",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      }
+    ]
+  },
+  "dfd": {
+    "level": 0,
+    "notation": "yourdon_coad",
+    "system_boundary": {
+      "id": "boundary_cult",
+      "name": "Cultivation & Harvest"
+    },
+    "external_entities": [
+      {
+        "id": "ext_grower",
+        "name": "Grower",
+        "description": "Tends lots through phases",
+        "source": "manual",
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "processes": [
+      {
+        "id": "proc_grow",
+        "number": "1.0",
+        "name": "Advance Plant-Lot Phase",
+        "description": "veg→flower→harvesting→drying",
+        "user_modified": true,
+        "mapped_relationship_id": null,
+        "source_evidence": [],
+        "source_facts": [],
+        "level_1_diagram": null
+      },
+      {
+        "id": "proc_harvest",
+        "number": "2.0",
+        "name": "Advance Harvest Phase",
+        "description": "drying→curing→processing→finished; record waste",
+        "user_modified": true,
+        "mapped_relationship_id": "rel_hv_lot",
+        "source_evidence": [],
+        "source_facts": [],
+        "level_1_diagram": null
+      }
+    ],
+    "data_stores": [
+      {
+        "id": "store_pl",
+        "name": "Plant Lots",
+        "description": "Lots in veg/flower",
+        "mapped_erd_entity": "ent_pl",
+        "user_modified": false,
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "store_hv",
+        "name": "Harvests",
+        "description": "Phase-tracked harvests",
+        "mapped_erd_entity": "ent_hv",
+        "user_modified": false,
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "data_flows": [
+      {
+        "id": "h1",
+        "from": "ext_grower",
+        "to": "proc_grow",
+        "data_name": "Phase update",
+        "mapped_relationship_id": null,
+        "user_modified": false,
+        "mapped_erd_entities": [
+          "ent_pl"
+        ],
+        "mapped_erd_attributes": [
+          "a_pl_phase"
+        ],
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "h2",
+        "from": "proc_grow",
+        "to": "proc_harvest",
+        "data_name": "Lot → harvest",
+        "mapped_relationship_id": "rel_hv_lot",
+        "user_modified": false,
+        "mapped_erd_entities": [
+          "ent_hv"
+        ],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "h3",
+        "from": "proc_harvest",
+        "to": "store_hv",
+        "data_name": "Harvest record",
+        "mapped_relationship_id": null,
+        "user_modified": false,
+        "mapped_erd_entities": [
+          "ent_hv"
+        ],
+        "mapped_erd_attributes": [
+          "a_hv_phase"
+        ],
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "business_rules": [
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/cultivation/domain/cultivation.ts:130-186"
+        ],
+        "to_contexts": [],
+        "id": "CUL-SM-01",
+        "title": "Plant-lot phase machine (forward-only)",
+        "category": "state_machine",
+        "statement": "VEGETATIVE(1)→FLOWER(2)→DRY(3)→FINISHED(4); each step stamps its date; invalid transitions throw.",
+        "spec_source": "spec-workflow-harvest.md §47-56",
+        "verified_by": "docs/context/behavioral-parity.md (cultivation: plant-lot phase machine)"
+      },
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/cultivation/domain/cultivation.ts:287-343"
+        ],
+        "to_contexts": [],
+        "id": "CUL-SM-02",
+        "title": "Harvest phase machine (forward-only)",
+        "category": "state_machine",
+        "statement": "DRYING(10)→CURING(20)→PROCESSING(30)→FINISHED(40); date-stamped; forward-only.",
+        "spec_source": "spec-workflow-harvest.md §49-54",
+        "verified_by": "docs/context/behavioral-parity.md (harvest phase machine)"
+      },
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "db/migrations/0004_cultivation_harvest.sql:103-149"
+        ],
+        "to_contexts": [],
+        "id": "CUL-INV-01",
+        "title": "Waste log is append-only",
+        "category": "invariant",
+        "statement": "Harvest waste is append-only; a BEFORE UPDATE/DELETE trigger blocks mutation.",
+        "spec_source": "spec-workflow-harvest.md §58",
+        "verified_by": "docs/context/behavioral-parity.md (Waste tracking)"
+      },
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/cultivation/service/cultivation-service.ts:225-228"
+        ],
+        "to_contexts": [],
+        "id": "CUL-LC-01",
+        "title": "Harvest FINISHED finishes the control number",
+        "category": "lifecycle",
+        "statement": "Reaching FINISHED stamps the harvest control number finished (see Seam: harvest-finish-cn).",
+        "spec_source": "spec-workflow-harvest.md §56-57",
+        "verified_by": "docs/context/behavioral-parity.md (cultivation 8/2)"
+      },
+      {
+        "severity": "warning",
+        "status": "gap",
+        "review_status": "accepted",
+        "enforced_at": [],
+        "to_contexts": [],
+        "id": "CUL-GAP-01",
+        "title": "Tracking-location move (BTX/BTF)",
+        "category": "lifecycle",
+        "statement": "Spec: changeTrackingLocation moves the harvest AND its BTX/BTF bags atomically. Not implemented (blocked on packaging context).",
+        "spec_source": "spec-workflow-harvest.md §62-63",
+        "verified_by": "docs/context/behavioral-parity.md (cultivation GAP)"
+      }
+    ],
+    "connectors": [
+      {
+        "id": "conn_seam1_control_numbers",
+        "name": "Seam 1 — Control-Number authority",
+        "kind": "shared_service",
+        "trigger": "Any context mints a traceable record",
+        "effect": "A single immutable control number ({prefix}{YYMMDD}-{genocode}, 18 type codes) is issued and never edited/deleted",
+        "from_context": "02_control_numbers",
+        "to_contexts": [
+          "03_genetics",
+          "04_cultivation_harvest",
+          "05_refinement_packaging",
+          "06_qa_lab",
+          "07_quality_batch"
+        ],
+        "contract": "ControlNumberService.create(type, facilityPrefix, genocode, date) -> value",
+        "enforced_at": [
+          "backend/src/contexts/control-numbers/domain/control-number.ts:36-66",
+          "backend/src/contexts/control-numbers/service/control-number-service.ts:18-32"
+        ],
+        "spec_source": "40-unified-workflow-graph.md (Seam 1); spec-control-numbers.md",
+        "status": "wired",
+        "review_status": "accepted"
+      },
+      {
+        "id": "conn_harvest_finish_cn",
+        "name": "Harvest FINISHED → control-number finish",
+        "kind": "seam",
+        "trigger": "Harvest phase transitions to FINISHED (40)",
+        "effect": "The harvest's control number is stamped finished (is_finished/finishedAt) — forward, no double-finish",
+        "from_context": "04_cultivation_harvest",
+        "to_contexts": [
+          "02_control_numbers"
+        ],
+        "contract": "transitionHarvestPhase(id, FINISHED) -> controlNumberService.finish(harvest.controlNumber, now)",
+        "enforced_at": [
+          "backend/src/contexts/cultivation/service/cultivation-service.ts:225-228"
+        ],
+        "spec_source": "spec-workflow-harvest.md §56-57",
+        "status": "wired",
+        "review_status": "accepted"
+      }
+    ]
+  },
+  "layout": {
+    "erd": {
+      "nodes": [
+        {
+          "id": "ent_cn",
+          "x": 60,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_pl",
+          "x": 440,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_plant",
+          "x": 820,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_plt",
+          "x": 60,
+          "y": 380,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_hv",
+          "x": 440,
+          "y": 380,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_hw",
+          "x": 820,
+          "y": 380,
+          "width": 300,
+          "height": 230
+        }
+      ],
+      "edges": []
+    },
+    "dfd": {
+      "nodes": [],
+      "edges": []
+    },
+    "dfd_level_1": {}
+  },
+  "styles": {
+    "theme": "minimal"
+  },
+  "postgres": {
+    "dialect": "postgresql",
+    "extensions": [
+      "pgcrypto"
+    ],
+    "schema_name": "public",
+    "default_primary_key": {
+      "type": "uuid",
+      "default": "gen_random_uuid()"
+    },
+    "add_audit_timestamps": false
+  },
+  "review": {
+    "proposals": [],
+    "warnings": [],
+    "dismissed_warnings": []
+  }
+}

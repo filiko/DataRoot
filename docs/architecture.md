@@ -60,15 +60,15 @@ The core DataRoot system works on any folder by first profiling the files and ge
 
 ### Tier 2 — Differentiated
 
-- Miro REST renderer using `MIRO_ACCESS_TOKEN`.
-- Cytoscape/HTML fallback.
-- Web UI.
+- Web UI with answer and provenance views.
+- Demo-site DFD/ERD editor polish.
+- Local JSON import/export polish.
 - Better confidence scoring.
 
 ### Tier 3 — Polish
 
 - Streaming agent output in the UI.
-- "Next experiments" suggestion frame on the Miro board.
+- "Next experiments" suggestions in the UI.
 - Inquiry log auto-update.
 - Multi-hop confidence scoring.
 
@@ -78,7 +78,7 @@ The core DataRoot system works on any folder by first profiling the files and ge
 - Production OAuth / multi-user auth.
 - Live external datastore integrations.
 - Mirage integration.
-- Full Miro MCP integration.
+- External board rendering.
 - Production-grade ontology extraction.
 
 ### Demo spine invariant
@@ -128,8 +128,6 @@ Enriched KB Graph
 Query Agent (Role C)
         ↓
 Cited Answer + Provenance JSON + Inquiry Log
-        ↓
-Optional Miro Board (Tier 2)
 
 ### 3.2 Why GitKB as the substrate
 
@@ -148,7 +146,6 @@ What GitKB does NOT do (DataRoot must add):
 
 - Native parsing of .xlsx, .fasta, .csv into structured facts. DataRoot still extracts normalized document records from raw scientific files before handing them to GitKB.
 - Domain-specific edge inference (e.g., "this column in harvests.csv is a foreign key into cultivars.xlsx").
-- Miro rendering.
 - Domain ontology.
 
 Implication: every time you'd reach for a generic indexing/search/graph primitive, ask "does GitKB already do this?" first. Almost always yes.
@@ -195,11 +192,10 @@ dataroot infer-domain-spec             # run Role A, write .dataroot/domain_spec
 dataroot apply-domain-spec            # run Role B, enrich KB docs using spec
 dataroot link                          # generic linker: FK, PK, ID, date, geo, measurement
 dataroot ask "<question>"              # run Role C, stream answer + provenance
-dataroot serve                         # start FastAPI + Next.js UI (Tier 2)
-dataroot miro <provenance_slug>         # render provenance to Miro board (Tier 2)
+dataroot serve                         # start FastAPI service
 ```
 
-For the hackathon, miro is Tier 2, not Tier 1.
+External board rendering is not part of the active DataRoot path.
 
 ### 3.5 Full project layout
 
@@ -211,7 +207,6 @@ dataroot/
 │   ├── agent-runtime.md         # roles, runner, tool_sets, prompts
 │   ├── ingestion.md             # parsers, document emission
 │   ├── linking.md               # FK inference, wikilink rules
-│   ├── miro-renderer.md         # Miro REST, layout, fallback
 │   ├── synthetic-dataset.md     # demo data specs
 │   ├── build-plan.md           # hour-by-hour plan
 │   └── glossary.md             # key terms
@@ -220,9 +215,6 @@ dataroot/
 ├── .env.example
 │   # Required for AI calls
 │   OPENAI_API_KEY=your_openai_api_key_here
-│   # Optional Tier 2 Miro rendering
-│   MIRO_ACCESS_TOKEN=your_miro_oauth_access_token_here
-│   MIRO_BOARD_ID=optional_existing_board_id
 │   # KB backend
 │   DATAROOT_KB_BACKEND=gitkb
 │   # no local backend fallback; GitKB is required
@@ -260,8 +252,7 @@ dataroot/
 │   │       ├── domain_spec_applier.md     # Role B
 │   │       └── query_agent.md             # Role C
 │   ├── render/
-│   │   ├── miro.py            # Miro REST renderer
-│   │   └── cytoscape.py       # HTML fallback
+│   │   └── interpretation.py  # provenance/data-tidbit interpretation helpers
 │   └── server/
 │       ├── app.py             # FastAPI
 │       └── routes.py

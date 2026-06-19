@@ -5,7 +5,8 @@ import json
 
 from fastapi.testclient import TestClient
 
-from models.pen import PenFile
+from generators.diagram_rules import apply_rules_gate
+from models.pen import BusinessRule, Connector, PenFile
 from repo_analysis.compiler import compile_pen_from_facts
 from repo_analysis.fastapi_provider import (
     auto_accept_phase_a_facts,
@@ -16,7 +17,6 @@ from repo_analysis.gitkb_provider import collect_gitkb_evidence, gitkb_evidence_
 from repo_analysis.inventory import build_inventory
 from repo_analysis.model_provider import collect_model_evidence, model_evidence_to_facts
 from repo_cli import analyze_repo
-from main import RepoAnalysisRequest, app, create_repo_analysis_schema
 
 
 def test_inventory_excludes_generated_dirs(tmp_path: Path) -> None:
@@ -155,6 +155,32 @@ def test_compiler_emits_valid_penfile(tmp_path: Path) -> None:
     assert validated.layout.dfd.nodes
 
 
+def test_rules_gate_preserves_dfd_behavioral_metadata() -> None:
+    pen = PenFile()
+    pen.dfd.business_rules.append(
+        BusinessRule(
+            id="rule_batch_release",
+            title="Only released batches can ship",
+            statement="A batch must be released before it can enter fulfillment.",
+        )
+    )
+    pen.dfd.connectors.append(
+        Connector(
+            id="conn_batch_release",
+            name="Batch release fan-out",
+            trigger="batch.status changes to released",
+            effect="downstream modules can allocate inventory",
+            from_context="quality",
+            to_contexts=["sales", "finance"],
+        )
+    )
+
+    apply_rules_gate(pen)
+
+    assert [rule.id for rule in pen.dfd.business_rules] == ["rule_batch_release"]
+    assert [connector.id for connector in pen.dfd.connectors] == ["conn_batch_release"]
+
+
 def test_compiler_ignores_candidate_and_rejected_facts(tmp_path: Path) -> None:
     app_file = tmp_path / "main.py"
     app_file.write_text(
@@ -286,6 +312,8 @@ def test_analyze_repo_writes_outputs(tmp_path: Path) -> None:
 
 
 def test_repo_analysis_api_accepts_arbitrary_repo_path(tmp_path: Path) -> None:
+    from main import RepoAnalysisRequest, create_repo_analysis_schema
+
     repo = tmp_path / "other_repo"
     repo.mkdir()
     (repo / "service.py").write_text(
@@ -312,6 +340,8 @@ def test_repo_analysis_api_accepts_arbitrary_repo_path(tmp_path: Path) -> None:
 
 
 def test_repo_analysis_upload_accepts_folder_picker_files() -> None:
+    from main import app
+
     client = TestClient(app)
     response = client.post(
         "/schema/repo-analysis/upload",

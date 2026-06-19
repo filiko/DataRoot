@@ -46,7 +46,7 @@ class MCPToolDescriptorTests(unittest.TestCase):
                 "kb_show",
                 "query_table",
                 "kb_graph",
-                "ask_and_render",
+                "ask",
             },
         )
 
@@ -71,8 +71,8 @@ class WorkspaceAliasTests(unittest.TestCase):
         self.assertEqual(mcp_server._resolve_workspace_key("bioreactorai"), "company_b")
 
 
-class AskAndRenderTests(unittest.TestCase):
-    def test_uses_live_ask_path_extracts_trace_and_updates_matching_section(self) -> None:
+class AskTests(unittest.TestCase):
+    def test_uses_live_ask_path_extracts_trace_and_returns_records(self) -> None:
         question = "What specific genes make Solara-14 powdery mildew resistant?"
         trace = {
             "question": question,
@@ -94,12 +94,6 @@ class AskAndRenderTests(unittest.TestCase):
             backend="gitkb",
         )
 
-        def render_side_effect(*args, **kwargs):
-            kwargs["render_metadata"]["interpreter_source"] = "agent_interpreter"
-            kwargs["render_metadata"]["planner_source"] = "agent_planner"
-            kwargs["render_metadata"]["section_status"] = "updated"
-            return "https://miro.com/app/board/board/"
-
         with mock.patch(
             "dataroot.server.app._answer_live_ask",
             return_value=(answer, {"raw": None}, "agent"),
@@ -108,28 +102,21 @@ class AskAndRenderTests(unittest.TestCase):
                 "dataroot.query.persist_answer_artifacts",
                 return_value={"inquiry": "inquiries/demo", "provenance_trace": "provenance_traces/demo"},
             ):
-                with mock.patch("dataroot.render.miro.render_provenance_to_miro", side_effect=render_side_effect) as renderer:
-                    result = mcp_server._ask_and_render(
-                        workspace,
-                        question,
-                        board_id="board",
-                        include_proof=False,
-                    )
+                result = mcp_server._ask(
+                    workspace,
+                    question,
+                    use_agent=True,
+                )
 
         answerer.assert_called_once()
-        renderer.assert_called_once()
-        self.assertEqual(renderer.call_args.args[0], trace)
-        self.assertEqual(renderer.call_args.kwargs["section_title"], "CropProtectorAI - Live Ask")
-        self.assertEqual(renderer.call_args.kwargs["answer_text"], answer)
-        self.assertTrue(renderer.call_args.kwargs["update_existing_section"])
+        self.assertTrue(answerer.call_args.kwargs["use_agent"])
         self.assertEqual(result["answer"], "PMR3 and PMR4 support the PMR trait.")
         self.assertEqual(result["answer_source"], "agent")
+        self.assertTrue(result["use_agent"])
         self.assertEqual(result["node_count"], 2)
         self.assertEqual(result["edge_count"], 1)
         self.assertEqual(result["stages"], ["query", "marker_gene", "answer"])
-        self.assertEqual(result["interpreter_source"], "agent_interpreter")
-        self.assertEqual(result["planner_source"], "agent_planner")
-        self.assertEqual(result["section_status"], "updated")
+        self.assertEqual(result["trace"], trace)
         self.assertEqual(result["provenance_trace"], "provenance_traces/demo")
 
 

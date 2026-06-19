@@ -18,10 +18,16 @@ export async function optimizeDiagramLayout(
   const gridSize = options.gridSize ?? 24;
   const nodeGap = options.nodeGap ?? 64;
   const sized = normalizeMeasuredSizes(input.nodes);
+  // Auto mode recomputes routes and label positions from scratch; manual
+  // placements are reset, consistent with Auto Arrange moving the nodes they
+  // were tuned to. Stale points are dropped so routeEdges always re-routes.
+  const edges = options.mode === "auto"
+    ? input.edges.map((edge) => ({ ...edge, points: undefined, label_t: undefined, label_offset: undefined }))
+    : input.edges;
   const placed = options.mode === "auto"
-    ? await autoArrangeNodes(sized, input.edges, gridSize)
+    ? repairNodeOverlaps(await autoArrangeNodes(sized, edges, gridSize), gridSize, 64)
     : repairNodeOverlaps(sized, gridSize, nodeGap);
-  const handled = assignHandles(placed, input.edges);
+  const handled = assignHandles(placed, edges);
   const routed = routeEdges(placed, handled);
   const labeled = placeEdgeLabels(placed, routed);
   return { nodes: placed, edges: labeled };

@@ -6,7 +6,13 @@ export function repairNodeOverlaps(
   gridSize: number,
   gap: number,
 ): LayoutNodeBox[] {
-  const next = nodes.map((node) => ({ ...node }));
+  // Snap first and push apart in grid multiples so the result is grid-aligned
+  // by construction — a trailing snap could reintroduce the overlap it fixed.
+  const next = nodes.map((node) => ({
+    ...node,
+    x: snap(node.x, gridSize),
+    y: snap(node.y, gridSize),
+  }));
   for (let iter = 0; iter < 80; iter++) {
     let changed = false;
     for (let i = 0; i < next.length; i++) {
@@ -26,12 +32,13 @@ export function repairNodeOverlaps(
 
         if (amount <= 0) continue;
         const direction = moveHorizontal ? Math.sign(dx) || 1 : Math.sign(dy) || 1;
+        const half = Math.ceil(amount / 2 / gridSize) * gridSize;
         if (moveHorizontal) {
-          a.x -= direction * amount / 2;
-          b.x += direction * amount / 2;
+          a.x -= direction * half;
+          b.x += direction * half;
         } else {
-          a.y -= direction * amount / 2;
-          b.y += direction * amount / 2;
+          a.y -= direction * half;
+          b.y += direction * half;
         }
         changed = true;
       }
@@ -39,9 +46,5 @@ export function repairNodeOverlaps(
     if (!changed) break;
   }
 
-  return next.map((node) => ({
-    ...node,
-    x: snap(node.x, gridSize),
-    y: snap(node.y, gridSize),
-  }));
+  return next;
 }

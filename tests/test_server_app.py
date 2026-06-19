@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-import os
 import json
+import os
 import unittest
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
 
-from dataroot.agent.codex_client import AgentResult
 from dataroot.kb.base import DocumentRecord
 import dataroot.server.app as app_module
 
@@ -17,232 +16,97 @@ class ServerAppTests(unittest.TestCase):
         app_module._workspace_cache.clear()
         self.client = TestClient(app_module.app)
 
-    def test_health_and_miro_entrypoints_load(self) -> None:
+    def test_health_index_and_workspace_entrypoints_load(self) -> None:
+        index = self.client.get("/")
+        self.assertEqual(index.status_code, 200)
+        self.assertEqual(index.json()["service"], "DataRoot Ask API")
+        self.assertEqual(index.json()["rendering"], "in_app")
+
         health = self.client.get("/health")
         self.assertEqual(health.status_code, 200)
         self.assertEqual(health.json()["status"], "ok")
+        self.assertEqual(health.json()["rendering"], "in_app")
         labels = {company["label"] for company in health.json()["companies"]}
         self.assertIn("CropProtectorAI", labels)
         self.assertIn("BioReactorAI", labels)
 
-        page = self.client.get("/miro/")
-        self.assertEqual(page.status_code, 200)
-        self.assertIn("DataRoot runs from the Miro board", page.text)
-        self.assertNotIn("textarea", page.text)
-        self.assertNotIn("Run board question", page.text)
+        workspaces = self.client.get("/api/workspaces")
+        self.assertEqual(workspaces.status_code, 200)
+        keys = {workspace["key"] for workspace in workspaces.json()["workspaces"]}
+        self.assertIn("company_a", keys)
+        self.assertIn("austin_permits", keys)
 
-        sdk = self.client.get("/miro/sdk")
-        self.assertEqual(sdk.status_code, 200)
-        self.assertIn("LIVE_ASK_POLL_MS = 5000", sdk.text)
-        self.assertIn("pollLiveAskInputs", sdk.text)
-        self.assertIn("/api/live-ask-board-input", sdk.text)
-        self.assertIn("icon:click", sdk.text)
-        self.assertIn("custom:run-live-ask", sdk.text)
-        self.assertIn("/api/ask-render-board-question", sdk.text)
-        self.assertNotIn("openPanel", sdk.text)
-        self.assertNotIn("app_card:", sdk.text)
+        self.assertEqual(self.client.get("/miro/").status_code, 404)
+        self.assertEqual(self.client.get("/miro/sdk").status_code, 404)
 
-    def test_ask_render_profiles_answers_persists_and_renders(self) -> None:
-        runner = FakeRunner(_agent_answer("What specific genes make the tomato line powdery mildew resistant?"))
-        with patch.dict(os.environ, {"MIRO_ACCESS_TOKEN": "token", "OPENAI_API_KEY": "key"}, clear=False):
-            with patch("dataroot.agent.runner.Runner", return_value=runner):
-                with patch(
-                    "dataroot.server.app.render_provenance_to_miro",
-                    return_value="https://miro.com/app/board/board/",
-                ) as renderer:
-                    response = self.client.post(
-                        "/api/ask-render",
-                        json={
-                            "company": "company_a",
-                            "board_id": "board",
-                            "question": "What specific genes make the tomato line powdery mildew resistant?",
-                            "include_proof": True,
-                        },
-                    )
+    def test_api_ask_profiles_answers_and_persists(self) -> None:
+        question = "What specific genes make the tomato line powdery mildew resistant?"
+        trace = _trace(question)
+        answer = _agent_answer(question)
 
-        self.assertEqual(response.status_code, 200, response.text)
-        payload = response.json()
-        self.assertIn("A-GEN-PMR3", payload["answer"])
-        self.assertIn("A-GEN-PMR4", payload["answer"])
-        self.assertEqual(payload["question"], "What specific genes make the tomato line powdery mildew resistant?")
-        self.assertEqual(payload["board_url"], "https://miro.com/app/board/board/")
-        self.assertTrue(payload["provenance_trace"].startswith("provenance_traces/"))
-        self.assertGreaterEqual(payload["node_count"], 5)
-        self.assertIn("marker_gene", payload["stages"])
-        self.assertEqual(payload["answer_source"], "agent")
-        self.assertEqual(payload["interpreter_source"], "deterministic_fallback")
-        self.assertEqual(payload["planner_source"], "deterministic_fallback")
-        self.assertTrue(payload["proof_included"])
-        self.assertEqual(payload["section_status"], "updated")
-        self.assertEqual(payload["trigger_source"], "api_submit")
-        self.assertTrue(all((tool.get("function") or {}).get("name") not in {"log_inquiry", "render_provenance"} for tool in runner.tools))
-        renderer.assert_called_once()
-        self.assertEqual(renderer.call_args.kwargs["board_id"], "board")
-        self.assertEqual(renderer.call_args.kwargs["context_label"], "CropProtectorAI")
-        self.assertEqual(renderer.call_args.kwargs["section_title"], "CropProtectorAI - Live Ask")
-        self.assertIn("A-GEN-PMR3", renderer.call_args.kwargs["answer_text"])
-        self.assertTrue(renderer.call_args.kwargs["update_existing_section"])
-        self.assertTrue(renderer.call_args.kwargs["include_proof"])
-        self.assertIsInstance(renderer.call_args.kwargs["render_metadata"], dict)
-
-    def test_board_question_endpoint_reads_live_ask_input(self) -> None:
-        with patch.dict(os.environ, {"MIRO_ACCESS_TOKEN": "token"}, clear=False):
-            with patch("dataroot.server.app.MiroClient", return_value=FakeMiroClient()):
-                with patch(
-                    "dataroot.server.app._answer_with_agent",
-                    return_value=(
-                        _agent_answer("What are the next batches or runs coming out soon?"),
-                        _trace("What are the next batches or runs coming out soon?"),
-                    ),
-                ):
-                    with patch(
-                        "dataroot.server.app.render_provenance_to_miro",
-                        return_value="https://miro.com/app/board/board/",
-                    ):
-                        response = self.client.post(
-                            "/api/ask-render-board-question",
-                            json={
-                                "board_id": "board",
-                                "include_proof": False,
-                            },
-                        )
-
-        self.assertEqual(response.status_code, 200, response.text)
-        payload = response.json()
-        self.assertEqual(payload["question"], "What are the next batches or runs coming out soon?")
-        self.assertEqual(payload["company"], "company_b")
-        self.assertEqual(payload["trigger_source"], "board_question_submit")
-
-    def test_live_ask_board_input_runs_submitted_question(self) -> None:
-        question = "Can BioReactorAI scale the next ester run soon?"
-        with patch.dict(os.environ, {"MIRO_ACCESS_TOKEN": "token"}, clear=False):
-            with patch("dataroot.server.app.MiroClient", return_value=FakeMiroClient()):
-                with patch(
-                    "dataroot.server.app._answer_with_agent",
-                    return_value=(_agent_answer(question), _trace(question)),
-                ):
-                    with patch(
-                        "dataroot.server.app.render_provenance_to_miro",
-                        return_value="https://miro.com/app/board/board/",
-                    ) as renderer:
-                        response = self.client.post(
-                            "/api/live-ask-board-input",
-                            json={
-                                "board_id": "board",
-                                "input_item_id": "question-input",
-                                "question": question,
-                            },
-                        )
-
-        self.assertEqual(response.status_code, 200, response.text)
-        payload = response.json()
-        self.assertEqual(payload["question"], question)
-        self.assertEqual(payload["company"], "company_b")
-        self.assertEqual(payload["trigger_source"], "board_input_poll")
-        renderer.assert_called_once()
-        self.assertEqual(renderer.call_args.kwargs["section_title"], "BioReactorAI - Live Ask")
-
-    def test_live_ask_board_input_blank_clears_section(self) -> None:
-        with patch.dict(os.environ, {"MIRO_ACCESS_TOKEN": "token"}, clear=False):
-            with patch("dataroot.server.app.MiroClient", return_value=FakeMiroClient()):
-                with patch(
-                    "dataroot.server.app.clear_live_ask_section_to_miro",
-                    return_value="https://miro.com/app/board/board/",
-                ) as clearer:
-                    with patch("dataroot.server.app._answer_with_agent") as answerer:
-                        response = self.client.post(
-                            "/api/live-ask-board-input",
-                            json={
-                                "board_id": "board",
-                                "input_item_id": "question-input",
-                                "question": "   ",
-                            },
-                        )
-
-        self.assertEqual(response.status_code, 200, response.text)
-        payload = response.json()
-        self.assertEqual(payload["question"], "")
-        self.assertEqual(payload["answer"], "")
-        self.assertEqual(payload["company"], "company_b")
-        self.assertEqual(payload["section_status"], "cleared")
-        self.assertEqual(payload["trigger_source"], "board_input_poll")
-        clearer.assert_called_once_with(board_id="board", section_title="BioReactorAI - Live Ask")
-        answerer.assert_not_called()
-
-    def test_live_ask_falls_back_when_agent_is_unavailable(self) -> None:
-        with patch.dict(
-            os.environ,
-            {"MIRO_ACCESS_TOKEN": "token", "OPENAI_API_KEY": "", "DATAROOT_KB_BACKEND": "local"},
-            clear=True,
-        ):
+        with patch(
+            "dataroot.server.app._answer_live_ask",
+            return_value=(answer, trace, "agent"),
+        ) as answerer:
             with patch(
-                "dataroot.server.app.render_provenance_to_miro",
-                return_value="https://miro.com/app/board/board/",
-            ) as renderer:
+                "dataroot.server.app.persist_answer_artifacts",
+                return_value={"inquiry": "inquiries/demo", "provenance_trace": "provenance_traces/demo"},
+            ) as persister:
                 response = self.client.post(
-                    "/api/ask-render",
+                    "/api/ask",
                     json={
                         "company": "company_a",
-                        "board_id": "board",
-                        "question": "What specific genes make the tomato line powdery mildew resistant?",
-                        "include_proof": True,
+                        "question": question,
+                        "use_agent": True,
                     },
                 )
 
         self.assertEqual(response.status_code, 200, response.text)
-        self.assertEqual(response.json()["answer_source"], "deterministic_fallback")
-        renderer.assert_called_once()
+        payload = response.json()
+        self.assertIn("A-GEN-PMR3", payload["answer"])
+        self.assertNotIn("<provenance>", payload["answer"])
+        self.assertEqual(payload["question"], question)
+        self.assertEqual(payload["company"], "company_a")
+        self.assertEqual(payload["provenance_trace"], "provenance_traces/demo")
+        self.assertEqual(payload["node_count"], 5)
+        self.assertEqual(payload["edge_count"], 0)
+        self.assertIn("marker_gene", payload["stages"])
+        self.assertEqual(payload["trace"], trace)
+        self.assertEqual(payload["answer_source"], "agent")
+        self.assertIn(payload["backend"], {"local", "gitkb"})
+        answerer.assert_called_once()
+        self.assertTrue(answerer.call_args.kwargs["use_agent"])
+        persister.assert_called_once()
 
-        app_module._workspace_cache.clear()
+    def test_live_ask_falls_back_when_agent_is_unavailable(self) -> None:
         with patch.dict(
             os.environ,
-            {"MIRO_ACCESS_TOKEN": "token", "OPENAI_API_KEY": "key", "DATAROOT_KB_BACKEND": "local"},
+            {"OPENAI_API_KEY": "", "MINIMAX_API_KEY": "", "DATAROOT_KB_BACKEND": "local"},
             clear=True,
         ):
             with patch(
-                "dataroot.agent.runner.Runner",
-                return_value=FakeRunner("Answer without provenance."),
-            ):
-                with patch(
-                    "dataroot.server.app.render_provenance_to_miro",
-                    return_value="https://miro.com/app/board/board/",
-                ) as renderer:
-                    invalid = self.client.post(
-                        "/api/ask-render",
-                        json={"company": "company_a", "board_id": "board", "question": "hello"},
-                    )
+                "dataroot.server.app._answer_with_deterministic_fallback",
+                return_value=(
+                    _agent_answer("fallback"),
+                    _trace("fallback"),
+                ),
+            ) as fallback:
+                answer, trace, source = app_module._answer_live_ask(
+                    app_module.COMPANIES["company_a"],
+                    app_module.CompanyWorkspace(
+                        config=app_module.COMPANIES["company_a"],
+                        store=object(),
+                        record_count=0,
+                        cached=False,
+                    ),
+                    "fallback",
+                    use_agent=True,
+                )
 
-        self.assertEqual(invalid.status_code, 200, invalid.text)
-        self.assertEqual(invalid.json()["answer_source"], "deterministic_fallback")
-        renderer.assert_called_once()
-
-        app_module._workspace_cache.clear()
-        with patch.dict(
-            os.environ,
-            {"MIRO_ACCESS_TOKEN": "token", "OPENAI_API_KEY": "key", "DATAROOT_KB_BACKEND": "local"},
-            clear=True,
-        ):
-            with patch(
-                "dataroot.agent.runner.Runner",
-                return_value=FakeRunner(error=RuntimeError("Error code: 429 - insufficient_quota")),
-            ):
-                with patch(
-                    "dataroot.server.app.render_provenance_to_miro",
-                    return_value="https://miro.com/app/board/board/",
-                ) as renderer:
-                    quota = self.client.post(
-                        "/api/ask-render",
-                        json={
-                            "company": "company_b",
-                            "board_id": "board",
-                            "question": "do we have the capacity to run another fermnation product",
-                        },
-                    )
-
-        self.assertEqual(quota.status_code, 200, quota.text)
-        self.assertEqual(quota.json()["answer_source"], "deterministic_fallback")
-        self.assertIn("fermentation-side availability", quota.json()["answer"])
-        renderer.assert_called_once()
+        self.assertIn("A-GEN-PMR3", answer)
+        self.assertEqual(trace["question"], "fallback")
+        self.assertEqual(source, "deterministic_fallback")
+        fallback.assert_called_once()
 
     def test_workspace_uses_gitkb_when_server_backend_requests_it(self) -> None:
         class FakeGitKBStore:
@@ -270,59 +134,22 @@ class ServerAppTests(unittest.TestCase):
         self.assertTrue(workspace.cached)
 
     def test_invalid_request_errors(self) -> None:
-        missing_question = self.client.post("/api/ask-render", json={"company": "company_a", "board_id": "board", "question": ""})
+        missing_question = self.client.post("/api/ask", json={"company": "company_a", "question": ""})
         self.assertEqual(missing_question.status_code, 400)
 
-        unknown_company = self.client.post("/api/ask-render", json={"company": "missing", "board_id": "board", "question": "hello"})
+        unknown_company = self.client.post("/api/ask", json={"company": "missing", "question": "hello"})
         self.assertEqual(unknown_company.status_code, 400)
 
-        with patch.dict(os.environ, {"MIRO_BOARD_ID": "optional_existing_board_id"}, clear=True):
-            missing_board = self.client.post("/api/ask-render", json={"company": "company_a", "question": "hello"})
-        self.assertEqual(missing_board.status_code, 400)
-        self.assertIn("board_id is required", missing_board.text)
-
-
-class FakeRunner:
-    def __init__(self, final_output: str = "", error: Exception | None = None):
-        self.final_output = final_output
-        self.error = error
-        self.tools = []
-
-    def run(self, system_prompt, tools, messages, tool_executor, temperature=0.7):
-        if self.error:
-            raise self.error
-        self.system_prompt = system_prompt
-        self.tools = tools
-        self.messages = messages
-        self.tool_executor = tool_executor
-        self.temperature = temperature
-        return AgentResult(messages=[], final_output=self.final_output, tool_calls=[], error=None)
-
-
-class FakeMiroClient:
-    def list_frames(self, board_id):
-        return [
-            {
-                "id": "company-b-live",
-                "type": "frame",
-                "data": {"title": "BioReactorAI - Live Ask"},
-            }
+    def test_live_ask_tool_filter_excludes_log_and_render_tools(self) -> None:
+        tools = [
+            {"function": {"name": "kb_search"}},
+            {"function": {"name": "log_inquiry"}},
+            {"function": {"name": "render_provenance"}},
         ]
 
-    def list_items(self, board_id):
-        return [
-            {
-                "id": "question-input",
-                "type": "text",
-                "parent": {"id": "company-b-live"},
-                "data": {
-                    "content": (
-                        "<p><strong>Type your question here:</strong></p>"
-                        "<p>What are the next batches or runs coming out soon?</p>"
-                    )
-                },
-            }
-        ]
+        filtered = app_module._live_ask_tools(tools)
+
+        self.assertEqual(filtered, [{"function": {"name": "kb_search"}}])
 
 
 def _trace(question: str) -> dict:

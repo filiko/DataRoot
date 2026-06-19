@@ -1,0 +1,1718 @@
+{
+  "documentType": "dashbot.dfdmaker",
+  "schemaVersion": "0.1",
+  "pen_version": "0.1",
+  "project": {
+    "id": "proj_nexus_01_identity",
+    "name": "Nexus · 01 Identity & Access",
+    "revision": 1
+  },
+  "sources": [],
+  "erd": {
+    "notation": "crows_foot",
+    "model_level": "physical",
+    "entities": [
+      {
+        "id": "ent_users",
+        "kind": "strong_entity",
+        "name": "users",
+        "display_name": "Users",
+        "domain": "identity",
+        "connects": [
+          "all"
+        ],
+        "attributes": [
+          {
+            "id": "a_u_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_u_email",
+            "name": "email",
+            "display_name": "Email",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "company-domain allowlisted (nexusagriscience.com / terpenebelt.com) before user creation"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_u_name",
+            "name": "full_name",
+            "display_name": "Full Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_u_title",
+            "name": "title",
+            "display_name": "Title",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_u_jobdesc",
+            "name": "job_description",
+            "display_name": "Job Description",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "qms-platform/backend/app/models/user.py User.job_description (Text, nullable=True) — free-text role detail distinct from title"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_u_role",
+            "name": "role",
+            "display_name": "Role",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": "'general'",
+            "check_constraint": "role IN ('admin','quality','manager','operator','sales','general')",
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: role tiers merge QMS AccessLevel {admin,quality,manager,general} (qms user.py AccessLevel) + Intel personas. 'general' baseline & admin/quality/manager trace to QMS; 'sales' is the Intel sales persona; 'operator' has NO source in QMS enum / PhytoVerify access_groups / auth context — retained as a design forward-looking shop-floor tier."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_u_dept",
+            "name": "department_id",
+            "display_name": "Department Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_u_facility",
+            "name": "default_facility_id",
+            "display_name": "Default Facility Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_u_gid",
+            "name": "google_id",
+            "display_name": "Google Id",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_u_gat",
+            "name": "google_access_token",
+            "display_name": "Google Access Token",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "per-user, for Calendar/Gmail"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_u_grt",
+            "name": "google_refresh_token",
+            "display_name": "Google Refresh Token",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_u_slack",
+            "name": "slack_user_id",
+            "display_name": "Slack User Id",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_u_active",
+            "name": "is_active",
+            "display_name": "Is Active",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "true",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_u_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_u_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Identity via Google SSO + domain allowlist + signed session + role tiers (BUILD_TASKS P0-5). Sessions are stateless HMAC cookies (no table). Touches every domain via ownership/audit.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_dept",
+        "kind": "strong_entity",
+        "name": "departments",
+        "display_name": "Departments",
+        "domain": "identity",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_d_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_desc",
+            "name": "description",
+            "display_name": "Description",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_org",
+        "kind": "strong_entity",
+        "name": "organizations",
+        "display_name": "Organizations",
+        "domain": "identity",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_o_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_o_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_o_active",
+            "name": "is_active",
+            "display_name": "Is Active",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "true",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_o_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_o_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_fac",
+        "kind": "strong_entity",
+        "name": "facilities",
+        "display_name": "Facilities",
+        "domain": "identity",
+        "connects": [
+          "control-numbers",
+          "cultivation",
+          "refinement",
+          "qa-lab",
+          "quality",
+          "product-master"
+        ],
+        "attributes": [
+          {
+            "id": "a_f_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_f_org",
+            "name": "organization_id",
+            "display_name": "Organization Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_f_prefix",
+            "name": "control_number_prefix",
+            "display_name": "Control Number Prefix",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "== control_numbers.facility_prefix — the tenant key threaded through every control number"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_f_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_f_labcode",
+            "name": "lab_code",
+            "display_name": "Lab Code",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "PhytoVerify 2018_05_28_141510_add_lab_code_to_locations_table.php: string lab_code(10) nullable — lab identity short code"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_f_cantransfer",
+            "name": "can_facility_transfer",
+            "display_name": "Can Facility Transfer",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "true",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "PhytoVerify 2017_10_04_191140_*_can_facility_transfer: boolean default true — transfer eligibility"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_f_metrc",
+            "name": "metrc_license",
+            "display_name": "Metrc License",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: PhytoVerify 2018_06_14_211240_add_metrc_columns_to_facilities_table.php string metrc_license on 'locations'. Kept as nullable text identifier only per house rules; METRC sync descoped."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_f_metrc_type",
+            "name": "metrc_license_type",
+            "display_name": "Metrc License Type",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: PhytoVerify 2018_06_14_211240_add_metrc_columns_to_facilities_table.php string metrc_license_type on 'locations'. Kept as nullable text for parity per house rules; metrc_license_start_date/end_date DESIGN-dropped (sync descoped)."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_f_active",
+            "name": "is_active",
+            "display_name": "Is Active",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "true",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_f_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_f_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Tenant boundary. Its control_number_prefix is the facility_prefix on every control number, so facilities bridge identity into all production/QA domains. DESIGN: legacy 'locations' columns full_name, address_line1/line2, city, state, postal_code, phone_number, point_of_contact (PhytoVerify 2017_03_08_133919 / 2018_12_28_202935) are dropped — physical address/contact detail is not needed in the clean schema; lab_code and can_facility_transfer are retained as operationally meaningful.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_fu",
+        "kind": "strong_entity",
+        "name": "facility_user",
+        "display_name": "Facility User (M:N)",
+        "domain": "identity",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_fu_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_fu_fac",
+            "name": "facility_id",
+            "display_name": "Facility Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_fu_user",
+            "name": "user_id",
+            "display_name": "User Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_fu_metrc_key",
+            "name": "metrc_user_api_key",
+            "display_name": "Metrc User Api Key",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: PhytoVerify 2018_06_14_213533_add_metrc_user_api_key_to_facility_user_table_.php string metrc_user_api_key nullable. Per-user-per-facility METRC credential kept as nullable text for parity; METRC sync descoped."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_fu_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Pivot: a user may work across multiple facilities.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_mt",
+        "kind": "strong_entity",
+        "name": "module_types",
+        "display_name": "Module Types",
+        "domain": "identity",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_mt_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_mt_type",
+            "name": "module_type",
+            "display_name": "Module Type",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "PhytoVerify 2018_08_09_152919_create_module_types_table.php: string module_type (+ app/Data/Models/ModuleType.php) — lookup of enableable modules"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_mt_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_mt_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "PhytoVerify module_types lookup that facility_module_types normalizes against (2018_08_09_152919_create_module_types_table.php).",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_fmt",
+        "kind": "strong_entity",
+        "name": "facility_module_types",
+        "display_name": "Facility Module Types",
+        "domain": "identity",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_fmt_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_fmt_fac",
+            "name": "facility_id",
+            "display_name": "Facility Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_fmt_module_type",
+            "name": "module_type_id",
+            "display_name": "Module Type Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "PhytoVerify 2018_08_09_153350_create_facility_module_types_table.php: module_type_id unsigned FK -> module_types(id) onDelete cascade"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_fmt_module",
+            "name": "module_key",
+            "display_name": "Module Key",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: denormalized convenience copy of module_types.module_type; legacy has no module_key column (2018_08_09_153350 normalizes via module_type_id). Authoritative link is the module_type_id FK above; kept nullable for read-side cache only."
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_fmt_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_api",
+        "kind": "strong_entity",
+        "name": "api_keys",
+        "display_name": "API Keys",
+        "domain": "identity",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_ak_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ak_org",
+            "name": "organization_id",
+            "display_name": "Organization Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ak_hash",
+            "name": "key_hash",
+            "display_name": "Key Hash",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "store a hash, never the raw key"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ak_scopes",
+            "name": "scopes",
+            "display_name": "Scopes",
+            "pg_type": "jsonb",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ak_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_ual",
+        "kind": "strong_entity",
+        "name": "user_audit_logs",
+        "display_name": "User Audit Logs",
+        "domain": "identity",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_ual_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ual_target",
+            "name": "target_user_id",
+            "display_name": "Target User Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ual_by",
+            "name": "performed_by_id",
+            "display_name": "Performed By Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ual_sys",
+            "name": "system_actor",
+            "display_name": "System Actor",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": "(performed_by_id IS NOT NULL)::int + (system_actor IS NOT NULL)::int = 1",
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "qms-platform/backend/app/models/user.py UserAuditLog ck_user_audit_logs_actor_xor — XOR with performed_by_id: exactly one actor"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ual_action",
+            "name": "action",
+            "display_name": "Action",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ual_field",
+            "name": "field_name",
+            "display_name": "Field Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ual_old",
+            "name": "old_value",
+            "display_name": "Old Value",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ual_new",
+            "name": "new_value",
+            "display_name": "New Value",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ual_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      }
+    ],
+    "relationships": [
+      {
+        "id": "rel_u_dept",
+        "name": "in department",
+        "from": {
+          "entity_id": "ent_users",
+          "attribute_id": "a_u_dept"
+        },
+        "to": {
+          "entity_id": "ent_dept",
+          "attribute_id": "a_d_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_users_department",
+          "on_delete": "set_null",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_u_fac",
+        "name": "default facility",
+        "from": {
+          "entity_id": "ent_users",
+          "attribute_id": "a_u_facility"
+        },
+        "to": {
+          "entity_id": "ent_fac",
+          "attribute_id": "a_f_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_users_default_facility",
+          "on_delete": "set_null",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_fac_org",
+        "name": "belongs to",
+        "from": {
+          "entity_id": "ent_fac",
+          "attribute_id": "a_f_org"
+        },
+        "to": {
+          "entity_id": "ent_org",
+          "attribute_id": "a_o_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_facilities_org",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_fu_user",
+        "name": "user",
+        "from": {
+          "entity_id": "ent_fu",
+          "attribute_id": "a_fu_user"
+        },
+        "to": {
+          "entity_id": "ent_users",
+          "attribute_id": "a_u_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_facility_user_user",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_fu_fac",
+        "name": "facility",
+        "from": {
+          "entity_id": "ent_fu",
+          "attribute_id": "a_fu_fac"
+        },
+        "to": {
+          "entity_id": "ent_fac",
+          "attribute_id": "a_f_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_facility_user_facility",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_fmt_fac",
+        "name": "enabled at",
+        "from": {
+          "entity_id": "ent_fmt",
+          "attribute_id": "a_fmt_fac"
+        },
+        "to": {
+          "entity_id": "ent_fac",
+          "attribute_id": "a_f_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_fmt_facility",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_fmt_mt",
+        "name": "of module type",
+        "from": {
+          "entity_id": "ent_fmt",
+          "attribute_id": "a_fmt_module_type"
+        },
+        "to": {
+          "entity_id": "ent_mt",
+          "attribute_id": "a_mt_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_fmt_module_type",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "PhytoVerify 2018_08_09_153350: module_type_id FK -> module_types(id) onDelete cascade"
+        ],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_api_org",
+        "name": "owned by",
+        "from": {
+          "entity_id": "ent_api",
+          "attribute_id": "a_ak_org"
+        },
+        "to": {
+          "entity_id": "ent_org",
+          "attribute_id": "a_o_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_api_keys_org",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_ual_target",
+        "name": "about",
+        "from": {
+          "entity_id": "ent_ual",
+          "attribute_id": "a_ual_target"
+        },
+        "to": {
+          "entity_id": "ent_users",
+          "attribute_id": "a_u_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_ual_target",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_ual_by",
+        "name": "performed by",
+        "from": {
+          "entity_id": "ent_ual",
+          "attribute_id": "a_ual_by"
+        },
+        "to": {
+          "entity_id": "ent_users",
+          "attribute_id": "a_u_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_ual_by",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      }
+    ]
+  },
+  "dfd": {
+    "level": 0,
+    "notation": "yourdon_coad",
+    "system_boundary": {
+      "id": "boundary_id",
+      "name": "Identity & Access"
+    },
+    "external_entities": [
+      {
+        "id": "ext_user",
+        "name": "Employee",
+        "description": "Signs in via Google",
+        "source": "manual",
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "ext_google",
+        "name": "Google OAuth",
+        "description": "External identity provider",
+        "source": "manual",
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "processes": [
+      {
+        "id": "proc_login",
+        "number": "1.0",
+        "name": "Authenticate",
+        "description": "Google OAuth → domain allowlist → signed session + role",
+        "user_modified": true,
+        "mapped_relationship_id": null,
+        "source_evidence": [],
+        "source_facts": [],
+        "level_1_diagram": null
+      },
+      {
+        "id": "proc_assign",
+        "number": "2.0",
+        "name": "Assign Facility / Role",
+        "description": "Grant facility access and role tier",
+        "user_modified": true,
+        "mapped_relationship_id": "rel_fu_user",
+        "source_evidence": [],
+        "source_facts": [],
+        "level_1_diagram": null
+      }
+    ],
+    "data_stores": [
+      {
+        "id": "store_users",
+        "name": "Users",
+        "description": "Identities + roles",
+        "mapped_erd_entity": "ent_users",
+        "user_modified": false,
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "store_fu",
+        "name": "Facility Access",
+        "description": "User×facility",
+        "mapped_erd_entity": "ent_fu",
+        "user_modified": false,
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "data_flows": [
+      {
+        "id": "g1",
+        "from": "ext_user",
+        "to": "proc_login",
+        "data_name": "Sign-in",
+        "mapped_relationship_id": null,
+        "user_modified": false,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "g2",
+        "from": "ext_google",
+        "to": "proc_login",
+        "data_name": "OAuth identity",
+        "mapped_relationship_id": null,
+        "user_modified": false,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "g3",
+        "from": "proc_login",
+        "to": "store_users",
+        "data_name": "Upsert user",
+        "mapped_relationship_id": null,
+        "user_modified": false,
+        "mapped_erd_entities": [
+          "ent_users"
+        ],
+        "mapped_erd_attributes": [
+          "a_u_email"
+        ],
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "g4",
+        "from": "proc_assign",
+        "to": "store_fu",
+        "data_name": "Grant",
+        "mapped_relationship_id": "rel_fu_user",
+        "user_modified": false,
+        "mapped_erd_entities": [
+          "ent_fu"
+        ],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "business_rules": [
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/identity/domain/domain-allowlist.ts",
+          "backend/src/contexts/identity/service/identity-service.ts:51-59"
+        ],
+        "to_contexts": [],
+        "id": "ID-GATE-01",
+        "title": "Company-domain allowlist gate",
+        "category": "gate",
+        "statement": "An email's domain must be on the active CompanyDomainAllowlist BEFORE any user/session is created.",
+        "spec_source": "30-nexus-intel.md (SSO)",
+        "verified_by": "Seam 6 (conn_seam6_sso_allowlist)"
+      },
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "shared/src/tenancy.ts",
+          "backend/src/contexts/tenancy/"
+        ],
+        "to_contexts": [],
+        "id": "TEN-VAL-01",
+        "title": "Facility control-number prefix authority",
+        "category": "validation",
+        "statement": "Each facility owns a control-number prefix; control numbers compose it as {facilityPrefix}{YYMMDD}-{genocode}.",
+        "spec_source": "spec-control-numbers.md"
+      }
+    ],
+    "connectors": [
+      {
+        "id": "conn_seam6_sso_allowlist",
+        "name": "Seam 6 — SSO + company-domain allowlist",
+        "kind": "auth",
+        "trigger": "User login",
+        "effect": "Email domain checked against the active CompanyDomainAllowlist before any user/session is created; role tiers applied",
+        "from_context": "01_identity",
+        "to_contexts": [
+          "01_identity"
+        ],
+        "contract": "isAllowedEmail(email) throws if domain not allowlisted; roles admin/quality/manager/operator + sales/facility-op/lab-tech",
+        "enforced_at": [
+          "backend/src/contexts/identity/service/identity-service.ts:51-59"
+        ],
+        "spec_source": "40-unified-workflow-graph.md (Seam 6); 30-nexus-intel.md",
+        "status": "wired",
+        "review_status": "accepted"
+      },
+      {
+        "id": "conn_mw_session",
+        "name": "Middleware — session validation",
+        "kind": "auth",
+        "trigger": "Authenticated route invoked",
+        "effect": "Bearer session id resolved to the current user/session via identity service",
+        "from_context": "01_identity",
+        "to_contexts": [],
+        "contract": "getAuthHeader(req) -> identityService.currentSession(sessionId)",
+        "enforced_at": [
+          "backend/src/index.ts (currentSession wiring)",
+          "backend/src/contexts/identity/service/identity-service.ts"
+        ],
+        "spec_source": "AGENTS.md §9",
+        "status": "wired",
+        "review_status": "accepted"
+      }
+    ]
+  },
+  "layout": {
+    "erd": {
+      "nodes": [
+        {
+          "id": "ent_org",
+          "x": 60,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_fac",
+          "x": 440,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_dept",
+          "x": 820,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_api",
+          "x": 60,
+          "y": 380,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_users",
+          "x": 440,
+          "y": 380,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_fu",
+          "x": 820,
+          "y": 380,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_fmt",
+          "x": 60,
+          "y": 700,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_mt",
+          "x": 440,
+          "y": 700,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_ual",
+          "x": 820,
+          "y": 700,
+          "width": 300,
+          "height": 230
+        }
+      ],
+      "edges": []
+    },
+    "dfd": {
+      "nodes": [],
+      "edges": []
+    },
+    "dfd_level_1": {}
+  },
+  "styles": {
+    "theme": "minimal"
+  },
+  "postgres": {
+    "dialect": "postgresql",
+    "extensions": [
+      "pgcrypto"
+    ],
+    "schema_name": "public",
+    "default_primary_key": {
+      "type": "uuid",
+      "default": "gen_random_uuid()"
+    },
+    "add_audit_timestamps": false
+  },
+  "review": {
+    "proposals": [],
+    "warnings": [],
+    "dismissed_warnings": []
+  }
+}

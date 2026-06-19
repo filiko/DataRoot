@@ -32,9 +32,9 @@ export async function autoArrangeNodes(
 
   try {
     const elkCandidates = await Promise.all([
-      layoutWithElk(nodes, edges, gridSize, "RIGHT", 64, 130),
       layoutWithElk(nodes, edges, gridSize, "RIGHT", 96, 170),
-      layoutWithElk(nodes, edges, gridSize, "DOWN", 72, 140),
+      layoutWithElk(nodes, edges, gridSize, "RIGHT", 120, 200),
+      layoutWithElk(nodes, edges, gridSize, "DOWN", 96, 170),
     ]);
     candidates.push(...elkCandidates);
   } catch (error) {
@@ -59,6 +59,9 @@ async function layoutWithElk(
         "elk.direction": direction,
         "elk.spacing.nodeNode": String(nodeSpacing),
         "elk.layered.spacing.nodeNodeBetweenLayers": String(layerSpacing),
+        "elk.spacing.edgeNode": "40",
+        "elk.spacing.edgeEdge": "24",
+        "elk.layered.spacing.edgeNodeBetweenLayers": "40",
         "elk.edgeRouting": "ORTHOGONAL",
         "elk.layered.considerModelOrder.strategy": "NODES_AND_EDGES",
       },
@@ -191,9 +194,9 @@ function balancedErdGrid(nodes: LayoutNodeBox[], edges: LayoutEdgeRef[], gridSiz
   return packErdGrid(ordered, columns, gridSize);
 }
 
-function packErdGrid(nodes: LayoutNodeBox[], columns: number, gridSize: number): LayoutNodeBox[] {
-  const colWidth = Math.max(360, Math.max(...nodes.map((node) => node.width)) + 84);
-  const rowGap = 72;
+export function packErdGrid(nodes: LayoutNodeBox[], columns: number, gridSize: number): LayoutNodeBox[] {
+  const colWidth = Math.max(400, Math.max(...nodes.map((node) => node.width)) + 120);
+  const rowGap = 110;
   const rowHeights: number[] = [];
   for (let start = 0; start < nodes.length; start += columns) {
     rowHeights.push(Math.max(...nodes.slice(start, start + columns).map((node) => node.height)));
@@ -233,10 +236,19 @@ function scoreLayout(nodes: LayoutNodeBox[], edges: LayoutEdgeRef[]): number {
   const aspect = width / height;
   const tallStackPenalty = height > width * 1.25 ? (height - width * 1.25) * 12 : 0;
   const wideRunawayPenalty = width > height * 4 ? (width - height * 4) * 2 : 0;
-  const aspectPenalty = Math.abs(Math.log(aspect / 1.6)) * 800;
+  // Accept any reasonably balanced shape (wide band); only nudge back extreme
+  // aspect ratios, at a low weight, so spread-out layouts aren't forced compact.
+  const ASPECT_LOW = 0.7;
+  const ASPECT_HIGH = 2.6;
+  const aspectPenalty =
+    aspect < ASPECT_LOW ? Math.log(ASPECT_LOW / aspect) * 250 :
+    aspect > ASPECT_HIGH ? Math.log(aspect / ASPECT_HIGH) * 250 :
+    0;
   const edgeLengthPenalty = totalEdgeLength(nodes, edges) * 0.035;
   const overlapPenalty = totalOverlap(nodes) * 100000;
-  const areaPenalty = (width * height) * 0.00005;
+  // Light area penalty — enough to break ties toward compactness, not so much
+  // that it crushes the diagram into a block.
+  const areaPenalty = (width * height) * 0.00002;
   return tallStackPenalty + wideRunawayPenalty + aspectPenalty + edgeLengthPenalty + overlapPenalty + areaPenalty;
 }
 

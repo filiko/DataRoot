@@ -198,18 +198,11 @@ These are the highest-priority tasks before adding polish.
 
 Only start these after Tier 1 e2e is stable.
 
-### Renderers
+### Diagram App
 
-- [ ] Add `src/dataroot/render/miro.py`.
-- [ ] Implement Miro REST client:
-  - frames
-  - shapes
-  - sticky notes
-  - connectors
-  - board URL return
-- [ ] Add `dataroot miro <provenance_slug>`.
-- [ ] Add Cytoscape/HTML fallback renderer.
-- [ ] Add renderer tests using static provenance JSON.
+- [ ] Keep the Nexus DFD/ERD fixture suite loadable from the demo site.
+- [ ] Preserve DFD business rules and connectors during import, save, and rules-gate updates.
+- [ ] Keep JSON export/import round-tripping the Nexus metadata.
 
 ### Server / UI
 
@@ -239,7 +232,7 @@ Only start these after Tier 1 e2e is stable.
   - CompanyB fermentation scale-up
 - [ ] Record backup video.
 - [ ] Test on demo laptop and demo network.
-- [ ] If using Miro, pre-warm board the night before.
+- [ ] Pre-load the Nexus demo fixtures and known-good question set.
 
 ## Known Local Caveats
 
@@ -255,11 +248,10 @@ Only start these after Tier 1 e2e is stable.
 
 If time gets tight, cut in this order:
 
-1. Web UI
-2. Miro renderer
-3. Cytoscape fallback
-4. Model-driven fuzzy Role B
-5. Advanced confidence scoring
+1. Export polish
+2. Diagram visual polish
+3. Model-driven fuzzy Role B
+4. Advanced confidence scoring
 
 Do not cut:
 

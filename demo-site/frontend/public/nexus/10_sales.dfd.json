@@ -1,0 +1,3159 @@
+{
+  "documentType": "dashbot.dfdmaker",
+  "schemaVersion": "0.1",
+  "pen_version": "0.1",
+  "project": {
+    "id": "proj_nexus_10_sales",
+    "name": "Nexus · 10 Sales / CRM",
+    "revision": 1
+  },
+  "sources": [],
+  "erd": {
+    "notation": "crows_foot",
+    "model_level": "physical",
+    "entities": [
+      {
+        "id": "ent_acct",
+        "kind": "strong_entity",
+        "name": "accounts",
+        "display_name": "Accounts",
+        "domain": "sales",
+        "connects": [
+          "consumer-profile",
+          "finance",
+          "identity"
+        ],
+        "attributes": [
+          {
+            "id": "a_a_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_a_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_a_hs",
+            "name": "hubspot_company_id",
+            "display_name": "Hubspot Company Id",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "mirror of external HubSpot SoR"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_a_stage",
+            "name": "lifecycle_stage",
+            "display_name": "Lifecycle Stage",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_a_owner",
+            "name": "owner_id",
+            "display_name": "Owner Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "hubspot_owner_id resolved → users (01_identity); routes/hubspot.js /api/owners + resolveOwnerByEmail"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_a_territory",
+            "name": "territory",
+            "display_name": "Territory",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_a_domain",
+            "name": "domain",
+            "display_name": "Domain",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "HubSpot company domain; meetings.js company brief props (line 212)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_a_industry",
+            "name": "industry",
+            "display_name": "Industry",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "HubSpot industry; meetings.js company brief props (line 212)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_a_city",
+            "name": "city",
+            "display_name": "City",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "meetings.js company brief props (line 212); PhytoVerify create_customers_table city"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_a_state",
+            "name": "state",
+            "display_name": "State",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "meetings.js company brief props (line 212); PhytoVerify create_customers_table state"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_a_country",
+            "name": "country",
+            "display_name": "Country",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "meetings.js company brief props (line 212)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_a_postal",
+            "name": "postal_code",
+            "display_name": "Postal Code",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "PhytoVerify create_customers_table postal_code"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_a_phone",
+            "name": "phone",
+            "display_name": "Phone",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "meetings.js company brief props (line 212); PhytoVerify create_customers_table phone_number"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_a_website",
+            "name": "website",
+            "display_name": "Website",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "meetings.js company brief props (line 212)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_a_revenue",
+            "name": "annual_revenue",
+            "display_name": "Annual Revenue",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "HubSpot annualrevenue; meetings.js company brief props (line 212)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_a_employees",
+            "name": "number_of_employees",
+            "display_name": "Number Of Employees",
+            "pg_type": "integer",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "HubSpot numberofemployees; meetings.js company brief props (line 212)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_a_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_a_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "CRM company/customer; mirrors HubSpot, native in Nexus. DESIGN: cross-department join point — 09 consumer_profiles connects=['...','sales'], owner_id resolves to a 01_identity user, and customer billing flows to finance.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_contact",
+        "kind": "strong_entity",
+        "name": "contacts",
+        "display_name": "Contacts",
+        "domain": "sales",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_c_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_acct",
+            "name": "account_id",
+            "display_name": "Account Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_name",
+            "name": "full_name",
+            "display_name": "Full Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_email",
+            "name": "email",
+            "display_name": "Email",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_phone",
+            "name": "phone",
+            "display_name": "Phone",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_hs",
+            "name": "hubspot_contact_id",
+            "display_name": "Hubspot Contact Id",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_title",
+            "name": "job_title",
+            "display_name": "Job Title",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "HubSpot jobtitle; meetings.js brief contactList"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_address",
+            "name": "address",
+            "display_name": "Address",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "routes/hubspot.js sample-kit contact props (line 858-860)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_city",
+            "name": "city",
+            "display_name": "City",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "routes/hubspot.js sample-kit contact props (line 858-860)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_state",
+            "name": "state",
+            "display_name": "State",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "routes/hubspot.js sample-kit contact props (line 858-860)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_zip",
+            "name": "zip",
+            "display_name": "Zip",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "routes/hubspot.js sample-kit contact props (line 858-860)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_country",
+            "name": "country",
+            "display_name": "Country",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "routes/hubspot.js sample-kit contact props (line 858-860)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_cohort",
+            "name": "contact_cohort_type",
+            "display_name": "Contact Cohort Type",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "SSB/MSB classifier; routes/crm-hygiene.js (lines 125-126,222)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_lastact",
+            "name": "last_activity_at",
+            "display_name": "Last Activity At",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "hs_last_sales_activity_timestamp / notes_last_updated; routes/kit-engager.js (line 208)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_c_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_deal",
+        "kind": "strong_entity",
+        "name": "deals",
+        "display_name": "Deals (pipeline)",
+        "domain": "sales",
+        "connects": [
+          "product-master",
+          "identity"
+        ],
+        "attributes": [
+          {
+            "id": "a_d_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_acct",
+            "name": "account_id",
+            "display_name": "Account Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_contact",
+            "name": "contact_id",
+            "display_name": "Contact Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "primary/shipping contact; routes/hubspot.js sample-kit deal (associationTypeId 3), shipping.js fetchContactsForDeals (587-625)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_name",
+            "name": "name",
+            "display_name": "Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_pipeline",
+            "name": "pipeline",
+            "display_name": "Pipeline",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "HubSpot pipeline id; shipping.js PIPELINES (328-333), kit-engager SAMPLE_KIT_PIPELINE, hubspot.js pipelineLabel branching"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_stage",
+            "name": "stage",
+            "display_name": "Stage",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "pipeline stage"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_type",
+            "name": "deal_type",
+            "display_name": "Deal Type",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "HubSpot hs_dealtype; meetings.js batchRead deals props (line ~224)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_amount",
+            "name": "amount",
+            "display_name": "Amount",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_owner",
+            "name": "owner_id",
+            "display_name": "Owner Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "hubspot_owner_id resolved → users (01_identity); routes/hubspot.js /api/owners"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_hs",
+            "name": "hubspot_deal_id",
+            "display_name": "Hubspot Deal Id",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_close",
+            "name": "close_date",
+            "display_name": "Close Date",
+            "pg_type": "date",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_stage_entered",
+            "name": "stage_entered_at",
+            "display_name": "Stage Entered At",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "hs_date_entered_<stage> (e.g. hs_date_entered_87375719); kit-engager submitDate (line 299), shipping.js sep per pipeline (329-332)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_intacct_status",
+            "name": "intacct_sync_status",
+            "display_name": "Intacct Sync Status",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "shipping.js INT_ERROR_PROPS / scanIntegrationErrors (lines 860-864)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_intacct_ts",
+            "name": "intacct_sync_timestamp",
+            "display_name": "Intacct Sync Timestamp",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "shipping.js INT_ERROR_PROPS (lines 860-864)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_intacct_doc",
+            "name": "intacct_document_number",
+            "display_name": "Intacct Document Number",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "shipping.js INT_ERROR_PROPS (lines 860-864)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_ss_status",
+            "name": "shipstation_sync_status",
+            "display_name": "Shipstation Sync Status",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "shipping.js INT_ERROR_PROPS (lines 860-864)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_ss_ts",
+            "name": "shipstation_sync_timestamp",
+            "display_name": "Shipstation Sync Timestamp",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "shipping.js INT_ERROR_PROPS (lines 860-864)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_ss_tags",
+            "name": "shipstation_order_tags",
+            "display_name": "Shipstation Order Tags",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "shipping.js INT_ERROR_PROPS (lines 860-864)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_d_updated",
+            "name": "updated_at",
+            "display_name": "Updated At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Pipeline deal; line items sell products (08_product_master). DESIGN: connects=['identity'] because owner_id is a hubspot_owner_id resolved to a 01_identity user.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_dli",
+        "kind": "strong_entity",
+        "name": "deal_line_items",
+        "display_name": "Deal Line Items",
+        "domain": "sales",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_dl_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_dl_deal",
+            "name": "deal_id",
+            "display_name": "Deal Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_dl_product",
+            "name": "product_id",
+            "display_name": "Product Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ products (08); cross-domain"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_dl_qty",
+            "name": "quantity",
+            "display_name": "Quantity",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": "1",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_dl_price",
+            "name": "unit_price",
+            "display_name": "Unit Price",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_kit",
+        "kind": "strong_entity",
+        "name": "sample_kits",
+        "display_name": "Sample Kits",
+        "domain": "sales",
+        "connects": [
+          "refinement",
+          "product-master",
+          "identity"
+        ],
+        "attributes": [
+          {
+            "id": "a_k_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_k_deal",
+            "name": "deal_id",
+            "display_name": "Deal Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_k_acct",
+            "name": "account_id",
+            "display_name": "Account Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_k_contact",
+            "name": "contact_id",
+            "display_name": "Contact Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "kit recipient; routes/kit-engager.js kits[].contact (lines 166-167)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_k_owner",
+            "name": "owner_id",
+            "display_name": "Owner Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "sales rep hubspot_owner_id resolved → users (01_identity); kit-engager ownerFilter (lines 318-326)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_k_status",
+            "name": "status",
+            "display_name": "Status",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": false,
+            "default": "'requested'",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: engagement status; real vocabulary is kit-engager computeEngagement enum (pending/in_transit/ready/emailed/followup_due/done/dismissed, lines 104-122), distinct from shipment tracking status"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_k_req",
+            "name": "requested_at",
+            "display_name": "Requested At",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: traces to deal createdate / submit-stage-enter date hs_date_entered_87375719; kit-engager submitDate (line 299)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_k_ship",
+            "name": "shipped_at",
+            "display_name": "Shipped At",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: ship date lives on the shipment object in source, mirrored here for convenience; kit-engager shipDate from shipment (line 298)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_k_landing",
+            "name": "landing_email_sent_at",
+            "display_name": "Landing Email Sent At",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "kit-engager state landingEmailSentAt; POST /api/kit-engager/log (lines 504-537)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_k_followup",
+            "name": "follow_up_sent_at",
+            "display_name": "Follow Up Sent At",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "kit-engager state followUpSentAt; POST /api/kit-engager/log (lines 504-537)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_k_dismissed",
+            "name": "dismissed_at",
+            "display_name": "Dismissed At",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "kit-engager state dismissedAt; POST /api/kit-engager/log (lines 504-537)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_k_notes",
+            "name": "notes",
+            "display_name": "Notes",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "kit-engager state notes; POST /api/kit-engager/log (lines 504-537)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_k_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Sample kit → deal flow. Kits contain physical packages (05) of products (08). DESIGN: connects=['identity'] because owner_id is a hubspot_owner_id resolved to a 01_identity user.",
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_kititem",
+        "kind": "strong_entity",
+        "name": "sample_kit_items",
+        "display_name": "Sample Kit Items",
+        "domain": "sales",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_ki_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ki_kit",
+            "name": "sample_kit_id",
+            "display_name": "Sample Kit Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": false,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ki_pkg",
+            "name": "package_id",
+            "display_name": "Package Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ packages (05); cross-domain"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ki_product",
+            "name": "product_id",
+            "display_name": "Product Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "→ products (08)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_ki_qty",
+            "name": "quantity",
+            "display_name": "Quantity",
+            "pg_type": "numeric",
+            "key_role": "none",
+            "nullable": false,
+            "default": "1",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_meeting",
+        "kind": "strong_entity",
+        "name": "meetings",
+        "display_name": "Meetings",
+        "domain": "sales",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_m_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_m_owner",
+            "name": "owner_id",
+            "display_name": "Owner Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "hubspot_owner_id resolved → users (01_identity)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_m_acct",
+            "name": "account_id",
+            "display_name": "Account Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_m_deal",
+            "name": "deal_id",
+            "display_name": "Deal Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "meetings surfaced against deals; kit-engager attaches last meeting to a deal (lines 392-415)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_m_contact",
+            "name": "contact_id",
+            "display_name": "Contact Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "matched to HubSpot contact by attendee email; meetings.js contactMap (lines 97-152)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_m_cal",
+            "name": "calendar_event_id",
+            "display_name": "Calendar Event Id",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "Google Calendar"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_m_title",
+            "name": "title",
+            "display_name": "Title",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "GCal event summary; meetings.js enriched event mapping (lines 142-152), kit-engager gcal title (407-411)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_m_desc",
+            "name": "description",
+            "display_name": "Description",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "GCal event description; meetings.js enriched event mapping (lines 142-152)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_m_location",
+            "name": "location",
+            "display_name": "Location",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "GCal event location; meetings.js enriched event mapping (lines 142-152)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_m_meeturl",
+            "name": "meet_url",
+            "display_name": "Meet Url",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "GCal hangoutLink/htmlLink; kit-engager gcal meetUrl (lines 407-411)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_m_when",
+            "name": "scheduled_at",
+            "display_name": "Scheduled At",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "GCal event start; meetings.js enriched event mapping (lines 142-152)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_m_ends",
+            "name": "ends_at",
+            "display_name": "Ends At",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "GCal event end; meetings.js enriched event mapping (lines 142-152)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_m_brief",
+            "name": "ai_brief",
+            "display_name": "Ai Brief",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "generated by shared AI service (11)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_m_granola",
+            "name": "granola_note_id",
+            "display_name": "Granola Note Id",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_m_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_ship",
+        "kind": "strong_entity",
+        "name": "shipments",
+        "display_name": "Shipments",
+        "domain": "sales",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_s_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_kit",
+            "name": "sample_kit_id",
+            "display_name": "Sample Kit Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_deal",
+            "name": "deal_id",
+            "display_name": "Deal Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "shipments associate to ANY deal across 4 pipelines, not only kits; shipping.js manifest + fetchShipmentsForDeals"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_carrier",
+            "name": "carrier",
+            "display_name": "Carrier",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "ShipStation/DHL"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_carrier_code",
+            "name": "carrier_code",
+            "display_name": "Carrier Code",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "ShipStation label cache carrierCode; shipping.js buildSSCache (lines 252-263)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_service_type",
+            "name": "service_type",
+            "display_name": "Service Type",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "shipping.js fetchShipmentsForDeals ship props (line 524-525)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_service_code",
+            "name": "service_code",
+            "display_name": "Service Code",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "SS cache service_code; shipping.js buildSSCache (lines 252-263)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_tracking",
+            "name": "tracking_number",
+            "display_name": "Tracking Number",
+            "pg_type": "text",
+            "key_role": "unique",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_status",
+            "name": "status",
+            "display_name": "Status",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_weight",
+            "name": "weight",
+            "display_name": "Weight",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "shipping.js fetchShipmentsForDeals ship props (line 524-525) + SS cache weight"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_label",
+            "name": "label_id",
+            "display_name": "Label Id",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "SS cache label_id; shipping.js buildSSCache (lines 252-263)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_ship_to",
+            "name": "ship_to",
+            "display_name": "Ship To",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "SS cache ship_to (address); shipping.js buildSSCache (lines 252-263)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_ship_from",
+            "name": "ship_from",
+            "display_name": "Ship From",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "SS cache ship_from (address); shipping.js buildSSCache (lines 252-263)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_ship_date",
+            "name": "ship_date",
+            "display_name": "Ship Date",
+            "pg_type": "date",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "source field ship_date; shipping.js fetchShipmentsForDeals ship props (line 524-525) + SS cache"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_shipped",
+            "name": "shipped_at",
+            "display_name": "Shipped At",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_delivered",
+            "name": "delivered_at",
+            "display_name": "Delivered At",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "SS cache delivered_at; shipping.js buildSSCache (lines 252-263)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_s_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": null,
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "ent_inbound",
+        "kind": "strong_entity",
+        "name": "inbound_submissions",
+        "display_name": "Inbound Submissions",
+        "domain": "sales",
+        "connects": [],
+        "attributes": [
+          {
+            "id": "a_in_id",
+            "name": "id",
+            "display_name": "Id",
+            "pg_type": "uuid",
+            "key_role": "primary",
+            "nullable": false,
+            "default": "gen_random_uuid()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_in_form",
+            "name": "source_form",
+            "display_name": "Source Form",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: loose proxy for form_name; real field is formName (a_in_form_name)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_in_class",
+            "name": "classification",
+            "display_name": "Classification",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "DESIGN: proxy for form_tier; real field is formTier (a_in_form_tier)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_in_form_id",
+            "name": "form_id",
+            "display_name": "Form Id",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "server.js _normalizeSubmission formId (lines 1642-1668)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_in_form_name",
+            "name": "form_name",
+            "display_name": "Form Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "server.js _normalizeSubmission formName (lines 1642-1668)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_in_form_tier",
+            "name": "form_tier",
+            "display_name": "Form Tier",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "high/warm/awareness from _classifyForm; server.js _normalizeSubmission formTier (lines 1642-1668)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_in_form_cat",
+            "name": "form_category",
+            "display_name": "Form Category",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "tradeshow/sample/content/direct; server.js _normalizeSubmission formCategory (lines 1642-1668)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_in_submitted",
+            "name": "submitted_at",
+            "display_name": "Submitted At",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "the `ts`; server.js _normalizeSubmission (lines 1642-1668)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_in_page",
+            "name": "page_url",
+            "display_name": "Page Url",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "server.js _normalizeSubmission pageUrl (lines 1642-1668)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_in_name",
+            "name": "contact_name",
+            "display_name": "Contact Name",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "server.js _normalizeSubmission contactName (lines 1642-1668)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_in_email",
+            "name": "contact_email",
+            "display_name": "Contact Email",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "server.js _normalizeSubmission contactEmail (lines 1642-1668)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_in_company",
+            "name": "contact_company",
+            "display_name": "Contact Company",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "server.js _normalizeSubmission contactCompany (lines 1642-1668)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_in_cphone",
+            "name": "contact_phone",
+            "display_name": "Contact Phone",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "server.js _normalizeSubmission contactPhone (lines 1642-1668)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_in_acct",
+            "name": "account_id",
+            "display_name": "Account Id",
+            "pg_type": "uuid",
+            "key_role": "foreign",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_in_routed",
+            "name": "routed_to",
+            "display_name": "Routed To",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_in_enrolled",
+            "name": "enrolled",
+            "display_name": "Enrolled",
+            "pg_type": "boolean",
+            "key_role": "none",
+            "nullable": false,
+            "default": "false",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_in_seq",
+            "name": "sequence_id",
+            "display_name": "Sequence Id",
+            "pg_type": "text",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "HubSpot sequence id; routes/inbound.js enroll (sequenceId/contactEmail)"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_in_enrolled_at",
+            "name": "enrolled_at",
+            "display_name": "Enrolled At",
+            "pg_type": "timestamptz",
+            "key_role": "none",
+            "nullable": true,
+            "default": null,
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [
+              {
+                "source_id": "design",
+                "source_columns": [
+                  "inboundAutoEnrolled keyed formId:email; routes/inbound.js enroll"
+                ]
+              }
+            ],
+            "confidence": 1,
+            "review_status": "accepted"
+          },
+          {
+            "id": "a_in_created",
+            "name": "created_at",
+            "display_name": "Created At",
+            "pg_type": "timestamptz",
+            "key_role": "audit",
+            "nullable": false,
+            "default": "now()",
+            "check_constraint": null,
+            "source_columns": [],
+            "evidence": [],
+            "confidence": 1,
+            "review_status": "accepted"
+          }
+        ],
+        "source_evidence": [],
+        "proposal_reason": "Form leads, classified + auto-enrolled.",
+        "confidence": 1,
+        "review_status": "accepted"
+      }
+    ],
+    "relationships": [
+      {
+        "id": "rel_contact_acct",
+        "name": "at account",
+        "from": {
+          "entity_id": "ent_contact",
+          "attribute_id": "a_c_acct"
+        },
+        "to": {
+          "entity_id": "ent_acct",
+          "attribute_id": "a_a_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_contact_account",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_deal_acct",
+        "name": "with account",
+        "from": {
+          "entity_id": "ent_deal",
+          "attribute_id": "a_d_acct"
+        },
+        "to": {
+          "entity_id": "ent_acct",
+          "attribute_id": "a_a_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_deal_account",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_deal_contact",
+        "name": "primary contact",
+        "from": {
+          "entity_id": "ent_deal",
+          "attribute_id": "a_d_contact"
+        },
+        "to": {
+          "entity_id": "ent_contact",
+          "attribute_id": "a_c_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_deal_contact",
+          "on_delete": "set_null",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "routes/hubspot.js sample-kit deal associationTypeId 3 + shipping.js fetchContactsForDeals (587-625)"
+        ],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_dli_deal",
+        "name": "line of",
+        "from": {
+          "entity_id": "ent_dli",
+          "attribute_id": "a_dl_deal"
+        },
+        "to": {
+          "entity_id": "ent_deal",
+          "attribute_id": "a_d_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_dli_deal",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_kit_deal",
+        "name": "for deal",
+        "from": {
+          "entity_id": "ent_kit",
+          "attribute_id": "a_k_deal"
+        },
+        "to": {
+          "entity_id": "ent_deal",
+          "attribute_id": "a_d_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_kit_deal",
+          "on_delete": "set_null",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_kit_acct",
+        "name": "to account",
+        "from": {
+          "entity_id": "ent_kit",
+          "attribute_id": "a_k_acct"
+        },
+        "to": {
+          "entity_id": "ent_acct",
+          "attribute_id": "a_a_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_kit_account",
+          "on_delete": "restrict",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_kit_contact",
+        "name": "recipient",
+        "from": {
+          "entity_id": "ent_kit",
+          "attribute_id": "a_k_contact"
+        },
+        "to": {
+          "entity_id": "ent_contact",
+          "attribute_id": "a_c_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_kit_contact",
+          "on_delete": "set_null",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "kit recipient; routes/kit-engager.js kits[].contact (lines 166-167)"
+        ],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_kititem_kit",
+        "name": "item of",
+        "from": {
+          "entity_id": "ent_kititem",
+          "attribute_id": "a_ki_kit"
+        },
+        "to": {
+          "entity_id": "ent_kit",
+          "attribute_id": "a_k_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_kititem_kit",
+          "on_delete": "cascade",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_meeting_acct",
+        "name": "about account",
+        "from": {
+          "entity_id": "ent_meeting",
+          "attribute_id": "a_m_acct"
+        },
+        "to": {
+          "entity_id": "ent_acct",
+          "attribute_id": "a_a_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_meeting_account",
+          "on_delete": "set_null",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_meeting_deal",
+        "name": "about deal",
+        "from": {
+          "entity_id": "ent_meeting",
+          "attribute_id": "a_m_deal"
+        },
+        "to": {
+          "entity_id": "ent_deal",
+          "attribute_id": "a_d_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_meeting_deal",
+          "on_delete": "set_null",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "meeting surfaced against deals; kit-engager attaches last meeting to a deal (lines 392-415)"
+        ],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_meeting_contact",
+        "name": "with contact",
+        "from": {
+          "entity_id": "ent_meeting",
+          "attribute_id": "a_m_contact"
+        },
+        "to": {
+          "entity_id": "ent_contact",
+          "attribute_id": "a_c_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_meeting_contact",
+          "on_delete": "set_null",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "matched by attendee email; meetings.js contactMap (lines 97-152)"
+        ],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_ship_kit",
+        "name": "ships",
+        "from": {
+          "entity_id": "ent_ship",
+          "attribute_id": "a_s_kit"
+        },
+        "to": {
+          "entity_id": "ent_kit",
+          "attribute_id": "a_k_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_ship_kit",
+          "on_delete": "set_null",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_ship_deal",
+        "name": "fulfills deal",
+        "from": {
+          "entity_id": "ent_ship",
+          "attribute_id": "a_s_deal"
+        },
+        "to": {
+          "entity_id": "ent_deal",
+          "attribute_id": "a_d_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_ship_deal",
+          "on_delete": "set_null",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [
+          "shipments associate to deals across all 4 pipelines; shipping.js manifest + fetchShipmentsForDeals"
+        ],
+        "confidence": 1,
+        "review_status": "accepted"
+      },
+      {
+        "id": "rel_inbound_acct",
+        "name": "enrolls",
+        "from": {
+          "entity_id": "ent_inbound",
+          "attribute_id": "a_in_acct"
+        },
+        "to": {
+          "entity_id": "ent_acct",
+          "attribute_id": "a_a_id"
+        },
+        "cardinality": {
+          "from_min": 0,
+          "from_max": "many",
+          "to_min": 1,
+          "to_max": 1
+        },
+        "postgres": {
+          "constraint_name": "fk_inbound_account",
+          "on_delete": "set_null",
+          "on_update": "no_action"
+        },
+        "dfd_process_id": null,
+        "evidence": [],
+        "confidence": 1,
+        "review_status": "accepted"
+      }
+    ]
+  },
+  "dfd": {
+    "level": 0,
+    "notation": "yourdon_coad",
+    "system_boundary": {
+      "id": "boundary_sales",
+      "name": "Sales / CRM"
+    },
+    "external_entities": [
+      {
+        "id": "ext_hubspot",
+        "name": "HubSpot",
+        "description": "CRM system of record (deals/contacts)",
+        "source": "manual",
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "ext_google",
+        "name": "Google Calendar / Gmail",
+        "description": "Meetings + email context",
+        "source": "manual",
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "ext_ship",
+        "name": "ShipStation / DHL",
+        "description": "Carrier + tracking",
+        "source": "manual",
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "processes": [
+      {
+        "id": "proc_kit",
+        "number": "1.0",
+        "name": "Build Sample Kit → Deal",
+        "description": "Assemble kit of packages/products; create deal",
+        "user_modified": true,
+        "mapped_relationship_id": "rel_kit_deal",
+        "source_evidence": [],
+        "source_facts": [],
+        "level_1_diagram": null
+      },
+      {
+        "id": "proc_ship",
+        "number": "2.0",
+        "name": "Ship & Track",
+        "description": "Create shipment, sync tracking",
+        "user_modified": true,
+        "mapped_relationship_id": "rel_ship_kit",
+        "source_evidence": [],
+        "source_facts": [],
+        "level_1_diagram": null
+      },
+      {
+        "id": "proc_lead",
+        "number": "3.0",
+        "name": "Classify & Enroll Lead",
+        "description": "Inbound form → classify → enroll",
+        "user_modified": true,
+        "mapped_relationship_id": "rel_inbound_acct",
+        "source_evidence": [],
+        "source_facts": [],
+        "level_1_diagram": null
+      }
+    ],
+    "data_stores": [
+      {
+        "id": "store_deal",
+        "name": "Deals",
+        "description": "Pipeline",
+        "mapped_erd_entity": "ent_deal",
+        "user_modified": false,
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "store_kit",
+        "name": "Sample Kits",
+        "description": "Kits",
+        "mapped_erd_entity": "ent_kit",
+        "user_modified": false,
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "data_flows": [
+      {
+        "id": "s1",
+        "from": "ext_hubspot",
+        "to": "proc_kit",
+        "data_name": "Deal sync",
+        "mapped_relationship_id": null,
+        "user_modified": false,
+        "mapped_erd_entities": [
+          "ent_deal"
+        ],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "s2",
+        "from": "proc_kit",
+        "to": "store_kit",
+        "data_name": "Kit",
+        "mapped_relationship_id": "rel_kit_deal",
+        "user_modified": false,
+        "mapped_erd_entities": [
+          "ent_kit"
+        ],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      },
+      {
+        "id": "s3",
+        "from": "proc_ship",
+        "to": "ext_ship",
+        "data_name": "Label request",
+        "mapped_relationship_id": null,
+        "user_modified": false,
+        "mapped_erd_entities": [],
+        "mapped_erd_attributes": [],
+        "source_evidence": [],
+        "source_facts": []
+      }
+    ],
+    "business_rules": [
+      {
+        "severity": "constraint",
+        "status": "enforced",
+        "review_status": "accepted",
+        "enforced_at": [
+          "backend/src/contexts/sales/domain/contact.ts:28-41"
+        ],
+        "to_contexts": [],
+        "id": "SAL-INV-01",
+        "title": "Sales records are immutable (frozen)",
+        "category": "invariant",
+        "statement": "Accounts, contacts, deals, and meetings are frozen at creation (readonly + Object.freeze).",
+        "spec_source": "30-nexus-intel.md",
+        "verified_by": "AGENTS.md §6"
+      },
+      {
+        "severity": "best_practice",
+        "status": "deferred",
+        "review_status": "accepted",
+        "enforced_at": [],
+        "to_contexts": [],
+        "id": "SAL-LC-01",
+        "title": "Intel sales breadth deprioritized",
+        "category": "lifecycle",
+        "statement": "The ~80-endpoint Intel sales breadth (HubSpot/shipping/lead-gen/etc.) is descoped by the product owner; the core sales entities exist.",
+        "spec_source": "missing-functionality-backlog.md (P2 #14)"
+      }
+    ],
+    "connectors": [
+      {
+        "id": "conn_seam7_shared_ai",
+        "name": "Seam 7 — Shared AI service (PII-stripped, provider fallback)",
+        "kind": "shared_service",
+        "trigger": "Any context requests AI assistance (SOP/CAPA, sales copy, consumer copy)",
+        "effect": "callAiWithFallback strips customer PII + enforces spend cap (Anthropic -> Groq fallback)",
+        "from_context": "11_finance_ai",
+        "to_contexts": [
+          "07_quality_batch",
+          "09_consumer_profile",
+          "10_sales"
+        ],
+        "contract": "callAiWithFallback(prompt) with stripCustomerPII + spend-cap",
+        "enforced_at": [
+          "(not built — finance/ai/* scaffold only)"
+        ],
+        "spec_source": "40-unified-workflow-graph.md (Seam 7); 30-nexus-intel.md",
+        "status": "deferred",
+        "review_status": "needs_review"
+      }
+    ]
+  },
+  "layout": {
+    "erd": {
+      "nodes": [
+        {
+          "id": "ent_acct",
+          "x": 60,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_contact",
+          "x": 440,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_deal",
+          "x": 820,
+          "y": 60,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_dli",
+          "x": 60,
+          "y": 380,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_kit",
+          "x": 440,
+          "y": 380,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_kititem",
+          "x": 820,
+          "y": 380,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_meeting",
+          "x": 60,
+          "y": 700,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_ship",
+          "x": 440,
+          "y": 700,
+          "width": 300,
+          "height": 230
+        },
+        {
+          "id": "ent_inbound",
+          "x": 820,
+          "y": 700,
+          "width": 300,
+          "height": 230
+        }
+      ],
+      "edges": []
+    },
+    "dfd": {
+      "nodes": [],
+      "edges": []
+    },
+    "dfd_level_1": {}
+  },
+  "styles": {
+    "theme": "minimal"
+  },
+  "postgres": {
+    "dialect": "postgresql",
+    "extensions": [
+      "pgcrypto"
+    ],
+    "schema_name": "public",
+    "default_primary_key": {
+      "type": "uuid",
+      "default": "gen_random_uuid()"
+    },
+    "add_audit_timestamps": false
+  },
+  "review": {
+    "proposals": [],
+    "warnings": [],
+    "dismissed_warnings": []
+  }
+}

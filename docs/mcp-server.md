@@ -3,7 +3,7 @@
 The DataRoot stdio MCP server (`src/dataroot/mcp/server.py`) wraps the
 existing `ToolExecutor` (`src/dataroot/agent/tools.py`) with a small set of
 **bounded, well-scoped tools** that an external agent can use to explore a
-DataRoot workspace and render the answer to a Miro board.
+DataRoot workspace, answer questions, and persist provenance traces.
 
 Server name: `dataroot-texas`. Default workspace: `austin_permits`.
 
@@ -56,7 +56,7 @@ included in the response so the caller can detect truncation.
 | `kb_show`           | 1 record (no cap needed)           |
 | `summarize_workspace` | n/a (returns counts only)        |
 | `list_datasets`     | n/a (workspace count is small)     |
-| `ask_and_render`    | n/a (caps come from underlying tools) |
+| `ask`               | n/a (caps come from underlying tools) |
 
 ## Workspaces
 
@@ -332,11 +332,10 @@ Supported ops: `==`, `!=`, `>`, `>=`, `<`, `<=`, `contains`, `in`.
 
 ---
 
-### `ask_and_render`
+### `ask`
 
-**Purpose.** Answer a free-form question against a workspace and render the
-provenance graph to a Miro board. Returns the board URL plus the
-provenance trace metadata.
+**Purpose.** Answer a free-form question against a workspace and return the
+clean answer plus persisted inquiry/provenance trace metadata.
 
 **Input.**
 
@@ -344,10 +343,9 @@ provenance trace metadata.
 {
   "type": "object",
   "properties": {
-    "workspace":     { "type": "string" },
-    "question":      { "type": "string", "description": "Free-form question about the workspace." },
-    "board_id":      { "type": "string", "description": "Optional existing Miro board ID." },
-    "include_proof": { "type": "boolean", "description": "Include the precise-proof frame on the board." }
+    "workspace": { "type": "string" },
+    "question":  { "type": "string", "description": "Free-form question about the workspace." },
+    "use_agent": { "type": "boolean", "description": "Use the OpenAI-backed agent path instead of deterministic fallback." }
   },
   "required": ["question"],
   "additionalProperties": false
@@ -361,53 +359,42 @@ provenance trace metadata.
   "workspace": "austin_permits",
   "question": "What's happening at 1623 S Lamar?",
   "answer": "PMR3 and PMR4 support the PMR trait.",
-  "board_url": "https://miro.com/app/board/<id>/",
   "inquiry": "inquiries/20260510123045",
   "provenance_trace": "provenance_traces/20260510123045",
   "node_count": 7,
   "edge_count": 9,
   "stages": ["query", "retrieval", "evidence_path", "answer"],
-  "answer_source": "agent",
-  "interpreter_source": "agent_interpreter",
-  "planner_source": "agent_planner",
-  "section_status": "updated",
-  "include_proof": false
+  "trace": { "nodes": [], "edges": [], "stages": [] },
+  "answer_source": "deterministic_fallback",
+  "use_agent": false
 }
 ```
 
-**How it composes.** `ask_and_render` reuses the FastAPI app's live-ask
-helpers so the MCP response matches the HTTP `/api/ask-render` response
-field-for-field. The wiring is:
+**How it composes.** `ask` reuses the FastAPI app's live-ask helpers so the
+MCP response matches the HTTP `/api/ask` response shape for answer and
+provenance data. The wiring is:
 
 1. Wrap the cached `GitKBStore` handle in a `CompanyWorkspace` and call
-   `dataroot.server.app._answer_live_ask` (the same path the Miro panel
-   uses).
+   `dataroot.server.app._answer_live_ask`.
 2. If the agent's structured trace is missing or malformed, fall back to
-   `dataroot.query._extract_provenance(answer)` so a Miro board still
-   renders.
+   `dataroot.query._extract_provenance(answer)`.
 3. Persist the inquiry + provenance via
    `dataroot.query.persist_answer_artifacts`.
-4. Render the trace with `dataroot.render.miro.render_provenance_to_miro`,
-   targeting the workspace's `Live Ask` section
-   (`update_existing_section=True`).
-5. Strip the embedded `<provenance>` block from the answer text using
+4. Strip the embedded `<provenance>` block from the answer text using
    `dataroot.server.app._strip_provenance` before returning.
 
 **Source-field meanings.**
 
-| Field                | Values                                         | Meaning                                                           |
-|----------------------|------------------------------------------------|-------------------------------------------------------------------|
-| `answer_source`      | `agent`, `deterministic_fallback`              | Which path produced the answer text.                              |
-| `interpreter_source` | `agent_interpreter`, `deterministic_fallback`  | Whether the data-tidbit interpreter ran via OpenAI or the fallback.|
-| `planner_source`     | `agent_planner`, `deterministic_fallback`      | Whether the Miro board planner ran via OpenAI or the fallback.    |
-| `section_status`     | `created`, `updated`                            | Whether the Miro Live Ask section was created or updated in place.|
+| Field           | Values                            | Meaning                              |
+|-----------------|-----------------------------------|--------------------------------------|
+| `answer_source` | `agent`, `deterministic_fallback` | Which path produced the answer text. |
+| `use_agent`     | `true`, `false`                   | Whether the caller requested the OpenAI-backed agent path. |
 
 **Errors.**
 
-- `MIRO_ACCESS_TOKEN` missing or invalid → `{"error": "Miro REST call failed: ..."}`.
-- `OPENAI_API_KEY` unset → the interpreter and planner fall back to
-  deterministic mode automatically; the call still succeeds, with
-  `interpreter_source` / `planner_source` set to `deterministic_fallback`.
+- `OPENAI_API_KEY` or model provider credentials are required only when
+  `use_agent` is true. Deterministic fallback remains available without
+  external model credentials.
 - Question yields no provenance → returns an answer string explaining the
   retrieval failure; no exception is raised.
 

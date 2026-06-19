@@ -91,6 +91,43 @@ export function labelSize(label: string | undefined): { width: number; height: n
   };
 }
 
+export function alignRoutedPoints(
+  points: Point[] | undefined,
+  sx: number,
+  sy: number,
+  tx: number,
+  ty: number,
+  tolerance = 40,
+): Point[] | null {
+  if (!points || points.length < 2) return null;
+  const first = points[0];
+  const last = points[points.length - 1];
+  if (Math.hypot(first.x - sx, first.y - sy) > tolerance) return null;
+  if (Math.hypot(last.x - tx, last.y - ty) > tolerance) return null;
+
+  if (points.length === 2) {
+    // A straight stored segment can't absorb anchor drift orthogonally; for
+    // small drift (rendered handle centers sit a few px off the modeled
+    // anchor) just connect the live anchors directly.
+    const close = Math.hypot(first.x - sx, first.y - sy) < 16
+      && Math.hypot(last.x - tx, last.y - ty) < 16;
+    return close ? [{ x: sx, y: sy }, { x: tx, y: ty }] : null;
+  }
+
+  // Splice the live anchors into the route, shifting the adjacent point along
+  // the shared axis so the terminal segments stay orthogonal.
+  const next = points.map((point) => ({ ...point }));
+  if (next[1].y === first.y) next[1] = { ...next[1], y: sy };
+  else if (next[1].x === first.x) next[1] = { ...next[1], x: sx };
+  next[0] = { x: sx, y: sy };
+
+  const penultimate = next[next.length - 2];
+  if (penultimate.y === last.y) next[next.length - 2] = { ...penultimate, y: ty };
+  else if (penultimate.x === last.x) next[next.length - 2] = { ...penultimate, x: tx };
+  next[next.length - 1] = { x: tx, y: ty };
+  return next;
+}
+
 export function rectCenteredAt(id: string, center: Point, width: number, height: number): Rect {
   return {
     id,
