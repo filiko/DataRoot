@@ -10,7 +10,7 @@ import uuid
 from typing import Any
 
 from models.pen import (
-    PenFile, Entity, Attribute, Relationship,
+    PenFile, Entity, Attribute, IndexDef, Relationship,
     RelationshipEndpoint, Cardinality, RelationshipPostgres,
     LayoutNode, LayoutEdge, DiagramLayout, DfdModel,
 )
@@ -170,6 +170,9 @@ class OpsService:
             "attribute.add": OpsService._attribute_add,
             "attribute.update": OpsService._attribute_update,
             "attribute.delete": OpsService._attribute_delete,
+            "index.add": OpsService._index_add,
+            "index.update": OpsService._index_update,
+            "index.delete": OpsService._index_delete,
             "relationship.add": OpsService._relationship_add,
             "relationship.update": OpsService._relationship_update,
             "relationship.delete": OpsService._relationship_delete,
@@ -218,6 +221,10 @@ class OpsService:
             entity.name = payload["name"]
         if "display_name" in payload:
             entity.display_name = payload["display_name"]
+        if "description" in payload:
+            entity.description = payload["description"]
+        if "color" in payload:
+            entity.color = payload["color"]
         return pen
 
     @staticmethod
@@ -267,6 +274,8 @@ class OpsService:
             attr.nullable = payload["nullable"]
         if "key_role" in payload:
             attr.key_role = payload["key_role"]
+        if "enum_values" in payload:
+            attr.enum_values = payload["enum_values"]
         return pen
 
     @staticmethod
@@ -282,6 +291,64 @@ class OpsService:
             if r.from_.attribute_id != payload["attribute_id"]
             and r.to.attribute_id != payload["attribute_id"]
         ]
+        for index in list(entity.indexes):
+            if payload["attribute_id"] in index.attribute_ids:
+                index.attribute_ids = [
+                    aid for aid in index.attribute_ids if aid != payload["attribute_id"]
+                ]
+                if not index.attribute_ids:
+                    entity.indexes.remove(index)
+        return pen
+
+    @staticmethod
+    def _index_entity_and_attrs(pen: PenFile, payload: dict[str, Any]) -> tuple[Entity, list[str]]:
+        entity = _find_entity(pen, payload["entity_id"])
+        if not entity:
+            raise ValueError(f"Entity not found: {payload['entity_id']}")
+        attr_ids = payload.get("attribute_ids", [])
+        known = {a.id for a in entity.attributes}
+        missing = [aid for aid in attr_ids if aid not in known]
+        if missing:
+            raise ValueError(f"Attributes not found on '{entity.name}': {', '.join(missing)}")
+        return entity, attr_ids
+
+    @staticmethod
+    def _index_add(pen: PenFile, payload: dict[str, Any]) -> PenFile:
+        entity, attr_ids = OpsService._index_entity_and_attrs(pen, payload)
+        if not attr_ids:
+            raise ValueError("index.add requires at least one attribute_id")
+        entity.indexes.append(IndexDef(
+            name=payload.get("name") or f"idx_{entity.name}_{uuid.uuid4().hex[:6]}",
+            attribute_ids=attr_ids,
+            unique=payload.get("unique", False),
+        ))
+        return pen
+
+    @staticmethod
+    def _index_update(pen: PenFile, payload: dict[str, Any]) -> PenFile:
+        entity = _find_entity(pen, payload["entity_id"])
+        if not entity:
+            raise ValueError(f"Entity not found: {payload['entity_id']}")
+        index = next((i for i in entity.indexes if i.id == payload["index_id"]), None)
+        if not index:
+            raise ValueError(f"Index not found: {payload['index_id']}")
+        if "name" in payload:
+            index.name = payload["name"]
+        if "unique" in payload:
+            index.unique = payload["unique"]
+        if "attribute_ids" in payload:
+            _, attr_ids = OpsService._index_entity_and_attrs(pen, payload)
+            if not attr_ids:
+                raise ValueError("index.update requires at least one attribute_id")
+            index.attribute_ids = attr_ids
+        return pen
+
+    @staticmethod
+    def _index_delete(pen: PenFile, payload: dict[str, Any]) -> PenFile:
+        entity = _find_entity(pen, payload["entity_id"])
+        if not entity:
+            raise ValueError(f"Entity not found: {payload['entity_id']}")
+        entity.indexes = [i for i in entity.indexes if i.id != payload["index_id"]]
         return pen
 
     @staticmethod

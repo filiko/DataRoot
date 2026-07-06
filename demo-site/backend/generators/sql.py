@@ -16,8 +16,16 @@ from models.pen import PenFile, Entity, Attribute, Relationship
 
 # ── Attribute → column DDL ────────────────────────────────────────────────────
 
-def _col_def(attr: Attribute) -> str:
-    parts = [f'    "{attr.name}"', attr.pg_type]
+def _escape_str(value: str) -> str:
+    return value.replace("'", "''")
+
+
+def _enum_type_name(entity: Entity, attr: Attribute) -> str:
+    return f"{entity.name}_{attr.name}_enum"
+
+
+def _col_def(attr: Attribute, type_override: str | None = None) -> str:
+    parts = [f'    "{attr.name}"', type_override or attr.pg_type]
 
     if attr.key_role == "primary":
         parts.append("NOT NULL")
@@ -46,15 +54,16 @@ def _create_table(entity: Entity) -> str:
     for attr in entity.attributes:
         if attr.review_status == "rejected":
             continue
+        enum_type = _enum_type_name(entity, attr) if attr.enum_values else None
         # Skip FK attrs here — we add them as constraints separately
         if attr.key_role == "foreign":
             # Still include the column definition (type, nullable)
-            col_def = f'    "{attr.name}" {attr.pg_type}'
+            col_def = f'    "{attr.name}" {enum_type or attr.pg_type}'
             if not attr.nullable:
                 col_def += " NOT NULL"
             col_defs.append(col_def)
         else:
-            col_defs.append(_col_def(attr))
+            col_defs.append(_col_def(attr, type_override=enum_type))
 
         if attr.key_role == "primary":
             pk_attr = attr
@@ -110,20 +119,73 @@ def export_sql(pen: PenFile) -> str:
     if pen.postgres.extensions:
         sections.append("")
 
-    # Tables (accepted entities only, topologically ordered — PKs first)
+    # Tables (accepted entities only, topologically ordered — referenced tables first)
     accepted_entities = [e for e in pen.erd.entities if e.review_status != "rejected"]
 
-    # Simple topo sort: entities without FK deps come first
-    fk_targets = {rel.to.entity_id for rel in pen.erd.relationships if rel.review_status != "rejected"}
-    ordered = [e for e in accepted_entities if e.id not in fk_targets or
-               not any(r.from_.entity_id == e.id for r in pen.erd.relationships)]
+    # Topo sort on FK dependencies: an entity is ready once every table it
+    # references is already placed. A cycle falls back to original order.
+    accepted_rels = [r for r in pen.erd.relationships if r.review_status != "rejected"]
+    deps = {
+        e.id: {r.to.entity_id for r in accepted_rels
+               if r.from_.entity_id == e.id and r.to.entity_id != e.id}
+        for e in accepted_entities
+    }
+    ordered: list[Entity] = []
+    placed: set[str] = set()
+    pool = list(accepted_entities)
+    while pool:
+        ready = [e for e in pool if deps[e.id] <= placed]
+        if not ready:  # cycle
+            ordered.extend(pool)
+            break
+        for e in ready:
+            ordered.append(e)
+            placed.add(e.id)
+            pool.remove(e)
 
-    # Add remaining entities
-    remaining = [e for e in accepted_entities if e not in ordered]
-    ordered.extend(remaining)
+    # Enum types (before the tables that use them)
+    enum_stmts: list[str] = []
+    for entity in ordered:
+        for attr in entity.attributes:
+            if attr.review_status == "rejected" or not attr.enum_values:
+                continue
+            values = ", ".join(f"'{_escape_str(v)}'" for v in attr.enum_values)
+            enum_stmts.append(
+                f'CREATE TYPE "{_enum_type_name(entity, attr)}" AS ENUM ({values});'
+            )
+    if enum_stmts:
+        sections.extend(enum_stmts)
+        sections.append("")
 
     for entity in ordered:
         sections.append(_create_table(entity))
+        sections.append("")
+
+    # Indexes
+    index_stmts: list[str] = []
+    for entity in ordered:
+        attrs_by_id = {a.id: a for a in entity.attributes if a.review_status != "rejected"}
+        for index in entity.indexes:
+            cols = [attrs_by_id[aid].name for aid in index.attribute_ids if aid in attrs_by_id]
+            if not cols or len(cols) != len(index.attribute_ids):
+                continue  # dangling attribute refs are surfaced by the rules engine
+            unique = "UNIQUE " if index.unique else ""
+            col_list = ", ".join(f'"{c}"' for c in cols)
+            index_stmts.append(
+                f'CREATE {unique}INDEX IF NOT EXISTS "{index.name}" ON "{entity.name}" ({col_list});'
+            )
+    if index_stmts:
+        sections.append("-- Indexes")
+        sections.extend(index_stmts)
+        sections.append("")
+
+    # Table comments
+    comment_stmts = [
+        f"COMMENT ON TABLE \"{entity.name}\" IS '{_escape_str(entity.description)}';"
+        for entity in ordered if entity.description
+    ]
+    if comment_stmts:
+        sections.extend(comment_stmts)
         sections.append("")
 
     # FK constraints

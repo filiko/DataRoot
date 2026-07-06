@@ -33,12 +33,13 @@ from generators.diagram_rules import apply_rules_gate
 from generators.pen_builder import apply_proposal, build_pen_file
 from generators.proposals import generate_erd_m2m_proposals
 from generators.sql import export_dbml, export_mermaid, export_sql
+from generators.sql_import import SqlImportError, import_sql
 from generators.static_analysis import run_full_analysis
 from generators.sync_engine import propagate_erd_to_dfd, validate
 from llm.ask import answer_question
 from llm.minimax import chat_about_diagram
 from models.db_models import User
-from models.pen import DiagramLayout, LayoutEdge, LayoutNode, LayoutPoint, PenFile
+from models.pen import DiagramLayout, LayoutEdge, LayoutNode, LayoutPoint, PenFile, WarningEntry
 from models.source import SourceTableModel
 from parsers.csv_parser import parse_csv
 from parsers.excel import parse_excel
@@ -187,6 +188,50 @@ def import_project(
     apply_rules_gate(pen)
     ProjectStore.create(pen, user, db)
     return {"project_id": pen.project.id, "pen": pen.model_dump(by_alias=True)}
+
+
+class SqlImportRequest(BaseModel):
+    sql: str
+    dialect: Literal["auto", "postgres", "mysql", "sqlite"] = "auto"
+    project_name: str = "Imported Schema"
+    source_name: str = "pasted DDL"
+
+
+@app.post("/schema/import-sql")
+def import_sql_schema(
+    user: Annotated[User, Depends(current_user)],
+    db: Annotated[Session, Depends(get_session)],
+    req: SqlImportRequest,
+):
+    try:
+        result = import_sql(
+            req.sql,
+            dialect=req.dialect,
+            project_name=req.project_name,
+            source_name=req.source_name,
+        )
+    except SqlImportError as e:
+        raise HTTPException(422, str(e))
+    pen = result.pen
+    apply_rules_gate(pen)
+    # The gate replaces review.warnings, so import warnings go in after it.
+    pen.review.warnings.extend(
+        WarningEntry(
+            rule_id="IMPORT-01",
+            severity="warning",
+            node_kind="global",
+            message=w.message,
+            context={"code": w.code, "statement": w.statement},
+        )
+        for w in result.warnings
+    )
+    ProjectStore.create(pen, user, db)
+    return {
+        "project_id": pen.project.id,
+        "pen": pen.model_dump(by_alias=True),
+        "warnings": [w.model_dump() for w in result.warnings],
+        "stats": result.stats,
+    }
 
 
 def _load_bundled_example(path: Path) -> PenFile:

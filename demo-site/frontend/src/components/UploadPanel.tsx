@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from "react";
-import { Boxes, BrainCircuit, Upload, FileSpreadsheet, FolderOpen, Loader2, SquarePen, FolderGit2, Check, ChevronRight } from "lucide-react";
+import { Boxes, BrainCircuit, Upload, FileSpreadsheet, FolderOpen, Loader2, SquarePen, FolderGit2, Check, ChevronRight, Database } from "lucide-react";
 import type { PenFile } from "../types/pen";
 import {
   LOCAL_ANALYZE_BASH,
@@ -14,6 +14,7 @@ import {
 } from "./repoAnalysis";
 
 import { API_BASE as API } from "../config/api";
+import { SQL_DIALECT_OPTIONS, importSqlFile, importSqlText, type SqlDialect } from "./sqlImport";
 
 interface Props {
   onIngested: (projectId: string, pen: PenFile) => void;
@@ -62,6 +63,10 @@ export function UploadPanel({
   const [activeRepoPath, setActiveRepoPath] = useState(DEMO_REPOS[0].path);
   const repoFolderRef = useRef<HTMLInputElement>(null);
   const openFileRef = useRef<HTMLInputElement>(null);
+  const sqlFileRef = useRef<HTMLInputElement>(null);
+  const [sqlPicking, setSqlPicking] = useState(false);
+  const [sqlDialect, setSqlDialect] = useState<SqlDialect>("auto");
+  const [sqlText, setSqlText] = useState("");
 
   const upload = useCallback(async (files: File[]) => {
     if (!files.length) return;
@@ -227,6 +232,35 @@ export function UploadPanel({
     void handleOpenDfdFile(e.target.files?.[0]);
   }, [handleOpenDfdFile]);
 
+  const handleImportSqlFile = useCallback(async (file: File | undefined) => {
+    if (!file) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await importSqlFile(file, sqlDialect);
+      onIngested(data.project_id, data.pen);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "SQL import failed");
+    } finally {
+      setLoading(false);
+      if (sqlFileRef.current) sqlFileRef.current.value = "";
+    }
+  }, [onIngested, sqlDialect]);
+
+  const handleImportSqlText = useCallback(async () => {
+    if (!sqlText.trim()) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await importSqlText(sqlText, sqlDialect);
+      onIngested(data.project_id, data.pen);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "SQL import failed");
+    } finally {
+      setLoading(false);
+    }
+  }, [onIngested, sqlDialect, sqlText]);
+
   const onDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setDragging(false);
@@ -236,9 +270,14 @@ export function UploadPanel({
       void handleOpenDfdFile(dfd);
       return;
     }
+    const sql = dropped.find((f) => /\.sql$/i.test(f.name));
+    if (sql) {
+      void handleImportSqlFile(sql);
+      return;
+    }
     const files = dropped.filter((f) => /\.(xlsx|xls|csv)$/i.test(f.name));
     upload(files);
-  }, [handleOpenDfdFile, upload]);
+  }, [handleImportSqlFile, handleOpenDfdFile, upload]);
 
   const onFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -381,7 +420,7 @@ export function UploadPanel({
               <span className="text-gray-400"> or click to browse</span>
             </div>
             <div className="flex gap-2 mt-1">
-              {[".xlsx", ".xls", ".csv"].map((ext) => (
+              {[".xlsx", ".xls", ".csv", ".sql"].map((ext) => (
                 <span
                   key={ext}
                   className="px-2 py-0.5 bg-gray-100 rounded text-xs font-mono text-gray-600"
@@ -442,6 +481,21 @@ export function UploadPanel({
           MorSat0 — Claude eval
         </button>
         <button
+          onClick={() => setSqlPicking((v) => !v)}
+          disabled={loading}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-sky-200 bg-sky-50 text-sm font-medium text-sky-700 hover:border-sky-400 hover:bg-sky-100 transition-colors disabled:opacity-50"
+        >
+          <Database className="w-4 h-4" />
+          Import SQL DDL
+        </button>
+        <input
+          ref={sqlFileRef}
+          type="file"
+          accept=".sql"
+          className="hidden"
+          onChange={(e) => void handleImportSqlFile(e.target.files?.[0])}
+        />
+        <button
           onClick={handleStartBlank}
           disabled={loading}
           className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:border-indigo-400 hover:text-indigo-700 transition-colors disabled:opacity-50"
@@ -450,6 +504,52 @@ export function UploadPanel({
           Start with a blank canvas
         </button>
       </div>
+
+      {sqlPicking && (
+        <div className="w-full max-w-lg rounded-xl border border-sky-200 bg-white p-4">
+          <div className="flex items-center justify-between mb-3">
+            <div className="text-sm font-medium text-gray-900">
+              Import an existing database from SQL
+            </div>
+            <select
+              value={sqlDialect}
+              onChange={(e) => setSqlDialect(e.target.value as SqlDialect)}
+              className="rounded-lg border border-sky-200 bg-white px-2 py-1.5 text-xs text-gray-700 outline-none focus:border-sky-500"
+            >
+              {SQL_DIALECT_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+          <textarea
+            value={sqlText}
+            onChange={(e) => setSqlText(e.target.value)}
+            placeholder={"CREATE TABLE customers (\n    id uuid PRIMARY KEY,\n    email text NOT NULL UNIQUE\n);"}
+            rows={6}
+            className="w-full rounded-lg border border-sky-200 bg-gray-50 px-3 py-2 text-xs font-mono text-gray-800 outline-none focus:border-sky-500"
+          />
+          <div className="flex gap-2 mt-3">
+            <button
+              onClick={handleImportSqlText}
+              disabled={loading || !sqlText.trim()}
+              className="flex-1 py-2 rounded-lg bg-sky-500 hover:bg-sky-600 text-white text-sm font-semibold transition-colors disabled:opacity-50"
+            >
+              Import pasted SQL
+            </button>
+            <button
+              onClick={() => sqlFileRef.current?.click()}
+              disabled={loading}
+              className="flex-1 py-2 rounded-lg border border-sky-300 bg-white text-sky-800 text-sm font-semibold hover:border-sky-500 transition-colors disabled:opacity-50"
+            >
+              Choose a .sql file
+            </button>
+          </div>
+          <div className="mt-2 text-xs text-gray-400">
+            Reads CREATE TABLE, ALTER TABLE … ADD CONSTRAINT, CREATE INDEX, and enum types.
+            Anything else is skipped with a warning.
+          </div>
+        </div>
+      )}
 
       {error && (
         <div className="w-full max-w-lg bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">

@@ -74,6 +74,16 @@ An attribute has `key_role: foreign` but no `Relationship` references it
 from either endpoint. The FK constraint will not be emitted by the SQL
 exporter; the user should either add a relationship or change the key role.
 
+### ERD-05 — Index integrity
+- **severity:** warn
+- **strategy:** warn
+- **scope:** ERD
+- **detector:** `_detect_erd_05_index_integrity`
+
+An `IndexDef` on an entity references an attribute ID that is missing or
+rejected. The index will be skipped by the SQL exporter; the user should
+remove the index or restore the column.
+
 ---
 
 ## DFD rules

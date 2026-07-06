@@ -48,6 +48,7 @@ class Attribute(BaseModel):
     nullable: bool = True
     default: str | None = None
     check_constraint: str | None = None  # raw SQL expression e.g. "quantity > 0"
+    enum_values: list[str] | None = None  # fixed value list (rendered as CREATE TYPE ... AS ENUM)
     # evidence / metadata
     source_columns: list[str] = Field(default_factory=list)
     evidence: list[AttributeEvidence] = Field(default_factory=list)
@@ -55,12 +56,22 @@ class Attribute(BaseModel):
     review_status: Literal["accepted", "needs_review", "rejected"] = "accepted"
 
 
+class IndexDef(BaseModel):
+    id: str = Field(default_factory=lambda: f"idx_{uuid.uuid4().hex[:8]}")
+    name: str
+    attribute_ids: list[str] = Field(default_factory=list)  # Attribute.id refs — survive renames
+    unique: bool = False
+
+
 class Entity(BaseModel):
     id: str = Field(default_factory=lambda: f"ent_{uuid.uuid4().hex[:8]}")
     kind: Literal["strong_entity", "weak_entity", "lookup_table"] = "strong_entity"
     name: str          # snake_case table name
     display_name: str  # human-readable label
+    description: str | None = None  # exported as COMMENT ON TABLE
+    color: str | None = None        # canvas header tint (never read by SQL exporters)
     attributes: list[Attribute] = Field(default_factory=list)
+    indexes: list[IndexDef] = Field(default_factory=list)
     # evidence / metadata
     source_evidence: list[AttributeEvidence] = Field(default_factory=list)
     proposal_reason: str | None = None
@@ -344,7 +355,7 @@ class ProjectMeta(BaseModel):
 
 class PenFile(BaseModel):
     documentType: Literal["dashbot.dfdmaker"] = "dashbot.dfdmaker"
-    schemaVersion: str = "0.1"
+    schemaVersion: str = "0.2"
     pen_version: str = "0.1"
     project: ProjectMeta = Field(default_factory=ProjectMeta)
     sources: list[SourceRef] = Field(default_factory=list)

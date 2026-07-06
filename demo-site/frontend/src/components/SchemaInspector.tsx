@@ -161,6 +161,35 @@ function EntityCard({ entity, theme }: { entity: Entity; theme: DiagramTheme }) 
         ))}
       </div>
 
+      {/* Indexes */}
+      {(entity.indexes?.length ?? 0) > 0 && (
+        <div style={{
+          padding: "7px 12px",
+          background: evidenceBg,
+          borderTop: `1px solid ${cardBorder}33`,
+          display: "flex", flexWrap: "wrap", gap: 5,
+        }}>
+          {entity.indexes!.map((index) => {
+            const cols = index.attribute_ids
+              .map((aid) => entity.attributes.find((a) => a.id === aid)?.name)
+              .filter(Boolean)
+              .join(", ");
+            return (
+              <span key={index.id} style={{
+                fontSize: 10,
+                fontFamily: "ui-monospace, monospace",
+                background: isChalk ? "rgba(239,232,213,0.08)" : "#ffffff",
+                color: isChalk ? "rgba(239,232,213,0.55)" : "#64748b",
+                border: `1px solid ${cardBorder}`,
+                borderRadius: 4, padding: "2px 7px",
+              }}>
+                {index.unique ? "unique idx" : "idx"}: {index.name} ({cols})
+              </span>
+            );
+          })}
+        </div>
+      )}
+
       {/* Source evidence */}
       {entity.source_evidence.length > 0 && (
         <div style={{

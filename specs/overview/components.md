@@ -48,7 +48,7 @@ Status legend: `implemented` / `partial` / `stub` / `dead` / `data-asset`.
 | DATA-DFM-014 | Auth, sessions & invite-link sharing | `demo-site/backend/auth.py:75` | implemented |
 | DATA-DFM-015 | LLM features (data Ask + diagram chat, MiniMax) | `demo-site/backend/llm/minimax.py:56` | implemented |
 | DATA-DFM-016 | DFDMaker FastAPI app (routes, exports, admin) | `demo-site/backend/main.py:51` | implemented |
-| DATA-DFM-017 | SQL DDL importer (DDL text → PenFile via sqlglot) | `demo-site/backend/generators/sql_import.py:1` | stub |
+| DATA-DFM-017 | SQL DDL importer (DDL text → PenFile via sqlglot) | `demo-site/backend/generators/sql_import.py:1` | implemented |
 | DATA-WEB-001 | Frontend shell, routing & tabs (`App.tsx`) | `demo-site/frontend/src/App.tsx:127` | implemented |
 | DATA-WEB-002 | ERD canvas editor (React Flow) | `demo-site/frontend/src/components/ERDCanvas.tsx:829` | implemented |
 | DATA-WEB-003 | DFD canvas editor (context + level-1 tabs) | `demo-site/frontend/src/components/DFDCanvas.tsx:429` | implemented |

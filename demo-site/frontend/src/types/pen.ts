@@ -20,10 +20,18 @@ export interface Attribute {
   nullable: boolean;
   default?: string;
   check_constraint?: string;
+  enum_values?: string[] | null;
   source_columns: string[];
   evidence: AttributeEvidence[];
   confidence: number;
   review_status: ReviewStatus;
+}
+
+export interface IndexDef {
+  id: string;
+  name: string;
+  attribute_ids: string[];
+  unique: boolean;
 }
 
 export interface Entity {
@@ -31,7 +39,10 @@ export interface Entity {
   kind: EntityKind;
   name: string;
   display_name: string;
+  description?: string | null;
+  color?: string | null;
   attributes: Attribute[];
+  indexes?: IndexDef[];
   source_evidence: AttributeEvidence[];
   proposal_reason?: string;
   confidence: number;

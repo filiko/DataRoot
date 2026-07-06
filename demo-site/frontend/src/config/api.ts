@@ -33,6 +33,7 @@ export const API = {
   openProject: () => getApiUrl('/projects/open'),
   saveProject: () => getApiUrl('/projects/save'),
   importProject: () => getApiUrl('/projects/import'),
+  importSql: () => getApiUrl('/schema/import-sql'),
   deleteProject: (id: string) => getApiUrl(`/projects/${id}`),
   projectList: () => getApiUrl('/projects'),
   projectRevision: (id: string) => getApiUrl(`/projects/${id}/revision`),

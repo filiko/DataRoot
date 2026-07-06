@@ -171,6 +171,19 @@ function AttributeRow({ attr }: { attr: Attribute }) {
           {attr.name}
         </span>
       )}
+      {attr.enum_values && attr.enum_values.length > 0 && (
+        <span
+          title={`One of: ${attr.enum_values.join(", ")}`}
+          style={{
+            fontSize: 9,
+            background: "#ede9fe",
+            color: "#6d28d9",
+            borderRadius: 4,
+            padding: "1px 4px",
+            fontWeight: 600,
+          }}
+        >enum</span>
+      )}
       <span style={{ color: theme.erd.entity.accent, fontSize: 11, fontFamily: "monospace" }}>
         {attr.pg_type}
       </span>
@@ -229,15 +242,18 @@ function TableNode({ data }: { data: TableNodeData }) {
       )}
 
       {/* Header */}
-      <div style={{
-        padding: "6px 8px",
-        background: tokens.header,
-        borderBottom: "1.5px solid",
-        borderColor: tokens.border,
-        display: "flex",
-        alignItems: "center",
-        gap: 6,
-      }}>
+      <div
+        title={entity.description || undefined}
+        style={{
+          padding: "6px 8px",
+          background: entity.color || tokens.header,
+          borderBottom: "1.5px solid",
+          borderColor: tokens.border,
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+        }}
+      >
         <span style={{ fontSize: 14 }}>{isLookup ? "📋" : "🗂"}</span>
         <span style={{ fontWeight: 600, color: tokens.text, letterSpacing: "-0.01em", flex: 1 }}>
           {entity.display_name || entity.name}

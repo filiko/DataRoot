@@ -196,6 +196,32 @@ def _detect_erd_04_orphan_fk(pen: PenFile, idx: _GraphIndex) -> list[RuleViolati
     return out
 
 
+def _detect_erd_05_index_integrity(pen: PenFile, idx: _GraphIndex) -> list[RuleViolation]:
+    out: list[RuleViolation] = []
+    for ent in pen.erd.entities:
+        if ent.review_status == "rejected":
+            continue
+        live_attrs = {a.id for a in ent.attributes if a.review_status != "rejected"}
+        for index in ent.indexes:
+            dangling = [aid for aid in index.attribute_ids if aid not in live_attrs]
+            if dangling:
+                out.append(RuleViolation(
+                    rule_id="ERD-05",
+                    severity="warning",
+                    node_kind="entity",
+                    node_id=ent.id,
+                    node_name=ent.display_name or ent.name,
+                    message=(
+                        f"Index '{index.name}' on '{ent.name}' references a missing or "
+                        f"rejected column. It will be skipped in SQL export."
+                    ),
+                    auto_regenerable=False,
+                    context={"entity_id": ent.id, "index_id": index.id,
+                             "dangling_attribute_ids": dangling},
+                ))
+    return out
+
+
 def _detect_dfd_01_floating_store(pen: PenFile, idx: _GraphIndex) -> list[RuleViolation]:
     out: list[RuleViolation] = []
 
@@ -473,6 +499,7 @@ _ALL_DETECTORS = [
     _detect_erd_01_orphan_entity,
     _detect_erd_03_self_m2m,
     _detect_erd_04_orphan_fk,
+    _detect_erd_05_index_integrity,
     _detect_dfd_01_floating_store,
     _detect_dfd_02_black_hole,
     _detect_dfd_03_miracle,
