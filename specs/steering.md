@@ -3,6 +3,9 @@
 _Spec sheet generated 2026-06-22. Alias `data`, component-ID prefix `DATA`._
 _Amended 2026-07-05: added DATA-DFM-017 (SQL DDL importer, `POST /schema/import-sql`) and PEN schema 0.2
 (indexes, enum columns, table description/color) — see `overview/spec.tech.md` REQ-DATA-067…071._
+_Amended 2026-07-06: added DATA-DFM-018 (project snapshots) plus multi-dialect SQL export, ERD editing UI
+for schema-0.2 fields, and auto-arrange-on-first-load — REQ-DATA-072…075. Implementation delegated to the
+AgenticFlow agent swarm (branch `af/dataroot`)._
 
 ## Source quality
 

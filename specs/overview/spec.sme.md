@@ -1,6 +1,6 @@
 # DataRoot — Plain-Language Spec
 
-**Component count: 56.** Same components, same IDs, same order as `components.md` and `spec.tech.md`,
+**Component count: 57.** Same components, same IDs, same order as `components.md` and `spec.tech.md`,
 written for a non-engineer. No code references.
 
 This repository holds **two related products**:
@@ -87,7 +87,9 @@ This repository holds **two related products**:
   auto-fix derived diagram objects without ever changing your tables.
 - **DATA-DFM-010 — Exporters.** Produce the equivalent PostgreSQL setup script, plus DBML and Mermaid diagram
   text. The SQL is checked for validity; if something's off it adds a warning comment instead of failing.
-  The script now also includes any indexes, fixed-value lists, and table descriptions you've defined.
+  The script now also includes any indexes, fixed-value lists, and table descriptions you've defined, and
+  you can ask for the script in other database flavors (MySQL, SQLite, SQL Server) — anything that can't be
+  translated becomes a note in the script rather than an error.
 - **DATA-DFM-011 — Safe-edit operations.** A fixed list of 19 allowed edits (add/rename/delete tables,
   columns, relationships, indexes, flows, move things, answer a proposal, change settings). Deletes clean up
   anything that depended on them.
@@ -108,25 +110,33 @@ This repository holds **two related products**:
   project: tables, columns, keys, and relationships are read out of the script, anything it can't understand
   is listed as a warning instead of failing, and the result goes through the same checks as every other way
   of creating a project. It understands PostgreSQL scripts best and can also read MySQL and SQLite ones.
+- **DATA-DFM-018 — Project snapshots.** Save a named copy of your whole project at any moment (like a
+  bookmark), see the list of saved copies, and restore one later — restoring is checked and versioned just
+  like any other edit, and only people on the project can do it.
 
 ## DATA-WEB — DFDMaker website (what you see in the browser)
 
 - **DATA-WEB-001 — App frame.** The overall page with its ERD / DFD / Schema / Export tabs, plus special
   pages for docs, the demo, and accepting an invite link. It always sends your login cookie with requests.
+  The editor header includes a snapshots menu to save, restore, or delete named copies of the project.
 - **DATA-WEB-002 — Table-diagram editor.** The interactive ERD canvas where you add and edit tables,
   columns, and relationships, with crow's-foot notation. New tables automatically get an ID key and audit
   timestamps; deleting a table asks you to confirm the knock-on removals. Tables can show a custom color
-  and description, and columns limited to a fixed list of values get a small badge.
+  and description, and columns limited to a fixed list of values get a small badge. The edit dialog lets
+  you set the table's description and color, edit a column's fixed value list, and add, change, or remove
+  indexes.
 - **DATA-WEB-003 — Flow-diagram editor.** The interactive DFD canvas, with a top-level "Context" view and a
   detailed view for each process. Moving things auto-saves, and renaming/reconnecting arrows goes through the
   safe-edit operations.
 - **DATA-WEB-004 — Auto-arrange.** The behind-the-scenes engine that tidies a diagram: it lays out the boxes,
-  picks where arrows attach, routes them at right angles, and places labels so they don't overlap.
+  picks where arrows attach, routes them at right angles, and places labels so they don't overlap. Freshly
+  imported projects are tidied automatically the first time they open (instead of showing a plain grid), and
+  you can always re-tidy with the Auto-arrange button.
 - **DATA-WEB-005 — Side panel.** The left workspace with four tabs: Ask, Proposals (accept/reject
   suggestions), Errors (design problems found), and Chat (talk to the AI about your diagram).
 - **DATA-WEB-006 — Export & inspector panels.** A viewer to copy or download the SQL/Mermaid/DBML/project
   file, a read-only schema browser (which also lists each table's indexes), and a collapsible banner that
-  summarizes current warnings.
+  summarizes current warnings. The SQL view has a picker to choose the database flavor of the script.
 - **DATA-WEB-007 — Server connection & live sync.** The code that calls the backend and keeps multiple
   collaborators in sync by quietly checking every few seconds whether someone else changed the project.
 - **DATA-WEB-008 — Landing, login & sharing screens.** The marketing/landing pages, the invite-gated
@@ -159,4 +169,5 @@ This repository holds **two related products**:
 - **DATA-OPS-005 — Automated tests.** Two test suites: one for the DataRoot pipeline (storage, linking, Miro
   drawing, the plug-in server) and one for DFDMaker that verifies the code-repo analyzer produces a valid
   project from trustworthy facts only, the SQL importer reads scripts correctly (with a "round trip" check
-  that re-exports what it imported), and old project files still open.
+  that re-exports what it imported), old project files still open, exported scripts are valid in every
+  supported database flavor, and snapshots save and restore faithfully.

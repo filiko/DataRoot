@@ -1,7 +1,7 @@
 # DataRoot — Component Registry
 
-**Component count: 56.** This registry is the parity backbone: `spec.tech.md` and `spec.sme.md`
-cover these exact 56 IDs in this exact order. Areas reflect the repo's real structure:
+**Component count: 57.** This registry is the parity backbone: `spec.tech.md` and `spec.sme.md`
+cover these exact 57 IDs in this exact order. Areas reflect the repo's real structure:
 `CORE` = the DataRoot Python lineage agent (`src/dataroot/`), `DFM` = the DFDMaker demo-site backend
 (`demo-site/backend/`), `WEB` = the demo-site React/Vite frontend (`demo-site/frontend/`),
 `DATA` = data assets, `OPS` = tooling/build/tests.
@@ -49,6 +49,7 @@ Status legend: `implemented` / `partial` / `stub` / `dead` / `data-asset`.
 | DATA-DFM-015 | LLM features (data Ask + diagram chat, MiniMax) | `demo-site/backend/llm/minimax.py:56` | implemented |
 | DATA-DFM-016 | DFDMaker FastAPI app (routes, exports, admin) | `demo-site/backend/main.py:51` | implemented |
 | DATA-DFM-017 | SQL DDL importer (DDL text → PenFile via sqlglot) | `demo-site/backend/generators/sql_import.py:1` | implemented |
+| DATA-DFM-018 | Project snapshots (named PEN copies + restore) | `demo-site/backend/models/db_models.py:1` | stub |
 | DATA-WEB-001 | Frontend shell, routing & tabs (`App.tsx`) | `demo-site/frontend/src/App.tsx:127` | implemented |
 | DATA-WEB-002 | ERD canvas editor (React Flow) | `demo-site/frontend/src/components/ERDCanvas.tsx:829` | implemented |
 | DATA-WEB-003 | DFD canvas editor (context + level-1 tabs) | `demo-site/frontend/src/components/DFDCanvas.tsx:429` | implemented |

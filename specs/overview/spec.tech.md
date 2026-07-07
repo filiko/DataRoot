@@ -1,9 +1,11 @@
 # DataRoot — Technical Spec
 
-**Component count: 56.** One section per component, same IDs/titles/order as `components.md`.
+**Component count: 57.** One section per component, same IDs/titles/order as `components.md`.
 Each requirement is tagged `REQ-DATA-NNN`. All `file:line` cites verified against the working tree
 on 2026-06-22. _Amended 2026-07-05: added DATA-DFM-017 (SQL DDL importer) and REQ-DATA-067…071;
 cites for not-yet-written code are path-only until implementation lands._
+_Amended 2026-07-06: added DATA-DFM-018 (project snapshots) and REQ-DATA-072…075 (multi-dialect
+SQL export, snapshots, ERD editing UI, auto-arrange on first load)._
 
 ---
 
@@ -249,7 +251,8 @@ cites for not-yet-written code are path-only until implementation lands._
 ### DATA-DFM-003 — DB models
 - **What.** SQLModel tables: `User` (`db_models.py:21`), `Project` w/ `pen_json` JSON column
   (`db_models.py:30`), `ProjectMember` (composite PK, role) (`db_models.py:41`), `Invite`
-  (`db_models.py:50`), `WaitlistSubmission` (`db_models.py:62`).
+  (`db_models.py:50`), `WaitlistSubmission` (`db_models.py:62`), `ProjectSnapshot`
+  (id, project_id, name, created_at, full pen JSON payload — → DATA-DFM-018) (`db_models.py`).
 - **REQ-DATA-031** A project's full PEN MUST be persisted as a JSON column with a monotonically increasing
   `revision` (`db_models.py:30`).
 
@@ -323,9 +326,9 @@ cites for not-yet-written code are path-only until implementation lands._
   sources (`diagram_rules.py:501,567`).
 
 ### DATA-DFM-010 — SQL/DBML/Mermaid exporters
-- **What.** `export_sql` (`generators/sql.py:103`), `export_mermaid` (`sql.py:156`), `export_dbml`
-  (`sql.py:212`). `dbml.py`/`mermaid.py` are 5-line re-export shims (`generators/dbml.py:4`,
-  `generators/mermaid.py:4`).
+- **What.** `export_sql` (`generators/sql.py:103`; `dialect` param per REQ-DATA-072), `export_mermaid`
+  (`sql.py:156`), `export_dbml` (`sql.py:212`). `dbml.py`/`mermaid.py` are 5-line re-export shims
+  (`generators/dbml.py:4`, `generators/mermaid.py:4`).
 - **Rules.** Read `erd`+`postgres` only, ignore layout, accepted entities only, topo-ordered tables, FK as
   ALTER constraints; validate via SQLGlot and downgrade failures to a comment warning (`sql.py:114,146`).
   _Schema 0.2: additionally emits `CREATE [UNIQUE] INDEX` per `Entity.indexes`, `CREATE TYPE ..._enum AS
@@ -334,6 +337,10 @@ cites for not-yet-written code are path-only until implementation lands._
   FK target is a valid root), fixing the earlier misclassification._
 - **REQ-DATA-041** SQL export MUST validate via SQLGlot and emit a warning comment rather than crashing on
   invalid DDL (`sql.py:146`).
+- **REQ-DATA-072** `export_sql` MUST accept a `dialect` parameter (`postgres` default) — the postgres
+  output stays byte-identical to the dialect-less path; other dialects (`mysql`, `sqlite`, `sqlserver`)
+  transpile per-statement via `sqlglot.transpile`, degrading untranslatable statements to a comment
+  instead of failing the whole export (`sql.py`, `tests/test_sql_export_dialects.py`).
 
 ### DATA-DFM-011 — Typed-ops service
 - **What.** `OpsService.apply_op(pen, op, payload)` applies 19 typed operations through one dispatch table
@@ -399,7 +406,8 @@ cites for not-yet-written code are path-only until implementation lands._
 - **What.** `FastAPI(title="DFDMaker API")` wiring all routes (`demo-site/backend/main.py:51`): ingest,
   blank/example/morsat0/claude-eval/repo-analysis schema creation (`main.py:129,161,202,213,224,246,305`),
   SQL DDL import (`POST /schema/import-sql`, → DATA-DFM-017),
-  project CRUD + ops + layout patch (`main.py:360-680`), validate/analyze, chat/ask, exports, waitlist,
+  project CRUD + ops + layout patch (`main.py:360-680`), validate/analyze, chat/ask, exports
+  (`/export/sql` accepts `?dialect=` per REQ-DATA-072), snapshots (→ DATA-DFM-018), waitlist,
   admin waitlist viewer (`main.py:1050`), and SPA static fallback (`main.py:1100-1119`).
 - **Rules.** SessionMiddleware + CORS (`main.py:60-82`); `init_db` on startup (`main.py:85-87`); imports
   resolve by injecting backend dirs into `sys.path` (`main.py:24-28`); `apply_rules_gate` runs on every
@@ -439,6 +447,21 @@ cites for not-yet-written code are path-only until implementation lands._
   `propagate_erd_to_dfd`, `apply_rules_gate`, `ProjectStore.create`) and surface skipped constructs as
   `WarningEntry(rule_id="IMPORT-01")` in `pen.review.warnings` (`sql_import.py`, `main.py`).
 
+### DATA-DFM-018 — Project snapshots
+- **What.** Named point-in-time copies of a project's PEN. `ProjectSnapshot` SQLModel table
+  (`demo-site/backend/models/db_models.py`: id, project_id FK, name, created_at, full pen JSON payload,
+  revision at capture). Routes in `main.py`: `POST /projects/{id}/snapshots {name}`,
+  `GET /projects/{id}/snapshots`, `DELETE /projects/{id}/snapshots/{snapshot_id}`,
+  `POST /projects/{id}/snapshots/{snapshot_id}/restore`. Service logic alongside the existing
+  project services (`demo-site/backend/services/`).
+- **Rules.** All snapshot routes are member-gated like other project mutations; `init_db()`'s
+  `create_all` picks the table up (no migration framework).
+- **REQ-DATA-073** Creating a snapshot MUST copy the project's full pen JSON and current revision
+  verbatim, gated on project membership (`db_models.py`, `main.py`).
+- **REQ-DATA-074** Restore MUST validate the stored payload as a `PenFile`, run `apply_rules_gate`,
+  and bump the project revision — never silently overwrite or skip validation
+  (`main.py`, `tests/test_snapshots.py`).
+
 ---
 
 ## Area: DATA-WEB — DFDMaker frontend (`demo-site/frontend/`)
@@ -453,12 +476,18 @@ cites for not-yet-written code are path-only until implementation lands._
   (`App.tsx:300`).
 - **REQ-DATA-049** The shell MUST gate views by auth/pen state and route `/docs`, `/demo`, `/invite/:token`
   without a router library (`App.tsx:167,179,330-388`).
+- _2026-07-06: the editor header gains a snapshot dropdown (save named snapshot / list / restore-with-confirm
+  / delete) backed by the DATA-DFM-018 routes (`App.tsx`)._
 
 ### DATA-WEB-002 — ERD canvas editor
 - **What.** React Flow ERD editor (`src/components/ERDCanvas.tsx:829`) with `TableNode` (`:188`),
   `CardinalityEdge` crow's-foot markers (`:361`), `penToFlow` (`:426`), entity/relationship dialogs
   (`:544,:736`). _Schema 0.2: `TableNode` renders `Entity.color` as a header tint, `Entity.description`
-  as a tooltip, and an enum badge on attributes with `enum_values` (read-only rendering first)._
+  as a tooltip, and an enum badge on attributes with `enum_values` (read-only rendering first).
+  2026-07-06: the entity edit dialog additionally edits `Entity.description`/`Entity.color`,
+  `Attribute.enum_values` (list editor), and creates/edits/deletes indexes through the existing
+  `index.add/update/delete` typed ops (`POST /projects/{id}/ops`, handlers at
+  `services/ops_service.py:316-347`)._
 - **Rules.** Writes via direct `fetch` to `PATCH /schema/{id}/pen` (`:874`) and `POST /projects/{id}/ops`
   (`:957`); new entity auto-generates UUID PK + audit attrs (`:1030-1070`); entity delete uses
   `DELETE /schema/{id}/entity/{eid}` with 409→`?force=true` cascade confirm (`:985`).
@@ -484,6 +513,10 @@ cites for not-yet-written code are path-only until implementation lands._
   (`overlap.ts:4`); preset `label_t`/`label_offset` are honored (`labelPlacement.ts:11`).
 - **REQ-DATA-052** Auto-arrange MUST output node/edge layout patches (`toLayoutNodePatch`/`toLayoutEdgePatch`
   at `optimizeLayout.ts:30,40`) consumable by `PATCH /schema/{id}/layout`.
+- **REQ-DATA-075** Projects whose ERD layout is still the server-side grid default (e.g. fresh SQL
+  imports/ingests from `pen_builder._auto_layout`) MUST be auto-arranged through the `optimizeLayout`
+  pipeline on first canvas load, with the result persisted via `PATCH /schema/{id}/layout`; a manual
+  Auto-arrange affordance remains available (`ERDCanvas.tsx`, `optimizeLayout.ts`).
 
 ### DATA-WEB-005 — Sidebar workspace
 - **What.** Left-sidebar host with tabs Ask/Proposals/Errors/Chat (`src/components/SidebarGrading.tsx:19`),
@@ -500,7 +533,9 @@ cites for not-yet-written code are path-only until implementation lands._
   {format}`) (`src/components/ExportPanel.tsx:19,31`); `SchemaInspector` read-only schema browser
   (`src/components/SchemaInspector.tsx:248`); `WarningsBanner` collapsible summary memoized to avoid
   re-render on polling (`src/components/WarningsBanner.tsx:75`). _Schema 0.2: `SchemaInspector` also lists
-  each entity's `indexes`._
+  each entity's `indexes`. 2026-07-06: the SQL tab of `ExportPanel` gains a dialect picker
+  (postgres default / mysql / sqlite / sqlserver) appending `?dialect=` to the export fetch
+  (REQ-DATA-072)._
 - **REQ-DATA-054** Export MUST fetch each format from the backend export route and allow copy/download
   (`ExportPanel.tsx:31`).
 
@@ -605,6 +640,8 @@ cites for not-yet-written code are path-only until implementation lands._
   (`pyproject.toml:33-35`); demo-site backend tests
   (`demo-site/backend/tests/`: `test_repo_analysis_phase_a.py` (12 tests), `test_sql_import.py` (SQL DDL
   importer + round-trip through `export_sql`, fixtures under `tests/fixtures/ddl/*.sql`),
-  `test_pen_model_migration.py` (schema 0.1 JSON still validates)) with `conftest.py` path injection.
+  `test_pen_model_migration.py` (schema 0.1 JSON still validates), `test_sql_export_dialects.py`
+  (REQ-DATA-072 dialect matrix), `test_snapshots.py` (REQ-DATA-073/074)) with `conftest.py`
+  path injection.
 - **REQ-DATA-066** Repo-analysis tests MUST assert all 7 output artifacts are written and only accepted
   facts compile into the PEN (`test_repo_analysis_phase_a.py:239,158`).
